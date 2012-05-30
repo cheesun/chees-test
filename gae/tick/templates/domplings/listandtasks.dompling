@@ -1,0 +1,76 @@
+            <div id="template_list">
+                <div title='taskList'>
+                    <div class='containsFloats'>
+                        <div title='messageWidget' class='messageWidget'></div>
+                        <div class='dialogButtonsRow'>
+                            <div title='setlistSaveWidget' class='dialogWidget' ><input type='button' value='create setlist' title='setlistSaveButton' class='setlistSaveButton' style='display:none'/></div>
+                            <div title='saveWidget' class='dialogWidget'><input type='button' value='save' title='saveButton' class='ticklistSaveButton' style='display:none'/></div>
+                            <div title='shareWidget' class='dialogWidget'><input type='button' value='share' title='shareButton' class='shareButton' style='display:none'/></div>                                                            
+                        </div>
+                        <div class='clearing unselectable' >&nbsp;</div>                         
+                    </div>
+                    <div title='rootElement' class='listRootElement'>                  
+                    </div>
+                    <div class='clearing unselectable' >&nbsp;</div>                     
+                </div>
+            </div>
+
+            <div id="template_roottask">
+                <div title='task' class="roottask">
+                    <div title='control' class="sublistContainer">
+                        <div title="list" class="sublist">
+                            <div title='dropTargetUnder' class='addTarget dragTarget'>
+                                click here to add new item
+                            </div>
+                        </div>                
+                    </div>
+                </div>            
+            </div>   
+
+            <div id="template_task">
+                <div class='taskContainer'>
+                    <div title='task' class='task'>
+                        <div class='containsFloats'>
+                            <div tabindex=-1 title='control' class='taskBody'>
+                                <div class='checkbox'>
+                                    <div class='checkBoxControl' title='checkBoxControl'>&nbsp;</div>
+                                </div>
+                                <div class='note' title='noteContainer'>
+                                    <textarea title='noteControl' class='empty'>click here to add notes...</textarea>
+                                </div>
+                                <div title='taskbullet' class='taskBodyBullet'><li title='taskbulletli'>&nbsp;</li></div>
+                                <div class='taskMain'>
+                                    <div title='tasktext' class='tasktext'>$text$</div>
+                                    <div title='taskeditcontainer' class='taskeditcontainer hidden'>
+                                        <input title='taskedit' class='taskedit'/>
+                                    </div>
+                                    <div title='setlistfindcontainer'></div>
+                                    <div title='taskcontrol' class='taskcontrol hidden'>
+                                        <input class='illistriousButton taskEditButton' title='editbutton' type='button' value=''/>
+                                        <input class='illistriousButton taskUpButton' title='upbutton' type='button' value=''/>
+                                        <input class='illistriousButton taskDownButton' title='downbutton' type='button' value=''/>
+                                        <input class='illistriousButton taskLeftButton' title='leftbutton' type='button' value=''/>
+                                        <input class='illistriousButton taskRightButton' title='rightbutton' type='button' value=''/>
+                                    </div>                                
+                                    <div title='edittext' class='edittext hidden'>
+                                        <input class='illistriousButton taskDoneButton' title='edittextdone' type='button' value=''/>
+                                        <input class='illistriousButton taskCancelButton' title='edittextcancel' type='button' value=''/>
+                                        <input class='illistriousButton taskFindButton' title='edittextfind' type='button' value=''/>
+                                        <input class='illistriousButton taskDeleteButton' title='edittextdelete' type='button' value=''/>
+                                    </div>
+                                </div>                                
+                                <div class='clearing unselectable' >&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="sublistContainer">
+                            <div title="list" class="sublist">
+                                <div title='dropTargetUnder' class='dragTarget'>
+                                </div>
+                            </div>                
+                        </div>
+                    </div>        
+                    <div title='dropTargetAfter' class='addTarget dragTarget'>
+                    </div>
+                </div>
+            </div>          
+            

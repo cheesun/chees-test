@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Who is stronger at doubles?</p>
+
+      <form method="post">
+        <input type="hidden" name="loser" value="{{player2}}">
+        <input type="submit" name="winner" value="{{player1}}"></input>
+      </form>
+      <form method="post">
+        <input type="hidden" name="loser" value="{{player1}}">
+        <input type="submit" name="winner" value="{{player2}}"></input>
+      </form>
+
+
+    <a href="ask">I dont know, let me try another pair</a>
+{% endblock %}
+

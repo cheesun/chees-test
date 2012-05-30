@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block templates %}
+  
+{% endblock %}
+
+{% block content %}    
+    <h2>chees Tick</h2>
+
+    <ul>
+        <li>Create lists to keep track of things</li>
+        <li>Find and use predefined lists in your own lists</li>
+        <li>Share your predefined lists with others</li>
+    </ul>
+    
+    <p>
+    {% if not user %}
+        <a href='{{login}}'>Log in now using your google account!</a>
+    {% else %}
+        Welcome back {{user}}! <a href='/tick/ticklists'>Click here to go to your lists</a>
+    {% endif %}
+    </p>
+    
+    {% if not user %}
+        <h4> Here are some quick stats about the Tick community </h4>
+    {% else %}
+        <h4> Here are some quick stats about your lists and tasks </h4>
+    {% endif %}
+    
+    <ul>
+    {% for item in stats %}
+        <li>{{item.0}}: {{item.1}}</li>
+    {% endfor %}
+    </ul>    
+    
+    <h4> Recent activity </h4>
+    <ul>
+    {% for item in feed %}
+        <li>
+        {% for token in item.array %}
+            {% if token.is_text %}
+                {{token.text|escape}}
+            {% else %}
+                <span class='{{token.kind_lower}}Slip slip'>{% ifequal token.kind_lower "tickuser" %}<img src='{{token.gravatar}}'></img>{% endifequal %}<a href='/tick/{{token.kind_lower}}/{{token.id}}'>{{token.name|escape}}</a></span>
+            {% endif %}
+        {% endfor %}                       
+        {{item.age}}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
+

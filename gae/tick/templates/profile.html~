@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}- {{user}}{% endblock %}
+
+
+{% block scripts %}
+ 
+{% endblock %}
+
+{% block templates %}
+  
+{% endblock %}
+
+{% block content %}    
+
+    <span class='slip tickuserSlip bigSlip'><img src='{{profile_user.bigslip_gravatar}}'></img>{{profile_user.tick_name}}</span>
+
+    <div class='userCard containsFloats'>
+        <div class='bigGravatar'>
+            <img src="{{profile_user.big_gravatar}}"></img>    
+        {% ifequal user_id profile_user.id %}
+            <br><a href='https://en.gravatar.com/site/login/'>change your profile picture at gravatar</a>
+        {% endifequal %}                
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>user name</th><td><span id='profile_tick_name'>{{profile_user.tick_name}}</span></td>
+                </tr>
+                <tr>
+                    <th>full name</th><td><span id='profile_full_name'>{{profile_user.full_name}}</span></td>            
+                </tr>            
+                <tr>
+                    <th>bio</th><td><span id='profile_bio'>{{profile_user.bio}}</span></td>            
+                </tr>   
+        {% ifnotequal user_id profile_user.id %}    
+            {% if following %}
+                <tr>
+                    <td colspan="2"><div class='objectActions'>
+                        <form action="/tick/tickuser/{{profile_user.id}}" method="post">
+                            <input type='hidden' name='action' value='unfollow'/>
+                            <input type='hidden' name='user_id' value="{{profile_user.id}}"/>
+                            You are following {{profile_user.tick_name}}.<br>
+                            To stop receiving updates from this user, <input type='submit' value='unfollow!'/>
+                        </form>            
+                    </div></td>
+                </tr>  
+            {% else %} 
+                <tr>
+                    <td colspan="2"><div class='objectActions'>
+                        <form action="/tick/tickuser/{{profile_user.id}}" method="post">
+                            <input type='hidden' name='action' value='follow'/>
+                            <input type='hidden' name='user_id' value="{{profile_user.id}}"/>
+                            If you would like to see this user's updates, <input type='submit' value='follow!'/>
+                        </form>            
+                    </div></td>
+                </tr>  
+            {% endif %}
+        {% endifnotequal %}      
+            </table>
+        </div>    
+    </div>
+
+    <table class='profileTable'>
+    <tr>
+        <th>following</th>
+        <td>
+        {% for usr in leaders %}
+            <span class='slip tickuserSlip'><img src="{{usr.gravatar}}"></img><a href='{{usr.id}}'>{{usr.tick_name}}</a></span>
+        {% endfor %}
+        {% if leaders %}
+        {% else %}
+            none yet :(        
+        {% endif %}        
+        </td>
+    </tr>
+    <tr>
+        <th>mutual</th> 
+        <td>
+        {% for usr in mutual %}
+            <span class='slip tickuserSlip'><img src="{{usr.gravatar}}"></img><a href='{{usr.id}}'>{{usr.tick_name}}</a></span>
+        {% endfor %}
+        {% if mutual %}
+        {% else %}
+            none yet :(        
+        {% endif %}
+        </td>    
+    </tr>
+    <tr>
+        <th>followers</th> 
+        <td>
+        {% for usr in followers %}
+            <span class='slip tickuserSlip'><img src="{{usr.gravatar}}"></img><a href='{{usr.id}}'>{{usr.tick_name|escape}}</a></span>
+        {% endfor %}
+        {% if followers %}
+        {% else %}
+            none yet :(        
+        {% endif %}        
+        </td>     
+    </tr>
+    </table>
+    
+    {% if feed %}
+        <h4> Recent activity </h4>
+        <ul>
+        {% for item in feed %}
+            <li>
+            {% for token in item.array %}
+                {% if token.is_text %}
+                    {{token.text}}
+                {% else %}
+                    <span class='{{token.kind_lower}}Slip slip'>{% if token.gravatar %}<img src='{{token.gravatar}}'></img>{% endif %}<a href='/tick/{{token.kind_lower}}/{{token.id}}'>{{token.name}}</a></span>
+                {% endif %}
+            {% endfor %}                       
+            {{item.age}}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+{% endblock %}
+
+
+{% block final %}
+    {% ifequal user_id profile_user.id %}
+        <script type="text/javascript">
+            var tick_name_edit = new chees.tick.control.AjaxEditable("profile_tick_name","tick_name","/tick/api/userupdate","{{profile_user.tick_name|escapejs}}");
+            var full_name_edit = new chees.tick.control.AjaxEditable("profile_full_name","full_name","/tick/api/userupdate","{{profile_user.full_name|escapejs}}");
+            var bio_edit = new chees.tick.control.AjaxEditable("profile_bio","bio","/tick/api/userupdate","{{profile_user.bio|escapejs}}");
+        </script>
+    {% endifequal %}
+{% endblock %}

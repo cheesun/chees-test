@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <title>Tick {% block title %}{% endblock %}</title>    
+      
+        <link rel='stylesheet' href='/tick/static/tick.css' type='text/css' media='screen'/>
+
+        <script type="text/javascript" src="/tick/static/tick.js"></script>
+        {% block scripts %}
+        {% endblock %}
+
+    </head>  
+
+    <body>
+
+        <div id="overlay" style="visibility: hidden">
+        </div>
+       
+        <div type='text/html' id="templates" style="visibility: hidden; display: none">
+        
+            <div id='template_listsearchandcreate'>
+                <div class='searchAndCreateDialog' title='searchAndCreateDialog'>
+                    <div title='optionsDialog' class='dialogBox'>
+                        <div title='loading'></div>
+                        <div title='resultList' class='resultList'>
+                        </div>
+                    </div>
+                </div>    
+            </div>        
+
+            <div id='template_userresult'>
+                <form action="/tick/tickuser" method="post" class='searchResult' title='form'>
+                    <input type='hidden' name='user_id' value="$id$"/>
+                    <input type='submit' name='action' value='$follow$' $disabled$/> <span class='slip tickuserSlip'><img %src%='$gravatar$'></img><a href='/tick/tickuser/$id$'>$tick_name$</a> $full_name$</span>
+                </form>
+            </div>
+
+            <div id='template_inviteuser'>
+                <form class='searchResult'>
+                    <input title='inviteButton' type='button' name='action' value='invite'/> "<span title='newInvitee' class='searchString'>$query$</span>" to join Tick!! 
+                </form>
+            </div>
+            
+            <div id='template_setlistresult'>
+                <form action="/tick/ticklists" method="post" class='searchResult' title='form'>
+                    <input type='hidden' name='type_id' value="$id$"/>
+                    <input type='hidden' name='action' value='clone'/>
+                    <span title='slip' class='slip setlistSlip'><a href="/tick/setlist/$id$">$name$</a> <input title='previewButton' type='button' value='preview'/></span>
+                    <span title='primary'>
+                        <input type='button' value='clone' onclick='var element = this.nextSibling.nextSibling; element.style.display="inline"; element.childNodes[1].focus();'/>
+                        <span title='extraOption' class='extraOption' style='display:none'> to a new ticklist called <input type='text' name='name'/><input type='submit' value='go!'/><input type='button' value='cancel' onclick='this.parentNode.style.display="none";'/></span>
+                    </span>
+                </form>
+            </div>
+
+            <div id='template_listowner'>
+                <span>
+                    by <span class='slip tickuserSlip'><img %src%="$owner_gravatar$"></img><a href='/tick/tickuser/$owner_id$''>$owner$</a></span>                               
+                </span>
+            </div>
+
+            <div id='template_ticklistresult'>
+                <div class='searchResult'>
+                <span title='slip' class='slip ticklistSlip'><a href='/tick/ticklist/$id$'>$name$</a></span> $top_task_path$
+                </div>
+            </div>
+
+            <div id='template_ticklistcreate'>
+                <div class='searchResult'><form action="/tick/ticklists" method="post" title='form'>
+                    <input type='hidden' name='action' value='add'/>
+                    <input type='hidden' name='name' value='!query!' title='newListTitleHidden'/>
+                    <input type='submit' value='create' title='submit'/> a freestyle ticklist <span class='slip ticklistSlip'><span title='newListTitle' class='searchString'>$query$</span></span> 
+                </form></div>
+            </div>
+           
+            <div id='template_listtype'>
+                <div class='searchResult'>
+                    <input type='radio' name='type_id' value="$id$"/>
+                    <label>$title$</label>
+                </div>
+            </div>    
+
+            <div id="template_setlistpreview">
+                <div title='setlistPreview' class='setlistPreview'>
+                    <div title='description' class='setlistPreviewDescription'>$description$</div>
+                    <div class='separator'></div>
+                    !list!
+                </div>
+            </div>
+
+        
+        {% block templates %}
+        {% endblock %}            
+        </div>
+    
+        
+        <div id="title">     
+            <div id="branding">         
+                <a href='/'><span class='chees'>alpha</span></a>
+                <a class='appName' href='/tick/'>tick</a>       
+            </div>      
+         
+            <div id="links"> 
+                {% block links %}
+                    <a href='/tick/ticklists'>ticklists</a>
+                    <a href='/tick/setlists'>setlists</a>
+                    <a href='/tick/tickuser/{{user_id}}'>{% if user %}{{user}}{% else %}profile{% endif %}</a>
+                {% endblock %}
+            </div>               
+        </div>
+  
+        <div id="undertitle">&nbsp;</div>
+       
+        <div class="ticklistCreationRow containsFloats">        
+            <div id="login">
+                {% if user %}
+                    {% if user_id %}
+                        logged in as <span class='slip tickuserSlip'>{% if gravatar %}<img src="{{gravatar}}"></img>{% endif %}<a href='/tick/tickuser/{{user_id}}''>{{user}}</a></span> <a href='{{login}}'>click here to logout</a>
+                    {% else %}
+                        Hi {{user}}, tick is invite only for now. <a href='{{login}}'>click here to logout</a> 
+                    {% endif %}
+                {% else %}
+                    <a href='{{login}}'>click here to login with your google account</a>
+                {% endif %}
+            </div>
+            <div class="ticklistCreation" id='ticklistCreation'>
+                <div class='inputWrapper'><input id='searchAndCreate' type='text' name='type' value='' class='inactive' autocomplete='off'/></div>
+                <div id='searchAndCreateDialog'></div>
+            </div>
+        </div>
+       
+        {% if messages %}
+        <div id="messages">
+        {% for m in messages %}
+            <div class="{{m.type}}">{{m.text}}</div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+
+        
+        <div id="main">
+            <div id="centeredOuter">
+            <div id="centeredInner"  class='containsFloats'>        
+        {% block content %}
+        {% endblock %}
+            </div>
+            </div>             
+        </div>
+
+        <div class='clearing unselectable' >&nbsp;</div>
+        
+        <div id="debug">
+        </div>
+
+        <div id="bottom">
+            <strong>tick</strong> <em>by chees</em>
+        </div>
+
+
+        <script type="text/javascript">
+            var sac = new chees.tick.SearchAndCreateDialog("searchAndCreate","searchAndCreateDialog","template_listsearchandcreate");
+        </script>
+        {% block final %}
+        {% endblock %}
+        
+    </body>
+  
+</html>
+
+
+
+
+
+

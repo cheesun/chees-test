@@ -1,0 +1,8 @@
+js/closure-library/closure/bin/build/closurebuilder.py \
+    --root=js/closure-library/ \
+    --root=js/chees/ \
+    --namespace="chees.tick.main" \
+    --output_mode=script \
+    > tick.js \
+&& cp tick.js gae/tick/static \
+&& echo 'copied tick.js to chees-test'

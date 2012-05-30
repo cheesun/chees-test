@@ -1,0 +1,12 @@
+            <div id="template_savedialog">
+                <div title='saveDialog' class='dialog saveDialog'>
+                    <table><tbody>
+                        <tr><th></th><td>
+                            <div title='saveMessage' class='saveMessage'></div>
+                            <div title='saveDetails' class='saveDetails'></div>
+                            <div><input type='checkbox' title='autoSave' class='autoSaveCheckBox' checked/>autosave enabled</div>
+                            <div><input type='button' title='saveButton' class='listTaskControlButton' value='save'/></div>
+                        </td></tr>
+                    </tbody></table>                    
+                </div>
+            </div>

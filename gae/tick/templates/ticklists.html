@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}- Ticklists{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function confirmDelete(name) {
+        return confirm("are you sure you want to delete '" + name + "'?");
+    }
+</script>  
+{% endblock %}
+
+{% block templates %}
+{% endblock %}
+
+{% block content %}    
+    <h2>{% if user %}{{user}}'s {% endif %}Ticklists</h2>
+    
+    <div class="clearing"></div>
+    
+    <h3>Open Ticklists</h3>
+    <div class="listList">
+        <div class="listListRows">
+        <div class="listListItem containsFloats">
+            <strong>
+        {% if user %}              
+            <span class="listActions listListCol">
+                actions
+            </span>
+        {% endif %}
+            <span class='listListCol'>last updated</span>        
+            <span class='listListCol'>progress</span>
+            <span class="listName">list name</span>
+            </strong>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>    
+    
+    {% if not open_lists %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">no lists :(</span>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>
+    {% endif %}
+    {% for i in open_lists %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">
+                <span class='slip ticklistSlip'><a href="/tick/ticklist/{{i.id}}">{{i.name}}</a></span>
+                {% ifnotequal i.owner_id user_id %}
+                    by <span class='slip tickuserSlip'>{% if i.owner_gravatar %}<img src="{{i.owner_gravatar}}"></img>{% endif %}<a href='/tick/tickuser/{{i.owner_id}}''>{{i.owner}}</a></span>                
+                {% endifnotequal %}
+            </span>        
+        {% if user %}              
+            <span class="listActions listListCol">
+                <form action="/tick/ticklists" method="post">
+                    <input type='hidden' name='name' value='{{i.name}}'/>
+                    <input type='hidden' name='id' value='{{i.id}}'/>
+                {% if i.favourite %}                    
+                    <input type='hidden' name='action' value='unfavourite'/>                         
+                    <input class='listActionButton favouriteListButton' type='submit' value='' title='remove list from favourites'/>                     
+                {% else %}
+                    <input type='hidden' name='action' value='favourite'/>                         
+                    <input class='listActionButton nonFavouriteListButton' type='submit' value='' title='add list to favourites'/>                    
+                {% endif %}
+                </form>               
+            {% ifequal i.owner_id user_id %}                
+                <form action="/tick/ticklists" method="post">
+                    <input type='hidden' name='name' value='{{i.name}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='delete'/>                    
+                    <input class='listActionButton deleteListButton' type='submit' value='' onclick='return confirmDelete("{{i.name}}");' title='delete list'/>
+                </form>                        
+                {% ifnotequal i.num_tasks -1 %}
+                    {% ifequal i.num_completed_tasks i.num_tasks %}
+                <form action="/tick/ticklists" method="post">
+                    <input type='hidden' name='name' value='{{i.name}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='close'/>
+                    <input class='listActionButton completeListButton' type='submit' value='' title='close completed list'/>                  
+                </form>
+                    {% endifequal %}
+                {% endifnotequal %}                
+            {% endifequal %}   
+        {% endif %}                    
+            </span>            
+            <span class='listListCol'>{{ i.updated|date:"D d M Y" }}</span>          
+            <span class='listListCol'>
+            {% ifnotequal i.num_tasks -1 %}
+                {{i.num_completed_tasks}}/<strong>{{i.num_tasks}}</strong>
+            {% else %}
+                &nbsp;
+            {% endifnotequal %}            
+            </span>            
+            <div class='clearing unselectable' >&nbsp;</div>
+            <div class='listName'><span class='listInfo'>{{i.top_task_path|escape}}</span></div>
+        </div>
+    {% endfor %}</div>
+    
+        <div class="clearing"></div></div>
+        
+    <h3>Closed Ticklists</h3>
+    <div class="listList">
+        <div class="listListRows">
+        <div class="listListItem containsFloats">
+            <strong>
+        {% if user %}               
+            <span class="listActions listListCol">
+                actions
+            </span>
+        {% endif %}               
+            <span class='listListCol'>last updated</span>        
+            <span class='listListCol'>progress</span>
+            <span class="listName">list name</span>
+            </strong>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>    
+    
+    {% if not closed_lists %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">no lists :(</span>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>
+    {% endif %}
+    {% for i in closed_lists %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">
+                <span class='slip ticklistSlip'><a href="/tick/ticklist/{{i.id}}">{{i.name}}</a></span> 
+                {% ifnotequal i.owner_id user_id %}
+                    by <span class='slip tickuserSlip'>{% if i.owner_gravatar %}<img src="{{i.owner_gravatar}}"></img>{% endif %}<a href='/tick/tickuser/{{i.owner_id}}''>{{i.owner}}</a></span>                
+                {% endifnotequal %}
+            </span>        
+        {% if user %}               
+            <span class="listActions listListCol">
+                <form action="/tick/ticklists" method="post">
+                    <input type='hidden' name='name' value='{{i.name}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>   
+                {% if i.favourite %}                    
+                    <input type='hidden' name='action' value='unfavourite'/>                         
+                    <input class='listActionButton favouriteListButton' type='submit' value='' title='remove list from favourites'/>                     
+                {% else %}
+                    <input type='hidden' name='action' value='favourite'/>                         
+                    <input class='listActionButton nonFavouriteListButton' type='submit' value='' title='add list to favourites'/>                    
+                {% endif %}                 
+                </form>                
+                <form action="/tick/ticklists" method="post">
+                    <input type='hidden' name='name' value='{{i.name}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='delete'/>                    
+                    <input class='listActionButton deleteListButton' type='submit' value='' onclick='return confirmDelete("{{i.name}}");' title='delete list'/>
+                </form>                   
+            </span>            
+            <span class='listListCol'>{{ i.updated|date:"D d M Y" }}</span>          
+            <span class='listListCol'>
+            {% ifnotequal i.num_tasks -1 %}
+                {{i.num_completed_tasks}}/<strong>{{i.num_tasks}}</strong>
+            {% else %}
+                &nbsp;
+            {% endifnotequal %}            
+            </span>            
+        {% endif %}               
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>
+    {% endfor %}</div>
+    
+        <div class="clearing"></div></div>
+                
+{% endblock %}
+{% block final %}
+{% endblock %}
+
+

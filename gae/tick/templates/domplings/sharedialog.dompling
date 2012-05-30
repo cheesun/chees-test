@@ -1,0 +1,19 @@
+            <div id="template_sharedialog">
+                <div title='shareDialog' class='dialog shareDialog'>
+                    <div title='accessSection'>
+                        <div><strong>access</strong></div>
+                        <form>
+                            <select title='accessSelect' name='accessSelect'>
+                                <option value='private'>private</option>
+                                <option value='public'>public</option>
+                            </select>
+                            <span title='accessButtons' style='visibility: hidden'>
+                                <input title='accessChangeButton' type='button' value='change'/><input title='accessCancelButton' type='button' value='cancel'/>
+                            </span>    
+                            <div title='saveDetails' class='saveDetails'></div>
+                        </form>
+                    </div>
+                    <div><strong>share</strong></div>
+                    <input title='recommendButton' type='button' value='recommend'/><input title='googlePlusButton' type='button' value='+1' disabled/><input title='facebookButton' type='button' value='f' disabled/><input title='twitterButton' type='button' value='tweet' disabled/>
+                </div>
+            </div>

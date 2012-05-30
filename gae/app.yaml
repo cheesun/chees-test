@@ -1,0 +1,65 @@
+application: chees-test
+version: 1
+runtime: python
+api_version: 1
+
+builtins:
+- appstats: on
+
+
+handlers:
+
+- url: /favicon.ico
+  static_files: tick/static/favicon.ico
+  upload: tick/static/(.*)
+
+- url: /
+  static_files: static/splash.html
+  upload: static/splash.html
+
+- url: /cv
+  static_files: static/cv.html
+  upload: static/cv.html
+
+- url: /wordguess/.*
+  script: wordguess/wordguess.py 
+  
+- url: /static/
+  static_dir: static
+
+- url: /tick/utility
+  script: main.py
+  login: admin
+  
+- url: /tick/?
+  script: main.py
+
+- url: /tick/ticklists
+  script: main.py
+
+- url: /tick/ticklist/.*
+  script: main.py
+
+- url: /tick/setlists
+  script: main.py
+
+- url: /tick/setlist/.*
+  script: main.py
+  
+- url: /tick/static
+  static_dir: tick/static
+
+- url: /tick/api/.*
+  script: api.py
+  
+- url: /tick/tasks/.*
+  script: api.py
+  login: admin
+
+- url: /tick/tickuser/.*
+  script: main.py
+
+- url: /tick/tickuser/?
+  script: main.py
+  login: required
+

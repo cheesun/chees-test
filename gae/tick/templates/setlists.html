@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}- Setlists{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function confirmDelete(name) {
+        return confirm("are you sure you want to delete '" + name + "'?");
+    }
+</script>  
+{% endblock %}
+
+{% block templates %}
+
+    
+
+{% endblock %}
+
+{% block content %}    
+    <h2>{% if user %}{{user}}'s {% endif %}Setlists</h2>
+   
+    <div class="clearing"></div>
+{% if user %}    
+    <h3>Your Setlists</h3>
+    <div class="listList">
+        <div class="listListRows">
+        <div class="listListItem containsFloats">
+            <strong>
+            <span class="listActions listListCol">
+                actions
+            </span>
+            <span class='listListCol'>rating</span> 
+            <span class="listName">list name</span>
+            </strong>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>    
+    
+    {% if not mine %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">no lists :(</span>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>
+    {% endif %}
+    {% for i in mine %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">
+                <span class='slip setlistSlip'><a href="/tick/setlist/{{i.id}}">{{i.name|escape}}</a></span>              
+            </span>        
+            <span class="listActions listListCol">
+                <form action="/tick/setlists" method="post">
+                    <input type='hidden' name='name' value='{{i.name|escape}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>         
+                {% if i.favourite %}                    
+                    <input type='hidden' name='action' value='unfavourite'/>                         
+                    <input class='listActionButton favouriteListButton' type='submit' value='' title='remove setlist from favourites'/>                     
+                {% else %}
+                    <input type='hidden' name='action' value='favourite'/>                         
+                    <input class='listActionButton nonFavouriteListButton' type='submit' value='' title='add setlist to favourites'/>                    
+                {% endif %}          
+                </form>                
+                <form action="/tick/setlists" method="post">
+                    <input type='hidden' name='name' value='{{i.name|escape}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='delete'/>                    
+                    <input class='listActionButton deleteListButton' type='submit' value='' onclick='return confirmDelete("{{i.name|escape}}");' title='delete list'/>
+                </form>                                            
+            {% if i.likeable %}                   
+                <form action="/tick/setlists" method="post">
+                    <input type='hidden' name='name' value='{{i.name|escape}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='like'/>                    
+                    <input class='listActionButton likeListButton' type='submit' value='' title='like list'/>
+                </form>              
+            {% endif %}                                       
+            </span>            
+            <span class='listListCol' title='{{i.likes}} likes, {{i.favourites}} favourites'>
+                {{ i.rating }}              
+            </span>         
+            <div class='clearing unselectable' >&nbsp;</div>         
+            <div class='listName'><span class='listInfo'>{{i.description|escape|truncatewords:25}}</span></div>            
+        </div>
+    {% endfor %}</div>
+    
+        <div class="clearing"></div></div>
+{% endif %}        
+    <h3>Public Setlists</h3>
+    <div class="listList">
+        <div class="listListRows">
+        <div class="listListItem containsFloats">
+            <strong>
+        {% if user %}             
+            <span class="listActions listListCol">
+                actions
+            </span>   
+        {% endif %}   
+            <span class='listListCol'>rating</span>
+            <span class="listName">list name</span>
+            </strong>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>    
+    
+    {% if not other %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">no lists :(</span>
+            <div class='clearing unselectable' >&nbsp;</div>
+        </div>
+    {% endif %}
+    {% for i in other %}
+        <div class='separator'></div>
+        <div class="listListItem containsFloats">
+            <span class="listName">
+                <span class='slip setlistSlip'><a href="/tick/setlist/{{i.id}}">{{i.name|escape}}</a></span> by <span class='slip tickuserSlip'>{% if i.owner_gravatar %}<img src="{{i.owner_gravatar}}"></img>{% endif %}<a href='/tick/tickuser/{{i.owner_id}}''>{{i.owner|escape}}</a></span><br>
+                {{i.description|escape|truncatewords:15}}
+            </span>        
+        {% if user %}                
+            <span class="listActions listListCol">
+                <form action="/tick/setlists" method="post">
+                    <input type='hidden' name='name' value='{{i.name|escape}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>   
+                {% if i.favourite %}                    
+                    <input type='hidden' name='action' value='unfavourite'/>                         
+                    <input class='listActionButton favouriteListButton' type='submit' value='' title='remove setlist from favourites'/>                     
+                {% else %}
+                    <input type='hidden' name='action' value='favourite'/>                         
+                    <input class='listActionButton nonFavouriteListButton' type='submit' value='' title='add setlist to favourites'/>                    
+                {% endif %}  
+                </form>                
+            {% if i.likeable %}                       
+                <form action="/tick/setlists" method="post">
+                    <input type='hidden' name='name' value='{{i.name|escape}}'/>        
+                    <input type='hidden' name='id' value='{{i.id}}'/>                            
+                    <input type='hidden' name='action' value='like'/>                    
+                    <input class='listActionButton likeListButton' type='submit' value='' title='like list'/>
+                </form>  
+            {% endif %}                                            
+            </span>     
+        {% endif %}                                                           
+            <span class='listListCol' title='{{i.likes}} likes, {{i.favourites}} favourites'>
+                {{ i.rating }}             
+            </span>        
+            <div class='clearing unselectable' >&nbsp;</div>         
+        </div>
+    {% endfor %}</div>
+    
+        <div class="clearing"></div></div>
+                
+{% endblock %}
+{% block final %}
+{% endblock %}
+
+

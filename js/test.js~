@@ -1,0 +1,11 @@
+var props = ['hello','world']
+
+var object = {};
+
+for (var name in props) {
+    object[name] = true;
+}
+
+document.write(object['hello']);
+
+document.write(object.hello);

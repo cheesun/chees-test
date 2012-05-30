@@ -1,0 +1,16 @@
+<html>
+    <form>
+        <input type="radio" name="action" value="guess" {% if guess %}checked{% endif %}/> guess <br />
+        <input type="radio" name="action" value="make" {% if make %}checked{% endif %}/> make <br />
+        <input type="radio" name="action" value="solve" {% if solve %}checked{% endif %}/> solve <br />        
+        <table>
+            <tr><td>pattern|target</td><td><input type="text" name="first" value='{{first}}'/></td></tr>
+            <tr><td>excluded|start</td><td><input type="text" name="second" value='{{second}}'/></td></tr>
+        </table>
+        <input type='submit' value='submit'/>
+    </form>
+    
+    <pre>
+    {{output}}
+    </pre>
+</html>

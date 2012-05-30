@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+    <head>
+        <title>Cheesun Choong</title>
+        <style type="text/css">
+            html {
+                font-family:sans-serif; 
+                background-color:#ded; 
+                padding:3em 5em 10em 5em;
+                color:#232;
+            }
+            h2 {
+                color:darkgreen;
+            }
+        </style>
+        <script type="text/javascript">
+            function is_char (chr) {
+                return ((chr >= "a" && chr <= "z") || (chr >= "A" && chr <= "Z") || (chr >= "0" && chr <= "9"))
+            }
+                                   
+            Scrambler = function (elem,debug_elem) {
+                // debug mode?
+                this.debug_elem = debug_elem;
+            
+                // the id and a cache of the element;
+                this.element = document.getElementById(elem);
+                if (!this.element) this.element = elem;               
+                
+                // text and original order of letters
+                this.text = this.element.innerHTML.split("");
+                this.len = this.text.length;
+                
+                // order contains the original sequence of numbers
+                // order contains the original sequence of numbers
+                this.order = [];
+                var tag = false; 
+                for (var i = 0; i < this.len; i++) {
+                    if (this.text[i] == '<') tag = true;
+                    else if (this.text[i] == '>') tag = false;
+                    // we store the order as a negative number so that we can distinguish between characters that should be moved and shouldnt
+                    if (tag || !is_char(this.text[i])) this.order.push(-i);
+                    else this.order.push(i);
+                }
+                
+                // used to keep track of what the element is currently doing
+                this.current_interval = null;
+                this.current_timeout = null;
+                this.current_mode = null;
+                
+                // mix it up
+                //this.start_mixing();
+                this.scramble_step(this.len*5);
+                this.enable_mouseover();
+                
+            }
+
+            Scrambler.prototype.debug = function(text) {
+                if (!this.debug_elem) return;
+                note = document.getElementById(this.debug_elem);
+                note.value = text + '\n' + note.value;
+            }
+            
+            Scrambler.prototype.valid_move = function(index) {
+                // remember that we marked characters we dont want to move with a negative number
+                return this.order[index] > 0;
+            }
+            
+            Scrambler.prototype.enable_mouseover = function () {
+                var self = this;
+                this.element.onmouseover = function () { self.start_sorting(); };
+                this.element.onmousewheel = function () { self.start_sorting(); };
+                // disabled so that text doesnt mix up again when you move the mouse away
+                // this.element.onmouseout = function() { self.start_mixing(); };            
+            }
+            
+            Scrambler.prototype.disable_mouseover = function() {
+                this.element.onmouseover = null;
+                this.element.onmousewheel = null;
+                this.element.onmouseout = null;
+            }
+            
+            Scrambler.prototype.stop = function() {
+                this.debug('stopping');
+                clearInterval(this.current_interval);
+                clearTimeout(this.current_timeout);
+                this.current_interval = null;
+                this.current_timeout = null;
+                this.current_mode = null;
+            }
+            
+            Scrambler.prototype.start_sorting = function() {
+                if (this.current_mode == 'sorting' ) return;
+                this.stop();
+                this.debug('sorting');
+                this.current_mode = 'sorting';
+                var self=this;
+                var steps = Math.round(this.len / 2); // how many pairs of letters to sort each timestep
+                this.bubble_step(steps);
+                this.current_interval = setInterval(function() {self.bubble_step(steps);},50);
+                this.current_timeout = setTimeout(function(){self.stop()},10000);
+            }
+            
+            Scrambler.prototype.start_mixing = function() {
+                if (this.current_mode == 'mixing') return;
+                this.stop();
+                this.debug('mixing');
+                this.current_mode = 'mixing';
+                var self=this;
+                var steps = Math.round(this.len / 8); // how many pairs of letters to mix each timestep
+                this.scramble_step(steps);
+                this.current_interval = setInterval(function() {self.scramble_step(steps);},80);
+                this.current_timeout = setTimeout(function(){self.stop()},1500);
+            }
+            
+            Scrambler.prototype.update_element = function () {
+                this.element.innerHTML = this.text.join("");
+            }
+
+            Scrambler.prototype.pick_pair = function () {
+                while (true) {
+                    var rnd = Math.floor(Math.random()*(this.len-1));
+                    var snd = rnd+1;
+
+                    // move the indexes outward if they point to characters we cant move                    
+                    while (rnd >= 0 && !this.valid_move(rnd)) rnd--;
+                    if (rnd < 0) continue;
+                    
+                    while (snd < this.len && !this.valid_move(snd)) snd++;
+                    if (snd >= this.len) continue;
+                    
+                    return [rnd,snd];
+                }
+            }
+            
+            Scrambler.prototype.scramble_step = function (steps) {
+                var ord = this.order;
+                var txt = this.text;
+                var len = this.len;
+                for (var i = 0; i < steps; i++) {                
+                    var pair = this.pick_pair();
+                    var rnd = pair[0];
+                    var snd = pair[1];
+                                        
+                    var txt_tmp = txt[rnd];
+                    txt[rnd] = txt[snd];
+                    txt[snd] = txt_tmp;
+
+                    var ord_tmp = ord[rnd];
+                    ord[rnd] = ord[snd];
+                    ord[snd] = ord_tmp;
+                    
+                }                
+                
+                this.update_element();
+            }
+            
+            Scrambler.prototype.bubble_step = function (steps) {
+                var ord = this.order;
+                var txt = this.text;
+                var len = this.len;
+                for (var i = 0; i < steps; i++) {
+                    var pair = this.pick_pair();
+                    var rnd = pair[0];
+                    var snd = pair[1];
+                    
+                    // since this is the sorting step we only swap if they are out of order
+                    // we compare with abs just in case we're moving an invalid character
+                    if (Math.abs(ord[rnd]) < Math.abs(ord[snd])) continue;
+                    
+                    var txt_tmp = txt[rnd];
+                    txt[rnd] = txt[snd];
+                    txt[snd] = txt_tmp;
+                    
+                    var ord_tmp = ord[rnd];
+                    ord[rnd] = ord[snd];
+                    ord[snd] = ord_tmp;
+                    
+                }                
+                this.update_element();  
+            }
+
+            var getElementsByClassName = document.getElementsByClassName ? 
+                function (class_name) {
+                    return document.getElementsByClassName(class_name);                    
+                } :
+                function (class_name) {
+                    var re = new RegExp("(?:^|\\s)" + class_name + "(?:$|\\s)");
+                    var all_elements = document.getElementsByTagName("*");
+                    var output = [];
+                    
+                    var current;
+                    for (var i in all_elements) {
+                        current = all_elements[i];
+                        var element_class = current.className;
+                        if (element_class && 
+                            element_class.indexOf(class_name) >= 0 &&
+                            re.test(element_class)) {
+                            output.push(current);
+                        }
+                    }
+                    return output;
+                }
+            
+            function main () {
+                var elements = getElementsByClassName('scrambled');
+                for (var i = 0; i < elements.length; i++) {
+                    new Scrambler(elements[i]);
+                }            
+            }
+            
+        </script>
+    </head>
+    <body onload="main();">    
+        <h1 class="scrambled">CV: Cheesun Choong</h1>
+        
+        <div class="scrambled"><a href="mailto:thecheesun@gmail.com">thecheesun@gmail.com</a></div>
+        
+        <div class="scrambled">
+        <h2>Key Skills</h2>
+
+        <h3>Programming</h3>
+        <ul>
+            <li>strongest languages: python, javascript</li>
+            <li>also good at: c, c++, java, perl</li>
+            <li>and I love learning new languages and techniques</li>
+        </ul>
+       
+        <h3>Web technologies</h3>
+        <ul>
+            <li>google app engine, web.py, django</li>
+            <li>google closure, pyjamas (GWT for python)</li>
+            <li>html, css</li>
+        </ul>
+
+        <h3>Foreign language skills</h3>
+        <ul>
+            <li>mandarin chinese - proficient</li>
+            <li>cantonese chinese - rudimentary</li>                    
+        </ul>
+        </div>
+        
+        <div class="scrambled">
+            <h2>Personal web programming projects</h2>
+            <h3>Shuttlebugs website</h3>
+            <ul>
+                <li>website to allow all members of the club committee to make changes</li>
+                <li>replaced a static HTML website I made for them 10 years ago</li>
+                <li>custom CMS implemented on google app engine</li>
+                <li>handles online creation/editing of new pages, photo galleries with upload, timetabling of session times, announcements</li>
+                <li>artwork done in GIMP</li>
+            </ul>
+
+            <h3>Tick</h3>
+            <ul>
+                <li>Checklist application, with some innovative twists, currently in progress</li>
+                <li>rehash of a application I invented in my current job</li>
+                <li>utilises javascript, google closure, google app engine</li>
+            </ul>
+                
+            <h3>Moderately Multiplayer Go</h3>
+            <ul>
+                <li>Play Go on large, non-regular maps with relatively many players</li>
+                <li>javascript frontend</li>
+                <ul>
+                    <li>html5 canvas for main gaming screen</li>
+                    <li>smooth mouse drag and mouse wheel zoom to move around map</li>
+                    <li>comet for realtime updates to all players</li>
+                </ul>
+                <li>web.py backend with sqlite database</li>
+
+                <li>scripts to process images to create maps</li>
+            </ul>
+            
+            <h3>Iboughtit</h3>
+            <ul>
+                <li>Worked on this with a friend: Our idea was to create a social networking site, but this project was shelved in the end because the scope kept growing.</li>
+                <li>used turbogears and mochikit</li>
+                <li>in the backend, implemented distributed datastore (based on kademlia) and distributed applet scheduler using pyRO (python Remote Objects).</li>
+            </ul>
+            
+            <h3>Other Projects</h3>
+            <ul>
+                <li>In the past two years I have worked on a series of web projects on diminishing size as I realised that I needed to limit the scope.</li>
+                <li>social travel website (a little like nextstop) - django</li>
+                <li>skills quest (social game where you rate other people's skills) - google app engine, pyjamas</li>
+            </ul>
+        </div>
+            
+        <div class="scrambled">    
+        <h2>Relevant work experience</h2>   
+            <h3>2007 - 2011 Macquarie Bank: Application DBA</h3>
+            <ul>
+                <li>Manage schema changes and deployments. Investment bank, 500 databases, 30 servers, data replication, worldwide. 
+                    <ul>
+                        <li>Coordinate deployments with various support and development teams</li>
+                        <li>Produced web tools to aid in managing schema environment</li>
+                    </ul>
+                </li>
+                <li>Create webtools to improve productivity for DBA team 
+                    <ul>
+                        <li>Began with a suite of tools I created for my own use in javascript (frontend), python (backend), used: web.py, tornadoweb, memcached, sybase</li>
+                        <li>Extended my Task Checklists application for wider use</li>
+                        <li>Developed other tools on my own initiative or by request</li>
+                    </ul>
+                </li>
+                <li>Work with development teams to optimise database access 
+                    <ul>
+                        <li>Tuning queries, designing database schemas</li>
+                        <li>Algorithm design to improve application and database performance</li>
+                    </ul>
+                </li>
+            </ul>
+                        
+            <h3>2007 Macquarie Bank: Joint Venture Programmer</h3>
+            <ul>
+                <li>Work on bugs raised or features requested by joint venture partners
+                    <ul>
+                        <li>C++, perl and python applications and scripts</li>
+                        <li>clearcase source control</li>
+                    </ul>
+                </li>
+                <li>Integrate JV systems with Macquarie systems 
+                    <ul>
+                        <li>Manage testing and deployment of integration changes.</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>2005 - 2006 Avaya Labs: Student Tester</h3>
+            <ul>
+                <li>Test Team 
+                    <ul>
+                        <li>Testing on QOS Product</li>
+                        <li>Developed automated testing tools, in C++</li>
+                        <li>Streamlined testing process for the team</li>
+                    </ul>
+                </li>
+                <li>Internal Software Development
+                    <ul>
+                        <li>Added new proprietary capabilities to the Ethereal (Wireshark) network protocol analyser (written in C).</li>
+                        <li>This was used by avaya researchers, technicians, and developers.</li>
+                        <li>Maintained a high standard of documentation, coding and testing</li>
+                    </ul>
+                </li>
+                <li>Managed development of a new application 
+                    <ul>
+                        <li>Followed complete software lifecycle, from conception, requirements and design, to coding, testing, and maintenance support.</li>
+                        <li>Communication and collaboration with contacts from related organisations.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>2004 Whitesmiths Australia: Contract Testing Officer</h3>
+            <ul>
+                <li>Tested deployment of Vodafone's new Mobile Network Management Software</li>
+                <li>Part of a 10 member team drawn from Alcatel, Vodafone and Whitesmiths to perform testing</li>
+                <li>The system was tested over 2 development cycles with the objective of problem identification and resolution</li>
+                <li>The project was successfully concluded on time in spite of the strict time line</li>
+            </ul>
+        </div>
+        
+        <div class="scrambled">
+            <h2>Educational History</h2>
+            <h3>2002 - 2006 University of New South Wales: Bachelor of Engineering (Software Engineering) / Bachelor of Arts (Chinese)</h3>
+            <ul>
+                <li>Programming Thesis on Go AI
+                    <ul>
+                        <li>Implemented an AI that played Go online via GTP</li>
+                        <li>Written in C++, using novel monte carlo and simulated annealing techniques</li>
+                    </ul>
+                </li>
+                <li>Achieved 2nd place in Sydney ACM Programming Competition 2004</li>
+                <li>9th place in Fourth Year Award 2006</li>
+            </ul>
+            <h3>1996 - 2001 James Ruse Agricultural High School</h3>
+            <ul>
+                <li>First place in UNSW Programming Competition</li>
+                <li>Represented Australia in South East Asia Regional Computer Confederation Software Competition 2001 (Runners Up)</li>
+            </ul>
+        </div>      
+        
+        <div class="scrambled">
+        <h2>What I do in my spare time</h2>
+        <ul>
+            <li>Play badminton</li>
+            <li>Work on my own hobby programming projects</li>
+            <li>Play go</li>
+            <li>Adventure motorcycling and camping</li>
+            <li>Make hammocks</li>
+        </ul>
+        </div>        
+        
+    </body>
+</html>

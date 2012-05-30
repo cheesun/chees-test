@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <table>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Matchups Played</th>
+      </tr>
+    {% for player in players %}
+      <tr>
+        <td>{{forloop.counter}}.</td>
+        <td>{{player.name}}</td>
+        <td>{{player.comps}}</td>
+      </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
+

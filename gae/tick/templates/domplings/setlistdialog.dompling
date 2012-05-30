@@ -1,0 +1,41 @@
+            <div id="template_setlistdialog">
+                <div title='setlistSaveDialog' class='dialog setlistSaveDialog'>
+                    <table><tbody>
+                        <tr>
+                            <th title='setlistUseHeading' >use the</th>
+                            <td title='setlistUseRadios'>
+                                <input title='useAll' type='radio' name='shape' value='all'/>entire list<br>
+                                <input title='useSelection' type='radio' name='shape' value='current'/>currently selected sublist<br>
+                            </td>
+                        </tr>
+                        <tr><th title='setlistNameHeading'>setlist name</th><td><input class='textInput' title='setlistName' type='text'/></td></tr>
+                        <tr><th title='setlistDescriptionHeading'>description</th><td><textarea class='textArea' title='setlistDescription'></textarea></td></tr>
+                        <tr><th title='setlistNotesHeading'>notes will be</th><td>
+                            <input title='includeNotes' type='radio' name='notes' value='include'/>included<br>                        
+                            <input title='excludeNotes' type='radio' name='notes' value='exclude'/>excluded<br>
+                        </td></tr>  
+                        <tr><th title='setlistShareHeading'>this setlist is for</th><td>
+                            <input title='shareSelf' type='radio' name='share' value='private'/>yourself<br>                        
+                            <input title='shareFriends' type='radio' name='share' value='friends'/>friends<br>
+                            <input title='shareEveryone' type='radio' name='share' value='public'/>everyone<br>
+                        </td></tr>                        
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input title='saveButton' class='listTaskControlButton' type='button' value='save'/>
+                                <input title='clearButton' class='listTaskControlButton' type='button' value='clear'/>
+                                <input title='cancelButton' class='listTaskControlButton' type='button' value='cancel'/>   
+                            </td>
+                        </tr>
+                        <tr>
+                            <th title='setlistPreviewHeading'>preview</th>
+                            <td>
+                                <div title='setlistPreview' class='setlistPreview'>
+                                    is hidden, click heading to toggle.
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                 
+                </div>
+            </div>

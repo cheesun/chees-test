@@ -1,0 +1,27 @@
+            <div id="template_finddialog">
+                <div title='finddialog' class='findDialog'>
+                    <div title='contents' tabindex=-1>
+                    </div>
+                    <form>
+                        <div><input type='checkbox' title='inplace' value='inplace'/> create checklist in-place (not yet implemented)</div>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="template_finditem">
+                <div title='findItem' class='findItem' tabindex=-1>
+                    <div title='findItemTitle' class='findItemTitle'>
+                        <span class='slip setlistSlip'>$name$</span> <input title='findItemAdd' type='button' value='insert' href='/tick/api/setlistload?id=$id$'/>
+                    </div>
+                    <div title='findItemAuthor' class='findItemAuthor'></div>           
+                    <div title='findItemRating' class='findItemRating'></div>
+                </div>
+            </div>
+            
+            <div id="template_findpreview">
+                <div title='findpreview' class='findPreview'>
+                    <div title='description' class='findPreviewDescription'></div>
+                    <div class='separator'></div>
+                    <div title='list'></div>
+                </div>
+            </div>

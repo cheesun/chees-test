@@ -1,0 +1,1326 @@
+/* compress at http://www.csscompressor.com/ */
+
+/* top level css, for all pages */
+/* base.html */
+
+    html {
+        overflow: -moz-scrollbars-vertical; 
+        overflow-y: scroll;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        font-family: sans-serif;
+    }
+
+    *:focus {
+        outline: none;
+    }
+
+    #main {
+        padding: 0 0 1em;
+        font-family: sans-serif;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+/* elements that appear in the header section of each page */
+
+    /* title bar, containing links and branding */
+    #title {
+        background-image: -moz-linear-gradient(top , #595 0%, #484 100%);
+        background-image: -webkit-linear-gradient(top , #595 0%, #484 100%);    
+        background-image: linear-gradient(top , #595 0%, #484 100%);        
+        background-color: #484;
+        color: white;
+        padding: 0 0 0.1em;
+    }
+
+    /* chees tick branding */
+
+        #branding a {
+            text-decoration: none;
+        }
+
+        #branding .appName {
+            color: #fff;
+        }
+
+        #branding .chees { 
+            padding: 0.25em 0;
+            font-style: italic;
+            font-family: serif;
+            font-weight: 100;
+            font-size: 0.75em;
+            color: #363;
+        }
+
+        #branding {
+            float: right;
+            font-size: 2.25em;
+            font-weight: 900;    
+            padding-right: 0.25em;
+        }
+
+    /* links to other pages within tick */
+
+        #links {
+            text-align: left;
+            font-weight: bold;
+            margin-left: 2em;   
+            padding-top: 1em;
+            color: #484;
+            vertical-align: bottom;
+        }
+
+        #links a {
+            margin-top: 1em;
+            font-size: 1.25em;
+            /*color: #fff;*/
+            color: #363;
+            text-decoration: none;
+            padding: 0 0.5em;
+            margin-left: -0.25em;
+            margin-right: 0.25em;
+        }
+
+        #links a:hover {
+            color: white;
+        }
+
+    /* current logged in user details */
+
+        #login {
+            float: right;
+            margin-top: 0.25em;
+            padding-top: 0;  
+            padding-right: 1em;
+            margin-bottom: 1em;
+            color: #484;      
+            text-align: right;
+            font-size: 0.75em;
+        }
+
+        #login a {
+            color: #484;
+            text-decoration: none;
+        }
+
+        #login a:hover {
+            text-decoration: underline;
+        }
+
+    /* second bar area under title bar */
+    
+        #undertitle {
+            border-top: 1px solid #8a8;
+            height: 1px;
+            font-size: 1px;
+            background-color: #cdc;
+            border-bottom: 1px solid #ded;
+        }
+        
+        /* intelligent input */
+
+            /* the input row */
+
+                .ticklistCreationRow {
+                    background-color: #eee;    
+                    -moz-box-shadow: 0px 4px 4px 0px #aaa;    
+                    -webkit-box-shadow: 0px 4px 4px 0px #aaa;        
+                    box-shadow: 0px 4px 4px 0px #aaa;      
+                    padding-bottom: 0.5em;      
+                }
+
+                .ticklistCreation {
+                    font-size: 1em;
+                    background-color: #eee;
+                    padding: 0.25em;
+                    /*border-radius: 0.5em;*/
+                    margin: 0 2em 0;
+                }
+
+                .ticklistCreation > .inputWrapper {
+                    background-color: #fff;
+                    width: 20em;
+                    padding: 0 0.25em;
+                }
+                .ticklistCreation > .inputWrapper > input {
+                    font-size: 1.25em;
+                    width: 100%;
+                    margin: 2px 0;
+                }
+
+                .inputWrapper {
+                    border: 1px solid #ddd;
+                    padding: 0.25em 0 0.25em 0.2em;
+                }
+
+                .inputWrapper > input {
+                    border: none;
+                }
+
+            /* dialog that shows results */
+
+                .searchAndCreateDialog {
+                    margin-top: 0.5em;
+                    margin-bottom: 0.25em;
+                }
+
+                .searchAndCreateDialog input {
+                    font-size: 1em;
+                    margin-left: 0.25em;
+                }
+
+                .searchAndCreateDialog .loading {
+                    color: darkgrey;
+                }
+
+                .searchAndCreateDialog .dot {
+                    color: darkgrey;
+                }
+
+                /* each section that appears in the results dialog */
+
+                    .sectionTitle {
+                        padding: 0.5em 0 0.25em 0;
+                        font-size: 1.25em;
+                        font-weight: bold;
+                        color: #888;
+                    }
+
+                    .searchString {
+                        font-weight: bold;
+                    }
+                    
+                    .searchResult {
+                        border: 1px solid transparent;
+                        padding: 0.2em;
+                    }
+
+                    .selectedResult {
+                        border: 1px solid #ddd;
+                        background-color: #fff;
+                    }
+
+                /* special preview treatment for inside the results dialog */
+
+                    .setlistPreview {
+                        margin-left: -1.5em;
+                        margin-bottom: 0.5em;
+                        background-color: #fff;
+                        position: relative;
+                        padding: 0.5em;
+                        border: 1px solid #ddd;
+                    }
+
+                    .setlistPreview ul {
+                        margin: 0;
+                        padding: 0 0.5em 0 1.5em;
+                        list-style-type: disc;  
+                    }
+
+                    .setlistPreview .separator {
+                        border-top: 1px solid #ddd;
+                        margin: 0.5em 0.25em;    
+                    }
+
+                    .setlistPreviewDescription {
+                        padding: 0 0.5em;
+                    }
+
+/* footer area at bottom of page */
+
+    #bottom {
+        border-top: 1px dotted #9b9;
+        margin-top: 2em;
+        color: #9b9;
+        text-align: center;
+        font-size: 0.75em;
+    }
+
+/* centering of overall layout */
+
+    #centeredOuter {
+        text-align: center;
+        margin-left: 2em;
+        margin-right: 2em;
+        padding: 0;
+    }
+
+    #centeredInner {
+        text-align: left;
+    }
+
+    #centeredInner div.column {
+        float: left;
+        width: 11em;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 0 1em 2em;
+        margin: 0 0.5em;
+        -moz-box-shadow: 4px 4px 4px 0 #aaa;
+        -webkit-box-shadow: 4px 4px 4px 0 #aaa;
+        box-shadow: 4px 4px 4px 0 #aaa;        
+    }   
+
+    #centeredInner div.column ul {
+        list-style-position: inside;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    #centeredInner div.column ul li {
+        padding: 0.25em 0 0.25em 0;
+        margin: 0;
+        border-top: 1px solid #ddd;    
+    }
+
+/* for user, ticklist and setlist slips - the inline representations of each of these things */
+
+    span.slip {
+        display: inline-block;
+    }
+
+    .slip {
+        padding: 0.1em 0.5em 0.1em 0.5em;
+        margin: 0.2em 0.25em 0.25em;
+        /*margin-bottom: 0.5em;*/
+        -webkit-border-radius: 3px 3px 3px 3px;
+        -moz-border-radius: 3px 3px 3px 3px;    
+        border-radius: 3px 3px 3px 3px;
+        -moz-box-shadow: 1px 1px 2px 0 #aaa;
+        -webkit-box-shadow: 1px 1px 2px 0 #aaa;
+        box-shadow: 1px 1px 2px 0 #aaa;  
+        line-height: 1.75em;
+    }
+
+    .slip span {
+        margin-right: 0.25em;
+    }
+
+    .slip input {
+        font-size: 1em;
+    }
+
+    .slip input[type='button'] {
+        color: #444;
+        font-size: 0.8em;
+        border: none;
+        background-color: inherit;
+        -webkit-border-radius: 3px 3px 3px 3px;
+        -moz-border-radius: 3px 3px 3px 3px;    
+        border-radius: 3px 3px 3px 3px;    
+        padding: 0.1em 0.2em;
+        margin: 0 0.25em;
+    }
+
+    .slip input:hover {
+        background-color: #aaa;
+    }
+
+    .slip img {
+        vertical-align: middle;
+        margin-left: -0.3em;   
+        margin-right: 0.5em;
+        margin-top: -0.3em;
+    }
+
+    .slip a {
+        text-decoration: none;
+        /*line-height: 1.5em;*/
+    }
+
+    .slip a:hover {
+        text-decoration: underline;
+    }
+
+    span.user {
+        display: inline-block;
+    }
+
+    /* specific types of slips */
+
+        .tickuserSlip {
+            background-color: #e0f0e0;
+        }
+
+        .ticklistSlip {
+            background-color: #f0f0da;
+            background-image: url('icons/check_list_small.png');   
+            background-position: 0.2em 0.2em; 
+            background-repeat: no-repeat;    
+            padding-left: 2em;    
+        }
+
+        .ticklistSlip.bigSlip {
+            background-image: url('icons/check_list.png');   
+        }
+
+        .setlistSlip {
+            background-color: #eaeaf0;
+            background-image: url('icons/magic_wand_small.png');   
+            background-position: 0.2em 0.2em; 
+            background-repeat: no-repeat;    
+            padding-left: 2em;
+        }
+
+        .bigSlip {
+            font-size: 2em;
+            margin-top: 0.5em;  
+        }
+
+        .bigSlip input {
+            vertical-align: middle;
+            font-size: 0.75em;
+        }
+
+        .setlistSlip.bigSlip {
+            background-image: url('icons/magic_wand.png');   
+        }
+
+/* loading animation */
+
+    .loading {
+        float: left;
+        color: #cc8;
+        margin: 0.25em 1em 0;
+        font-weight: 900;
+    }
+
+    .dot {
+        margin-top: 0.25em;
+        margin-left: 0.3em;
+        width: 1em;
+        list-style-type: disc;
+        list-style-position: inside;
+        color: #cc8;
+        float: left;
+    }
+
+/* some actions available on pages for certain objects */
+
+    .objectActions {
+        border: 2px dashed #ddd;
+        padding: 0.25em;
+        margin: 0.25em;
+    }
+
+/* utility classes */
+
+    /* for divs that contain floats */
+
+        .containsFloats {
+            /*overflow: hidden;*/
+            width: 100%;
+            padding: 0px;
+            zoom: 1;
+        }
+
+        .containsFloats:before, .containsFloats:after {
+            content: "";
+            display: table;
+        }
+
+        .containsFloats:after {
+            clear: both;
+        }
+
+        .clearing {
+            overflow: hidden;
+            max-height: 0px;
+            height: 0px;
+            font-size: 0px;
+            clear: both;
+            padding: 0;
+            margin: 0;
+            line-height: 0;
+        }
+
+    /* utility class for preventing select of extraneous text */
+
+    .unselectable {
+       -moz-user-select: -moz-none;
+       -khtml-user-select: none;
+       -webkit-user-select: none;
+       user-select: none;
+    }
+
+
+/* for ticklist and setlist pages */
+/* ticklist.html */
+/* setlist.html */
+
+    /* the list is generated in the javascript and displayed in this element */
+    #output {
+        width: 45em;
+    }        
+
+    /* help section */
+    #help {
+        margin-top: 1em;
+    }
+
+    /* the row of buttons above the list which open up dialogs */
+
+        .dialogButtonsRow {
+            padding-top: 0.25em;
+            padding-bottom: 0.25em;
+            float: right;
+        }
+
+        .dialogButtonsRow > div {
+            float: right;
+            height: 1.5em;
+            margin-left: 0.25em;
+        }
+
+        .dialogButtonsRow > div:hover {
+            border-color: #777;
+        }
+
+        .dialogButtonsRow > div:active {
+            color: #000;
+            border-color: #000;
+        }
+
+        .dialogButtonsRow > div > input[type=button] {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0;
+            padding: 0em 0.5em 0 1.5em;
+            border: 1px solid transparent;
+            color: #777;
+            background-color: white;
+        }
+
+        .dialogButtonsRow > div > input[type=button]:hover {
+            border: 1px solid #ddd;
+        }
+
+        /* specific types of buttons */
+
+            .ticklistSaveButton {
+                background-image: url('icons/disk_small.png');   
+                background-position: 0.4em center; 
+                background-repeat: no-repeat;    
+            }
+
+            .setlistSaveButton {
+                background-image: url('icons/magic_wand_small.png');   
+                background-position: 0.4em center; 
+                background-repeat: no-repeat;    
+            }
+
+            .shareButton {
+                background-image: url('icons/two_people_small.png');   
+                background-position: 0.4em center; 
+                background-repeat: no-repeat;    
+            }
+
+        .dialogButtonsRow > div > input.activeDialog {
+            background-color: #ddd;
+            -moz-box-shadow: 4px 4px 4px 0 #aaa;        
+            -webkit-box-shadow: 4px 4px 4px 0 #aaa;       
+            box-shadow: 4px 4px 4px 0 #aaa;
+        }
+
+        .dialogButtonsRow > div > input.activeDialog:hover {
+            border: 1px solid #ddd;
+        }
+
+    /* dialog that shows up when the above buttons are clicked */
+
+        .dialog {
+            max-width: 30em;
+            font-size: 1.25em;
+            visibility: hidden;
+            background-color: white;
+            position: absolute;
+            border: 2px solid #ddd;
+            margin-top: -1px;
+            margin-right: -1px; 
+            color: #444;
+            padding: 1em 1em 1em;
+            z-index: 105;
+            -moz-box-shadow: 4px 4px 4px 0 #aaa;        
+            -webkit-box-shadow: 4px 4px 4px 0 #aaa;    
+            box-shadow: 4px 4px 4px 0 #aaa;    
+        }
+
+        .dialog input,select {
+            font-size: 0.8em;
+        }   
+
+        .dialog div {
+            margin-bottom: 0.5em;
+        }
+
+        .dialog h3 {
+            margin-top: 1em;
+        }
+
+        .dialog table {
+            margin: 1em 1em 1em 0em;
+        }
+
+        .dialog table th {
+            text-align: right;
+            vertical-align: top;
+            padding-top: 0.5em;
+            padding-right: 0.5em;
+        }
+
+        .dialog table td {
+            padding-top: 0.5em;
+            padding-left: 0.5em;
+        }
+
+        .dialog .textInput {
+            width: 100%;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        .dialog .textArea {
+            border: 1px solid #ddd;
+            font-family: sans-serif;
+            width: 100%;
+            height: 10em;
+            font-size: 1em;    
+        }
+
+        .dialog .setlistPreview {
+            border: 1px solid #ddd;
+            width: 100%;  
+            font-size: 0.75em;  
+        }
+
+        .dialog .setlistPreview > ul {
+            margin: 0.25em;
+        }
+
+        .dialog .setlistPreview ul {
+            margin-left: 1em;
+            padding-left: 0.5em;
+        }
+
+        .dialog .listTaskControlButton {
+            margin-right: 0.25em;
+            font-size: 1em;
+        }
+
+    /* dialog row dialog inputs */
+
+        .validInput {
+            color: #484;
+        }
+
+        .invalidInput {
+            color: #C44;
+        }
+
+        .inactive {
+            color: #aaa;
+        }
+
+    /* dialog for finding setlists */
+
+        .findDialog {
+            background-color: white;
+            border: 1px solid #eed;
+            margin: 0.5em 1px;
+            color: #444;
+            padding: 0.25em;
+            font-size: 0.8em;
+        }
+
+
+        .findDialog .separator {
+            border-top: 1px solid #ddd;
+            margin: 0 0 1em;
+        }
+
+        .findItem {
+            margin-bottom: 0.25em;
+            padding: 0.25em 0.25em 0.25em 0.5em;
+        }
+
+        .findItemSelected {
+            background-color: #ded;
+            color: #484;
+        }
+
+        .findItem:hover {
+            background-color: #ded;
+            color: #484;
+        }
+
+        .findItemAdd {
+            float: right;
+            padding-left: 1.25em;
+            margin-left: 0.25em;
+            border: none;
+            background-color: inherit;
+            background-image: url('icons/script_add.png');   
+            background-position: left center;   
+            background-repeat: no-repeat;  
+        }
+
+        .findItemView {
+            float: right;
+            padding-left: 1.25em;
+            margin-left: 0.25em;
+            border: none;
+            background-color: inherit;
+            background-image: url('icons/script_go.png');   
+            background-position: left center;   
+            background-repeat: no-repeat;  
+        }
+
+        /* preview of setlist */
+
+            .findPreview {
+                margin-top: 0.5em;
+                background-color: #fff;
+                position: absolute;
+                border: 2px solid #ddd;
+                width: 20em;
+                padding: 1em 0.5em 0.5em;
+                box-shadow: 4px 4px 4px 0 #aaa;
+                -moz-box-shadow: 4px 4px 4px 0 #aaa;
+                -webkit-box-shadow: 4px 4px 4px 0 #aaa;    
+            }
+
+            .findPreview ul {
+                padding-left: 1.5em;
+                list-style-type: disc;  
+            }
+
+            .findPreview .separator {
+                border-top: 1px solid #ddd;
+                margin: 1em 0.25em 0em;    
+            }
+
+            .findPreviewDescription {
+                padding: 0 0.5em;
+            }
+
+
+    /* tasklist */
+
+        .task { 
+            margin-top: 0em;    
+            padding: 0 0 0 0; 
+            border: 1px solid transparent;
+            background-color: transparent;
+            margin-right: -1px;
+        }    
+
+        /* hack for transparent borders in IE6 */
+        *html .task {
+            border-color: pink;
+            filter: chroma(color=pink);
+            width:100%;
+        }
+
+    /* the root task, which contains all other tasks, has some special properties */
+
+        /* root task is a child of this */
+
+            .listRootElement {
+                margin-top: 0.5em;
+                padding: 0.5em 0.5em 0.75em;
+                background-color: #ffc;
+                border: 1px solid #ddd;
+                -moz-box-shadow: 4px 4px 4px 0px #aaa;    
+                -webkit-box-shadow: 4px 4px 4px 0px #aaa;        
+                box-shadow: 4px 4px 4px 0px #aaa;            
+            }
+
+        .roottask ul {
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .roottask {
+            padding: 0;
+            margin: 0;
+            margin-top: 0.25em;
+        }
+
+        .roottask > .sublistContainer > .sublist > .dragTarget {
+            vertical-align: middle;
+            color: #cc8;
+            border: 2px dashed transparent;
+            margin-top: 0.75em; 
+            margin-bottom: 0.75em;
+            font-weight: bold;
+            padding: 0.25em 0.5em;
+            height: auto;
+            text-align: center;
+        }
+
+        .roottask > .sublistContainer > .sublist > .dragTarget:hover {
+            border: 2px dashed #cc8;
+        }
+
+        .roottask > .sublistContainer > .sublist > .dragTarget.dragOver {
+            border: 2px dashed #cc8;
+        }
+
+        .roottask .task .sublistContainer {
+            margin-left: 0.7em;
+        }
+
+        .roottask .task .sublist {
+            padding-left: 0.3em;
+            border-left: 1px solid #ddd;
+        }
+        
+        .rootTask input[type=button] {
+            margin: 0px;
+        }        
+
+    /* components of each task */
+
+        .taskContainer {
+            margin-bottom: 0px;
+        }
+
+        .taskMain {
+            padding: 2px;
+            margin-top: -4px;
+            margin-left: 1.2em;
+            margin-right: 18.6em;
+            border: 1px solid transparent;
+        }
+
+        .tasktext {
+            padding-left: 0.5em;
+            margin: 1px;
+            border: 1px solid transparent;
+            /* word wrap*/
+            white-space: pre-wrap;      /* CSS3 */   
+            white-space: -moz-pre-wrap; /* Firefox */    
+            white-space: -pre-wrap;     /* Opera <7 */   
+            white-space: -o-pre-wrap;   /* Opera 7 */    
+            word-wrap: break-word;      /* IE */    
+        }
+
+        .tasktext[contenteditable=true] {
+            border: 1px solid #eed;
+            background-color: white;
+        }
+
+        .taskeditcontainer {
+            margin: 1px;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            border: 1px solid #eed;
+            background-color: white;    
+        }
+
+        .taskedit {
+            padding: 0;
+            margin: 0;
+            margin-left: -1px;
+            border: 0;
+            font-size: 1em;
+            width: 100%;
+        }
+
+        .taskcontrol {
+            float: left;
+        }
+
+        .edittext {
+            float: right;
+        }
+
+        .taskBody {
+            padding: 3px 1px 0px 1px;
+        }
+
+        .taskBodyBullet {
+            margin-top: 1px;
+            float: left;
+            cursor: move;
+        }
+
+        .taskBodyBullet > li {
+            list-style-type: disc;
+            list-style-position: inside;
+            margin-left: 0.5em;
+            cursor: move;
+            float: left;
+        }
+
+        /* check box for each task */
+        
+            .checkbox {
+                margin: 0 0.25em 0 0.75em;
+                width: 1em;
+                float: right;
+                display: inline;
+            }
+
+            .checkBoxControl {
+                margin: 0 auto;
+                padding: 0 0.5em;
+                float: right;
+                background-color: #fff;
+                border: 1px solid #eed;
+            }
+
+            .checkedCheckBox {
+                background-color: #484;
+                background-image: url('tick.png');   
+                background-position: right bottom; 
+            }
+
+        /* notes, displayed between item text and checkbox */
+
+            .note {
+                margin: 0 0.25em 0 0.75em;
+                float: right;
+                background-color: inherit;
+                border: none;
+                padding: 0;
+                line-height: 0.8em;
+            }
+
+            .note textarea {
+                width: 19em;
+                min-width: 19em;
+                max-width: 19em;
+                height: 1.2em;
+                min-height: 1.2em;
+                
+                resize: none;
+                overflow: hidden;
+                font-size: 0.8em;
+                margin: 0;
+                padding: 2px 0.25em 2px 0.5em;
+                font-family: sans-serif;
+                font-weight: normal;
+                background-color: #fff;
+                border: 1px solid #eed;      
+                color: #000;   
+            } 
+
+            .note textarea.empty {
+                background-color: inherit;
+                color: #cc8;    
+            }
+
+            .note textarea:focus {
+                background-color: #fff;
+                border: 1px solid #eed;      
+                color: #000;    
+            }
+
+        /* buttons for actions to be performed on tasks */
+
+            .illistriousButton {
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                margin: 0;
+                padding: 0em 0.5em;
+                border: 1px solid transparent;
+                color: transparent;
+                background-color: transparent;
+                background-position: center center;   
+                background-repeat: no-repeat;      
+                height: 28px;
+                width: 28px
+            }
+
+            .illistriousButton:hover {
+                background-color: #eee;
+            }
+
+            .illistriousButton:active {
+                background-color: #aaa;
+            }
+
+            .taskEditButton {
+                background-image: url('icons/pencil_small.png');   
+            }
+
+            .taskLeftButton {
+                background-image: url('icons/left_small.png');   
+            }
+
+            .taskRightButton {
+                background-image: url('icons/right_small.png');   
+            }
+
+            .taskUpButton {
+                background-image: url('icons/up_small.png');   
+            }
+
+            .taskDownButton {
+                background-image: url('icons/down_small.png');   
+            }
+
+            .taskCancelButton {
+                background-image: url('icons/cancel_small.png');   
+            }
+
+            .taskDeleteButton {
+                background-image: url('icons/delete_small.png');   
+            }
+
+            .taskFindButton {
+                background-image: url('icons/magnifying_glass_small.png');   
+            }
+
+            .taskDoneButton {
+                background-image: url('icons/done_small.png');   
+            }
+
+    /* modifiers for tasks */
+
+        /* if the task contains subtasks, it will be a grouping task */
+
+            .groupingTask {
+                font-weight: bold;
+            }
+
+            .groupingTask > .taskMain > .taskeditcontainer > .taskedit {
+                font-weight: bold;
+            }
+
+        /* collapsed tasks, with their subtasks hidden */
+        
+            .collapsedTask > .sublistContainer {
+                display: none;
+            }
+
+            .collapsedTask > div.containsFloats:after {
+                font-size: 0.75em;
+                margin-left: 2.5em;
+                content: "(sublist hidden)"
+                color: #cc8;
+                margin-bottom: 1px;
+            }
+
+            .collapsedTask > div.containsFloats > div.taskBody > div.taskBodyBullet > li {
+                list-style-type: circle;
+            }        
+
+        /* style sheets for selected tasks */
+
+            .selectedtask {
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+                border: 1px solid #484;    
+            }
+
+            /* hack for transparent borders in IE6 */
+            *html .selectedtask {
+                border-color: #484;
+                filter: chroma(color=pink);
+                width:100%;
+                margin-right: 0px;
+            }
+
+        /* make completed tasks less outstanding */
+        
+            .completedTask {
+                color: #cc8;
+            }
+
+    /* drag and drop */
+
+        /* target element for dragging and dropping */
+        
+            .dragTarget {
+                height: 10px;
+                margin: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                z-index: -1;
+            }
+
+            .dragTarget:last-child:not(.addTarget) {
+                height: 0px;
+            }
+
+            .dragTarget:hover:not(:last-child) {
+                border: 2px dashed #cc8;
+                margin-top: -2px;
+                margin-bottom: -2px;
+            }
+
+        /* target element for clicking to add a new item */
+
+            .addTarget:hover {
+                border: 2px dashed #cc8;
+                margin-top: -2px;
+                margin-bottom: -2px;
+            }
+
+        /* added to item while dragging */
+        
+            .dragtask {
+                width: 35em;
+                opacity:0.3;
+                background-color: #ffc;    
+                filter:alpha(opacity=30);
+            }
+
+            .dragtask ul {
+                margin: 0em;
+            }
+
+        /* when hovering over while dragging */
+        
+            .dragOver {
+                border: 2px dashed #cc8;
+                margin-top: -2px;
+                margin-bottom: -2px;
+            }
+
+            .dragTarget:last-child:not(.addTarget).dragOver {
+                height: 10px;
+            }
+
+            /* for ie6 */
+            *html .dragOver {
+                border-color: #484;
+                filter: chroma(color=pink);
+                width:100%;
+            }
+
+/* for list of lists pages */
+/* ticklists.html */
+/* setlists.html */
+
+    .listList {
+        padding: 0.5em 0em;
+        /*background-color: #ffc;
+        border: 1px solid #ddd;       */
+    }
+
+    .listList form {
+        margin: 0;
+    }
+
+    .listListRows {
+        
+    }
+
+    .listList .separator {
+        border-top: 1px solid #ddd;
+        margin: 0.5em;
+    }
+
+    .listListCol {
+        width: 10em;
+        float: right;
+        text-align: left;
+        overflow: hidden;
+    }
+
+
+    /*.listCreationDate {
+        width: 10em;
+        float: right;
+        text-align: left;
+    }*/
+
+    .listActions {
+        margin-left: 0.5em;
+        padding-right: 1em;
+        width: 8em;
+        float: right;
+        text-align: left;
+    }
+
+    .listName {
+        padding-left: 1em;
+        text-align: left;
+        float: left;
+        overflow: hidden;
+    }
+
+    .listInfo {
+        padding-left: 0.5em;
+    }
+
+    /* action buttons for each entry */
+
+        .listList .listActionButton {
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0em 0.5em;
+            border: 1px solid transparent;
+            color: transparent;
+            background-color: #fff;
+            background-position: center center;   
+            background-repeat: no-repeat;      
+            height: 28px;
+            width: 28px
+        }
+
+
+        .deleteListButton {
+            background-image: url('icons/delete.png');   
+        }
+
+        .completeListButton {
+            background-image: url('icons/done.png');   
+        }
+
+        .favouriteListButton {
+            background-image: url('icons/filled_star.png');   
+        }
+
+        .nonFavouriteListButton {
+            background-image: url('icons/empty_star.png');   
+        }
+
+        .scheduleListButton {
+            background-image: url('icons/calendar.png');   
+        }
+
+        .likeListButton {
+            background-image: url('icons/thumbs_up.png');   
+        }
+
+        .listList .listActionButton:hover {
+            background-color: #eee;
+        }
+
+        .listList .listActionButton:active {
+            background-color: #aaa;
+        }
+
+        .listActions form {
+            display: inline;
+        }
+
+    /* messages from the last action */
+
+        #messages {
+            margin: 0 1em;
+            float: right;
+            width: 20em;
+            font-size: 0.75em;
+            max-height: 10em;
+            overflow: auto;
+        }
+
+        #messages div {
+            border: 1px solid #ddd;
+            padding: 0.5em 1em;
+            margin: 0.25em;
+            color: #444;
+        }
+
+        #messages .bad {
+            border: 1px solid #844;
+            background-color: #DCC;
+        }
+
+        #messages .good {
+            border: 1px solid #484;
+            background-color: #CDC;
+        }
+
+        #messages .neutral {
+            border: 1px solid #AA4;
+            background-color: #EEC;
+        }
+
+/* profile page specific */
+/* profile.html */
+
+    table.profileTable {
+    }
+
+    .profileTable td {
+        vertical-align: middle;
+    }
+
+    table.profileTable td .user {
+        margin-bottom: 0.5em
+    }
+
+    .profileTable th {
+        text-align: right;
+        padding: 0.5em 2em 0.5em 1em;
+        color: #444;      
+        vertical-align: top;
+    }
+
+    .userCard {
+        width: 45em;
+        border: 1px solid #aaa;
+        padding: 1em;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        box-shadow: 4px 4px 4px 0 #aaa;
+        -moz-box-shadow: 4px 4px 4px 0 #aaa;
+        -webkit-box-shadow: 4px 4px 4px 0 #aaa;
+        margin-bottom: 2em;
+    }
+
+    .userCard > .bigGravatar {
+        float: left;
+        margin-right: 1em;
+        width: 10em;
+        text-align: center;
+    }
+
+
+    .userCard > .bigGravatar > a {
+        font-size: 0.5em;
+    }
+
+    .userCard > .bigGravatar > img {
+        box-shadow: 2px 2px 2px 0 #aaa;
+        -moz-box-shadow: 2px 2px 2px 0 #aaa;
+        -webkit-box-shadow: 2px 2px 2px 0 #aaa;    
+    }
+
+    .userCard table {
+    }
+
+    .userCard table th {
+        vertical-align: top;
+        text-align: right;
+        color: #444;    
+        width: 7em;  
+        padding: 0 1em 0.5em 0;
+        line-height: 1.5em;    
+    }
+
+    .userCard table td {
+        padding: 0 0.5em 0.5em 1em;
+        vertical-align: top;
+        line-height: 1.5em;
+    }
+    
+    .userCard table td span {
+        margin-right: 0.5em;
+    }
+
+    .userCard table tr input[type=button][value=change] {
+        visibility: hidden;
+    }
+
+    .userCard table tr:hover input[type=button][value=change] {
+        visibility: visible;
+    }
+
+
