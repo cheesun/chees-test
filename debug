@@ -6,3 +6,5 @@ js/closure-library/closure/bin/build/closurebuilder.py \
     > tick.js \
 && cp tick.js gae/tick/static \
 && echo 'copied tick.js to chees-test'
+cp gae/tick/static/tick_uncompressed.css gae/tick/static/tick.css
+&& echo 'copied tick_uncompressed.css to tick.css'

@@ -1,4 +1,3 @@
-python cssmin.py < gae/tick/static/tick_uncompressed.css > gae/tick/static/tick.css
 cd gae && ./update.sh
 date
 
