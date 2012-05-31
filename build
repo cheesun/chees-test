@@ -8,6 +8,6 @@ js/closure-library/closure/bin/build/closurebuilder.py \
     > tick.js \
 && mv tick.js gae/tick/static \
 && echo 'copied tick.js to chees-test'
-python cssmin.py < gae/tick/static/tick_uncompressed.css > gae/tick/static/tick.css 
+python cssmin.py < gae/tick/static/tick_uncompressed.css > gae/tick/static/tick.css \
 && echo 'compressed tick_uncompressed.css to tick.css'
 

@@ -1,0 +1,3 @@
+*.pyc
+gae/tick/static/tick.css
+gae/tick/static/tick.js
