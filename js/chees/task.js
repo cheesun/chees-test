@@ -603,14 +603,7 @@ chees.tick.Task.prototype.del = function(dont_select) {
     if (!dont_select) {
         if (this.prev) this.taskList.selectUp();
         else if (this.next) this.taskList.selectDown();
-        else this.taskList.selectUp(); /*
-        var prev = this.traversePrev();
-        if (prev) {
-            this.taskList.selectTask(prev,true);
-            alert('here: ' + prev);
-        }
-        else if (this.next) this.taskList.selectTask(this.next,true);    
-        else this.taskList.selectTask(this.parent); */
+        else this.taskList.selectUp();
     }
     this.remove(); 
     this.reportChange();

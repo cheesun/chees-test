@@ -524,13 +524,6 @@ chees.tick.List.prototype.selectRight = function () {
 
 chees.tick.List.prototype.deleteTask = function () {
     if (this.currentSelection == this.rootTask) return;
-    /*var prev = this.currentSelection.traversePrev();
-    var next = this.currentSelection.next;
-    this.currentSelection.remove();
-    //var next = prev.traverseNext();
-    if (next) this.selectTask(next,true);
-    else if (prev) this.selectTask(prev,true);
-    else this.selectTask(this.rootTask,true); */
     this.currentSelection.del();  
     this.reportChange(); 
 }
