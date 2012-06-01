@@ -563,7 +563,7 @@ chees.tick.Task.prototype.revert = function () {
     if (!this.editing) return;
     this.editing = false;
     if (!this.updated) { // this was a new task and the user cancelled creation
-        this.del(false); 
+        this.del(); 
         return;
     }
     this.taskList.setlistFindObject.removeLastAdded();
@@ -600,10 +600,17 @@ chees.tick.Task.prototype.find = function() {
 
 chees.tick.Task.prototype.del = function(dont_select) {
     goog.dom.classes.add(this.dom['edittext'],'hidden');
-    if (dont_select) {
-        if (this.next) this.taskList.selectTask(this.next,true);
-        else if (this.prev) this.taskList.selectTask(this.prev,true);
-        else if (this.parent) this.taskList.selectTask(this.parent,true);
+    if (!dont_select) {
+        if (this.prev) this.taskList.selectUp();
+        else if (this.next) this.taskList.selectDown();
+        else this.taskList.selectUp(); /*
+        var prev = this.traversePrev();
+        if (prev) {
+            this.taskList.selectTask(prev,true);
+            alert('here: ' + prev);
+        }
+        else if (this.next) this.taskList.selectTask(this.next,true);    
+        else this.taskList.selectTask(this.parent); */
     }
     this.remove(); 
     this.reportChange();
