@@ -325,6 +325,7 @@ chees.tick.List.prototype.initDrag = function () {
     function dragStartHandler(e) {
         if(self.currentSelection != e.dragSourceItem.data)
             self.selectTask(e.dragSourceItem.data);
+        self.currentSelection.done();
     }
 
     goog.events.listen(this.dragGroup,'dragstart',dragStartHandler);     

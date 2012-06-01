@@ -100,7 +100,15 @@ chees.tick.Dialog = function (button,template,hover) {
     
 }
 
-chees.tick.Dialog.prototype.toggle = function () {
+chees.tick.Dialog.prototype.toggle = function (show) {
     if (this.popup.isVisible()) this.popup.setVisible(false);
     else this.popup.setVisible(true);  
+}
+
+chees.tick.Dialog.prototype.show = function() {
+    this.popup.setVisible(true);
+}
+
+chees.tick.Dialog.prototype.hide = function() {
+    this.popup.setVisible(false);
 }
