@@ -178,6 +178,9 @@ chees.tick.Task = function(id,text,virtual,locked) {
             e.preventDefault(); 
             e.stopPropagation(); 
             if (!self.virtual && self.first == null) return; // only allow this if there are already children
+            if (self.taskList.currentSelection && self.taskList.currentSelection != self.taskList.rootTask) {
+				self.taskList.currentSelection.deselect();
+				}
             var newTask = self.taskList.newTask(); 
             newTask.insertFirst(self); 
             self.taskList.selectTask(newTask);

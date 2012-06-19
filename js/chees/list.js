@@ -466,16 +466,20 @@ chees.tick.List.prototype.newTask = function (text) {
 }
 
 chees.tick.List.prototype.createTaskAfter = function () {
+    var currentTask = this.currentSelection;
+    currentTask.deselect();
     var newTask = this.newTask(); 
-    if (this.currentSelection == this.rootTask) newTask.insertFirst(this.rootTask);    
-    else newTask.insertAfter(this.currentSelection); 
+    if (currentTask == this.rootTask) newTask.insertFirst(this.rootTask);    
+    else newTask.insertAfter(currentTask); 
     this.selectTask(newTask);
     newTask.edit();    
 }
 
 chees.tick.List.prototype.createTaskUnder = function () {
+    var currentTask = this.currentSelection;
+    currentTask.deselect();
     var newTask = this.newTask(); 
-    newTask.insertFirst(this.currentSelection); 
+    newTask.insertFirst(currentTask); 
     this.selectTask(newTask);
     newTask.edit();    
 }
