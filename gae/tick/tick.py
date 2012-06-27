@@ -24,8 +24,7 @@ class TickApiHandler(webapp.RequestHandler):
 
     def __init__(self,*args,**kwargs):
         super(TickApiHandler,self).__init__(*args,**kwargs)
-        self.current_user = models.TickUser.get_current_user()
-        
+        self.current_user = models.TickUser.get_current_user()       
         def wrap_get_post(funct):
             def newfunct(*args,**kwargs):
                 try:               
@@ -57,6 +56,10 @@ class TickPageHandler(webapp.RequestHandler):
         self.current_user = None        
         def wrap_get_post(funct):
             def newfunct(*args,**kwargs):
+                user_agent = self.request.headers['User-Agent']
+                if 'MSIE 5' in user_agent or 'MSIE 6' in user_agent or 'MSIE 7' in user_agent:
+                    self.output('msie.html')
+                    return
                 if users.get_current_user():
                     try:
                         self.current_user = models.TickUser.get_or_create() #models.TickUser.get_current_user() 
