@@ -46,17 +46,17 @@
                                     </div>
                                     <div title='setlistfindcontainer'></div>
                                     <div title='taskcontrol' class='taskcontrol hidden'>
-                                        <input class='illistriousButton taskEditButton' title='editbutton' type='button' value=''/>
-                                        <input class='illistriousButton taskUpButton' title='upbutton' type='button' value=''/>
-                                        <input class='illistriousButton taskDownButton' title='downbutton' type='button' value=''/>
-                                        <input class='illistriousButton taskLeftButton' title='leftbutton' type='button' value=''/>
-                                        <input class='illistriousButton taskRightButton' title='rightbutton' type='button' value=''/>
+                                        <input class='illistriousButton taskEditButton' title='editbutton[edit]' type='button' value=''/>
+                                        <input class='illistriousButton taskUpButton' title='upbutton[up]' type='button' value=''/>
+                                        <input class='illistriousButton taskDownButton' title='downbutton[down]' type='button' value=''/>
+                                        <input class='illistriousButton taskLeftButton' title='leftbutton[left]' type='button' value=''/>
+                                        <input class='illistriousButton taskRightButton' title='rightbutton[right]' type='button' value=''/>
                                     </div>                                
                                     <div title='edittext' class='edittext hidden'>
-                                        <input class='illistriousButton taskDoneButton' title='edittextdone' type='button' value=''/>
-                                        <input class='illistriousButton taskCancelButton' title='edittextcancel' type='button' value=''/>
-                                        <input class='illistriousButton taskFindButton' title='edittextfind' type='button' value=''/>
-                                        <input class='illistriousButton taskDeleteButton' title='edittextdelete' type='button' value=''/>
+                                        <input class='illistriousButton taskDoneButton' title='edittextdone[done]' type='button' value=''/>
+                                        <input class='illistriousButton taskCancelButton' title='edittextcancel[cancel]' type='button' value=''/>
+                                        <input class='illistriousButton taskFindButton' title='edittextfind[find]' type='button' value=''/>
+                                        <input class='illistriousButton taskDeleteButton' title='edittextdelete[delete]' type='button' value=''/>
                                     </div>
                                 </div>                                
                                 <div class='clearing unselectable' >&nbsp;</div>
