@@ -14,8 +14,15 @@
 
     </head>  
 
-    <body>
-
+    <body id="body">
+        <div id="notifications-container">
+            <div id="notifications">
+                <div id="notifications-close">X</div> 
+                <div id="notifications-text">
+                    <div>Notifications from Tick are shown here, click the [X] to acknowledge and close.</div>
+                </div>
+            </div>
+        </div>
         <div id="overlay" style="visibility: hidden">
         </div>
        
@@ -132,13 +139,7 @@
             </div>
         </div>
        
-        {% if messages %}
-        <div id="messages">
-        {% for m in messages %}
-            <div class="{{m.type}}">{{m.text}}</div>
-        {% endfor %}
-        </div>
-        {% endif %}
+
 
 
         
@@ -162,6 +163,11 @@
 
 
         <script type="text/javascript">
+            var notifier = new chees.tick.Notifications("notifications-container", "notifications-text", "notifications-close", 60000);
+            chees.tick.GlobalNotify.register(notifier);
+            {% for m in messages %}
+                chees.tick.GlobalNotify.publish("{{m.text}}","{{m.type}}");
+            {% endfor %}
             var sac = new chees.tick.SearchAndCreateDialog("searchAndCreate","searchAndCreateDialog","template_listsearchandcreate");
         </script>
         {% block final %}

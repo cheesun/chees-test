@@ -64,7 +64,8 @@ chees.tick.Save.prototype.checkServerChange = function () {
                     self.lastSaved = null;
                     if (self.autosave) self.toggleAutoSave();           
                     this.failed = true; 
-                    alert('list has changed on server, please refresh');
+                    //alert('list has changed on server, please refresh');
+                    chees.tick.GlobalNotify.publish('list has changed on server, please refresh','bad');
                 }
             }
         }
@@ -207,14 +208,15 @@ chees.tick.Save.prototype.callback = function (event,state,time) {
         this.version = parseInt(event.target.getResponseText());            
     } else {
         if (this.autosave) this.toggleAutoSave();
-        var msg = 'save at ' + time.toUsTimeString() + ' failed.';
+        var msg = 'Save at ' + time.toUsTimeString() + ' failed.';
         this.dialog.dom['saveMessage'].innerHTML = msg;
         goog.dom.classes.remove(this.dialog.dom['saveMessage'],'validInput');        
         goog.dom.classes.add(this.dialog.dom['saveMessage'],'invalidInput');           
         var text = event.target.getResponseText();
         this.dialog.dom['saveDetails'].innerHTML = text;
         this.failed = true;
-        alert(msg + ' Please check details in the save menu above.');
+        //alert(msg + ' Please check details in the save menu above.');
+        chees.tick.GlobalNotify.publish(msg + 'Please check details in the save menu.');
         this.dialog.show();
     }
     this.saving = false;

@@ -523,7 +523,7 @@ class ListSetLists(TickPageHandler):
             try:
                 id = int(self.request.get('id'))            
                 target = models.SetList.delete_setlist(id)
-                models.Activity.create('<actor>|favourited|<target>',target=target)
+                models.Activity.create('<actor>|deleted|<target>',target=target)
                 return self.compose([Message('succesfully deleted "%s"'%name,'good')])
             except Exception,e:
                 return self.compose([Message('unable to delete "%s": %s'%(name,e),'bad')])               

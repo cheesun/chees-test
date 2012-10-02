@@ -36,7 +36,8 @@
                                     <div class='checkBoxControl' title='checkBoxControl'>&nbsp;</div>
                                 </div>
                                 <div class='note' title='noteContainer'>
-                                    <textarea title='noteControl' class='empty'>click here to add notes...</textarea>
+                                    <div title='noteDisplay' class='noteDisplay empty'>click here to add notes...</div>
+                                    <textarea title='noteControl' class='empty hidden'></textarea>
                                 </div>
                                 <div title='taskbullet' class='taskBodyBullet'><li title='taskbulletli'>&nbsp;</li></div>
                                 <div class='taskMain'>

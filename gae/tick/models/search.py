@@ -499,7 +499,6 @@ class Searchable(object): #object):
 
     def indexed_ordinal_changed(self):
         """updates the ordinal on the index entry"""
-        logging.warning('why not here')             
         if not self.INDEX_ORDERING_FUNCT:
             return
         ordinal = self.INDEX_ORDERING_FUNCT()

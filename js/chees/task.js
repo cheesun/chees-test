@@ -154,7 +154,7 @@ chees.tick.Task = function(id,text,virtual,locked) {
             this.keyHandler,
             goog.events.KeyHandler.EventType.KEY,
             function (e) {
-                alert('bubbled here first'); 
+                //alert('bubbled here first'); 
                 if (self.editing) { e.stopPropagation(); }
             },
             true
@@ -179,8 +179,8 @@ chees.tick.Task = function(id,text,virtual,locked) {
             e.stopPropagation(); 
             if (!self.virtual && self.first == null) return; // only allow this if there are already children
             if (self.taskList.currentSelection && self.taskList.currentSelection != self.taskList.rootTask) {
-				self.taskList.currentSelection.deselect();
-				}
+                self.taskList.currentSelection.deselect();
+                }
             var newTask = self.taskList.newTask(); 
             newTask.insertFirst(self); 
             self.taskList.selectTask(newTask);
@@ -341,6 +341,7 @@ chees.tick.Task.prototype.setText = function (text,esc) {
     else processed = text;
     this.text = text;
     this.updated = true;
+    processed = chees.tick.tools.augmentLinks(processed);
     if(!this.virtual) this.dom['tasktext'].innerHTML = processed;
 }
 
@@ -585,7 +586,7 @@ chees.tick.Task.prototype.done = function () {
         return;
         }
     this.editing = false;
-    this.taskList.setlistFindObject.confirmUsage();  
+    var used_setlist = this.taskList.setlistFindObject.confirmUsage();  
     this.taskList.setlistFindObject.reset();  
     goog.dom.classes.add(this.dom['edittext'],'hidden');
     if (this.selected) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');    
@@ -594,6 +595,25 @@ chees.tick.Task.prototype.done = function () {
     this.setText(this.dom['taskedit'].value);
 
     this.reportChange();
+    
+    // encourage the user to try the 'setlistfind' functionality
+    if (!used_setlist && this.first === null) {
+        var query = this.dom['taskedit'].value;
+        this.taskList.setlistFindObject.direct(query,
+            function(event) {
+                if (event.target.getStatus() == 200) {
+                    var text = event.target.getResponseText();
+                    var returned = goog.json.parse(text);
+                    var results = returned['results'];
+                    var message = 'Did you know there are ' + results.length + ' setlists that match the text "' + query + '"? You can click the pencil (edit) and then the magnifying glass (find) to see their details and use them in your list.';
+                    if (results.length == 1)
+                        message = 'Did you know there is ' + results.length + ' setlist that match the text "' + query + '"? You can click the pencil (edit) and then the magnifying glass (find) to see its details and use it in your list.';
+                    if (results.length > 0) 
+                        chees.tick.GlobalNotify.publish(message);
+                } 
+            }
+        )        
+    }
 }
 
 chees.tick.Task.prototype.find = function() {
@@ -602,6 +622,7 @@ chees.tick.Task.prototype.find = function() {
 }
 
 chees.tick.Task.prototype.del = function(dont_select) {
+    this.editing = false;
     goog.dom.classes.add(this.dom['edittext'],'hidden');
     if (!dont_select) {
         if (this.prev) this.taskList.selectUp();

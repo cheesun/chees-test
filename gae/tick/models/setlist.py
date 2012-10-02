@@ -117,13 +117,14 @@ class SetList(Searchable, Rated, Permissioned, Audited):
         existing_list = cls.get_by_id(id)
         if not existing_list:
             raise Exception('setlist does not exist')
-        if existing_list.can_edit():
+        if not existing_list.can_edit():
             raise Exception('you are not allowed to delete this setlist')
         if existing_list.deleted:
             raise Exception('setlist already deleted')        
         existing_list.deleted = True
         existing_list.put()
         existing_list.enqueue_deindexing(url='/tick/tasks/searchdeindexing')
+        return existing_list
         
 '''
 class TickSetTask(db.Model):

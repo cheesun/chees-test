@@ -173,7 +173,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         
         # change tasks for this list
         for i in inserts:
-            logging.warning(l.next_task_id)
+            #logging.warning(l.next_task_id)
             t = TickTask.create_task(l,i)
             total += 1
             if 'complete' in i and i['complete'] is True:

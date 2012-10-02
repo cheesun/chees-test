@@ -86,9 +86,12 @@ chees.tick.SetlistSave.prototype.pickRadio = function(list) {
 
 chees.tick.SetlistSave.prototype.callback = function (event) {
     if (event.target.getStatus() == 200) {
-        alert('save successful: ' + event.target.getResponseText());
+        //alert('save successful: ' + event.target.getResponseText());
+        chees.tick.GlobalNotify.publish('Setlist save successful: ' + event.target.getResponseText(),'good');
+        this.dialog.hide();
     } else {
-        alert('save failed: ' + event.target.getResponseText());
+        //alert('save failed: ' + event.target.getResponseText());
+        chees.tick.GlobalNotify.publish('Setlist save failed: ' + event.target.getResponseText(),'bad');
     }
 }
 
@@ -133,7 +136,8 @@ chees.tick.SetlistSave.prototype.save = function () {
     var data = this.getData();
     
     if (!this.validateInputs(data)) {
-        alert ('please fill in all fields');        
+        //alert ('please fill in all fields');        
+        chees.tick.GlobalNotify.publish('please fill in all fields','bad');
         return false;
     }
     

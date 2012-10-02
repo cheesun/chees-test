@@ -6,12 +6,18 @@
     html {
         overflow: -moz-scrollbars-vertical; 
         overflow-y: scroll;
+        background-color: #595;
     }
 
     body {
-        padding: 0;
+        padding: 0 0 5em;
         margin: 0;
         font-family: sans-serif;
+        background-color: white;
+        -webkit-box-shadow: 0 5px 10px -2px black;
+        -moz-box-shadow:    0 5px 10px -2px black;
+        box-shadow:         0 5px 10px -2px black;
+        margin-bottom: 10px;        
     }
 
     *:focus {
@@ -28,6 +34,60 @@
     }
 
 /* elements that appear in the header section of each page */
+
+    /* notifications */
+    #notifications-container {
+        display: none; 
+        position: fixed;
+        z-index: 6001;
+        top: 0;
+        left: 0;
+        right: 0;    
+        font-size:0.9em;
+    }
+    
+    #notifications {
+        background: #fde073;
+        text-align: center;
+        overflow: hidden; 
+        -webkit-box-shadow: 0 0 10px black;
+        -moz-box-shadow:    0 0 10px black;
+        box-shadow:         0 0 10px black;
+        margin-bottom: 10px;
+    }
+
+    #notifications-text div {
+        border-bottom: 2px solid #dc6;
+        padding: 0.5em 2em;
+    }
+
+    #notifications-text .bad {
+        background-color: #DCC;
+    }
+
+    #notifications-text .good {
+        background-color: #CDC;
+    }
+
+    #notifications-text .neutral {
+        background-color: inherit; 
+    }
+
+    #notifications-close {
+      float: right;
+      height: 1em;
+      width: 1em;
+      margin: 0.5em;
+      margin-left: -10em;
+      border: 2px solid gray;
+      color: gray;
+      line-height: 1;
+    }
+    
+    #notifications-close:hover {
+       color: black;
+       border: 2px solid black;
+    }
 
     /* title bar, containing links and branding */
     #title {
@@ -687,7 +747,7 @@
         /* preview of setlist */
 
             .findPreview {
-                margin-top: 0.5em;
+                margin-left: 0.5em;
                 background-color: #fff;
                 position: absolute;
                 border: 2px solid #ddd;
@@ -819,6 +879,15 @@
             background-color: white;
         }
 
+        .tasktext a {
+            color: inherit;
+            background-position: right center;   
+            background-repeat: no-repeat;      
+            background-image: url('icons/link_tasktext.png');   
+            padding-right: 21px;
+            margin-right: 0.25em;
+        }
+
         .taskeditcontainer {
             margin: 1px;
             padding-left: 0.5em;
@@ -896,14 +965,8 @@
                 line-height: 0.8em;
             }
 
-            .note textarea {
+            .note div,textarea {
                 width: 19em;
-                min-width: 19em;
-                max-width: 19em;
-                height: 1.2em;
-                min-height: 1.2em;
-                
-                resize: none;
                 overflow: hidden;
                 font-size: 0.8em;
                 margin: 0;
@@ -913,9 +976,37 @@
                 background-color: #fff;
                 border: 1px solid #eed;      
                 color: #000;   
+                line-height: 1.2;
+                margin-bottom: 2px;
+            }
+
+            .note div {
+                /* word wrap*/
+                white-space: pre-wrap;      /* CSS3 */   
+                white-space: -moz-pre-wrap; /* Firefox */    
+                white-space: -pre-wrap;     /* Opera <7 */   
+                white-space: -o-pre-wrap;   /* Opera 7 */    
+                word-wrap: break-word;      /* IE */
+            }
+        
+            .note div a {
+                color: inherit;
+                background-position: right center;
+                background-repeat: no-repeat;
+                background-image: url('icons/link_notetext.png');
+                padding-right: 17px;
+                margin-right: 0.25em;
+            }
+        
+            .note textarea {
+                min-width: 19em;
+                max-width: 19em;
+                height: 1.2em;
+                min-height: 1.2em;
+                resize: none;                
             } 
 
-            .note textarea.empty {
+            .note .empty {
                 background-color: inherit;
                 color: #cc8;    
             }

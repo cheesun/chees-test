@@ -48,6 +48,20 @@ chees.tick.tools.escapeHTML = function (text) {
     return div.innerHTML;
 } 
 
+chees.tick.tools.augmentLinks = function (text) {
+    // go through and replace links in processed text
+    var regex = "((?:(?:https?|ftps?|mailto)\\:\\/\\/)?"; // SCHEME
+    regex += "(?:(?:[a-z0-9+!*(),;?&=\\$_.-]+(?:\\:[a-z0-9+!*(),;?&=\\$_.-]+)?@)?"; // User and Pass
+    regex += "(?:[a-z0-9-.]*)\\.(?:aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|xxx)(?:\\.(?:[a-z]{2,3}))?"; // Host or IP
+    regex += "(?:\\\\:[0-9]{2,5})?"; // Port
+    regex += "(?:\\/(?:[a-z0-9+\\$%_-]\\.?)+)*\\/?"; // Path
+    regex += "(?:\\?[a-z+&\\$_.-][a-z0-9;:@&%=+\\/\\$_.-]*)?"; // GET Query
+    regex += "(?:#[a-z!_.-][a-z0-9+\\$!@_.,-]*)?))"; // Anchor    
+    regex += "(\\s|$|\\b\\W(?:\\s|$|\\W))"; // Possible terminations
+    return text.replace(new RegExp(regex,'gi'),'<a href="$1" target="_blank">$1</a>$2');
+}
+
+
 chees.tick.tools.getActualColor = function (node, def) {
     if (!def) def = '#ffc';
     var styleColor = 'transparent';
@@ -92,3 +106,37 @@ chees.tick.tools.isEmpty = function (obj) {
     }
     return true;
 }
+
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+        "use strict";
+        if (this == null) {
+            throw new TypeError();
+        }
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (len === 0) {
+            return -1;
+        }
+        var n = 0;
+        if (arguments.length > 1) {
+            n = Number(arguments[1]);
+            if (n != n) { // shortcut for verifying if it's NaN
+                n = 0;
+            } else if (n != 0 && n != Infinity && n != -Infinity) {
+                n = (n > 0 || -1) * Math.floor(Math.abs(n));
+            }
+        }
+        if (n >= len) {
+            return -1;
+        }
+        var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+        for (; k < len; k++) {
+            if (k in t && t[k] === searchElement) {
+                return k;
+            }
+        }
+        return -1;
+    }
+}
+

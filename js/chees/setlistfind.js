@@ -207,7 +207,7 @@ chees.tick.SetlistFind.prototype.insertSetlist = function (id,reset) {
                 self.lastAdded = addedTasks;
                 self.lastAddedId = id;
             } else {
-                alert('unable to load setlist');
+                chees.tick.GlobalNotify.publish('unable to load setlist','bad');
             }
             if (reset) self.reset();
         }
@@ -223,7 +223,7 @@ chees.tick.SetlistFind.prototype.removeLastAdded = function () {
 }
 
 chees.tick.SetlistFind.prototype.confirmUsage = function () {
-    if (this.lastAdded == null) return;
+    if (this.lastAdded == null) return false;
     var data = {'id':this.lastAddedId,'ticklist_id':this.list.id};
     var map = new goog.structs.Map(data);
     var querydata = goog.Uri.QueryData.createFromMap(map);        
@@ -231,11 +231,12 @@ chees.tick.SetlistFind.prototype.confirmUsage = function () {
         '/tick/api/setlistuse',
         function(e){
             if (e.target.getStatus() != 200) 
-               alert(e.target.getResponseText());
+               chees.tick.GlobalNotify.publish(e.target.getResponseText(),'bad');
         },
         'POST',
         String(querydata)        
     );  
+    return true;
 }
 
 chees.tick.SetlistFind.prototype.showPreview = function (previewItem,id) {
@@ -332,6 +333,17 @@ chees.tick.SetlistFind.prototype.reset = function () {
     this.lastAdded = null;
     this.lastAddedId = null;
     this.dialogDom['contents'].innerHTML = '';
+}
+
+chees.tick.SetlistFind.prototype.direct = function(text,callback) {
+    if (text == '') {
+        return callback("{'results':[]}");
+    }
+    var searchQuery = encodeURIComponent(text);
+    goog.net.XhrIo.send(
+        '/tick/api/setlistfind?q=' + searchQuery,
+        callback
+    );    
 }
 
 chees.tick.SetlistFind.prototype.search = function (text,container) {

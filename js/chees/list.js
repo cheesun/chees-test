@@ -132,7 +132,7 @@ chees.tick.List.prototype.loadList = function (id) {
             self.setupTasks(obj['tasks']);
             self.dom['rootElement'].focus();
         } else {
-            alert('load failed: ' + event.target.getResponseText());
+            chees.tick.GlobalNotify.publish('load failed: ' + event.target.getResponseText(),"bad");
         }
     }
         
@@ -185,7 +185,8 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
         var current = t[firstTask]['next'];
         while (current != null) {
             if (current in visited) { 
-                alert('cycle detected! ' + current);
+                //alert('cycle detected! ' + current);
+                chees.tick.GlobalNotify.publish('cycle detected! ' + current,'bad');
                 break;            
             } else {
                 visited[current] = true;
@@ -210,7 +211,8 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
             var current = task['first'];
             while (current != null) {
                 if (current in visited) { 
-                    alert('cycle detected! ' + current);
+                    //alert('cycle detected! ' + current);
+                    chees.tick.GlobalNotify.publish('cycle detected! ' + current,'bad');
                     break;            
                 } else {
                     visited[current] = true;            
@@ -547,6 +549,12 @@ chees.tick.List.prototype.generateList = function () {
 chees.tick.List.prototype.reportChange = function () {
     if (this.saveObject) {
         this.saveObject.notify(this.generateList());
+    } else {
+        if (!this.user_id) {
+            chees.tick.GlobalNotify.publish("Note that although you can make changes to this list, they will not be saved. Please log in if you'd like to save lists.");
+        } else {
+            chees.tick.GlobalNotify.publish("Note that changes you make to this list will not be saved automatically. You can save your changes as a new setlist by using the 'create setlist' button. Alternately, you can clone this setlist to a new ticklist of your own and change it there!");
+        }
     }
 }
 

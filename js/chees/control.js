@@ -67,7 +67,7 @@ chees.tick.control.AjaxButton.prototype.begin = function () {
         if (event.target.getStatus() == 200) {       
             return self.receive(event.target.getResponseText());
         } else {
-            alert('request failed: ' + event.target.getResponseText());
+            chees.tick.GlobalNotify.publish('request failed: ' + event.target.getResponseText(),'bad');
             return self.failed();
         }    
     }
@@ -140,7 +140,7 @@ chees.tick.control.AjaxEditable.prototype.beginSave = function () {
         if (event.target.getStatus() == 200) {       
             self.completeSave();
         } else {
-            alert('update failed: ' + event.target.getResponseText());
+            chees.tick.GlobalNotify.publish('update failed: ' + event.target.getResponseText(),'bad');
         }
     }
     var data = {};
