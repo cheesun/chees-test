@@ -2,9 +2,11 @@
 
 {% block title %}- Setlist - {{name}}{% endblock %}
 
-{% block scripts %}
-        <script type="text/javascript" src="/tick/static/tick.js"></script>
+{% block onload %}
+                var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
+                l.loadSetlist({{id}});
 {% endblock %}
+
 
 {% block templates %}
 
@@ -49,10 +51,5 @@
             </div>        
 {% endblock %}
 
-{% block final %}
-            <script type="text/javascript">
-                var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
-                l.loadSetlist({{id}});
-            </script>
-{% endblock %}
+
 

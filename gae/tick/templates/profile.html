@@ -2,13 +2,12 @@
 
 {% block title %}- {{user}}{% endblock %}
 
-
-{% block scripts %}
- 
-{% endblock %}
-
-{% block templates %}
-  
+{% block onload %}
+    {% ifequal user_id profile_user.id %}
+                var tick_name_edit = new chees.tick.control.AjaxEditable("profile_tick_name","tick_name","/tick/api/userupdate","{{profile_user.tick_name|escapejs}}");
+                var full_name_edit = new chees.tick.control.AjaxEditable("profile_full_name","full_name","/tick/api/userupdate","{{profile_user.full_name|escapejs}}");
+                var bio_edit = new chees.tick.control.AjaxEditable("profile_bio","bio","/tick/api/userupdate","{{profile_user.bio|escapejs}}");
+    {% endifequal %}
 {% endblock %}
 
 {% block content %}    
@@ -122,12 +121,4 @@
 {% endblock %}
 
 
-{% block final %}
-    {% ifequal user_id profile_user.id %}
-        <script type="text/javascript">
-            var tick_name_edit = new chees.tick.control.AjaxEditable("profile_tick_name","tick_name","/tick/api/userupdate","{{profile_user.tick_name|escapejs}}");
-            var full_name_edit = new chees.tick.control.AjaxEditable("profile_full_name","full_name","/tick/api/userupdate","{{profile_user.full_name|escapejs}}");
-            var bio_edit = new chees.tick.control.AjaxEditable("profile_bio","bio","/tick/api/userupdate","{{profile_user.bio|escapejs}}");
-        </script>
-    {% endifequal %}
-{% endblock %}
+

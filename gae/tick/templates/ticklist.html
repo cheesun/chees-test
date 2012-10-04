@@ -5,6 +5,14 @@
 {% block scripts %}
 {% endblock %}
 
+{% block onload %}
+                var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':{{id}}},"{{name|escapejs}}");
+                var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
+                l.loadList({{id}});
+                
+                window.onbeforeunload = function(e){return l.leavePage(e)};
+{% endblock %}
+
 {% block templates %}
 
 {% include "domplings/message.dompling" %}
@@ -39,13 +47,4 @@
             </div>        
 {% endblock %}
 
-{% block final %}
-            <script type="text/javascript">
-                var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':{{id}}},"{{name|escapejs}}");
-                var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
-                l.loadList({{id}});
-                
-                window.onbeforeunload = function(e){return l.leavePage(e)};
-            </script>
-{% endblock %}
 
