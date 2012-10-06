@@ -1,4 +1,4 @@
-from tick.tick import TickListSave, TickListLoad, SetListSave, SetListFind, SetListLoad, UserFollow, UserFind, SetListShare, TickListShare, UserUpdate, SetListUse, TickListVersion, UserInvite, TickListUpdate, Recommend, TickListFind
+from tick.api import TickListSave, TickListLoad, SetListSave, SetListFind, SetListLoad, UserFollow, UserFind, SetListShare, TickListShare, UserUpdate, SetListUse, TickListVersion, UserInvite, TickListUpdate, Recommend, TickListFind
 
 from tick.models import SearchIndexing, SearchDeindexing, Permissioning, ActivityFanout
 
@@ -12,23 +12,23 @@ def main():
       ('/tick/api/listsave', TickListSave),
       ('/tick/api/listload', TickListLoad),
       ('/tick/api/ticklistshare', TickListShare),
-      ('/tick/api/ticklistversion', TickListVersion),      
+      ('/tick/api/ticklistversion', TickListVersion),
       ('/tick/api/ticklistfind', TickListFind),
-      ('/tick/api/setlistsave', SetListSave),   
+      ('/tick/api/setlistsave', SetListSave),
       ('/tick/api/setlistfind', SetListFind),
-      ('/tick/api/setlistload', SetListLoad),      
-      ('/tick/api/setlistshare', SetListShare), 
-      ('/tick/api/setlistuse', SetListUse),            
+      ('/tick/api/setlistload', SetListLoad),
+      ('/tick/api/setlistshare', SetListShare),
+      ('/tick/api/setlistuse', SetListUse),
       ('/tick/api/userfollow', UserFollow),
       ('/tick/api/userfind', UserFind),
-      ('/tick/api/userupdate', UserUpdate),      
-      ('/tick/api/userinvite', UserInvite),            
-      ('/tick/api/ticklistupdate', TickListUpdate),    
-      ('/tick/api/recommend', Recommend),    
+      ('/tick/api/userupdate', UserUpdate),
+      ('/tick/api/userinvite', UserInvite),
+      ('/tick/api/ticklistupdate', TickListUpdate),
+      ('/tick/api/recommend', Recommend),
 
-      ('/tick/tasks/permissioning', Permissioning),      
+      ('/tick/tasks/permissioning', Permissioning),
       ('/tick/tasks/searchindexing', SearchIndexing),
-      ('/tick/tasks/searchdeindexing', SearchDeindexing),      
+      ('/tick/tasks/searchdeindexing', SearchDeindexing),
       ('/tick/tasks/activityfanout', ActivityFanout),
      
     ],
