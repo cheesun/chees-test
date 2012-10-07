@@ -7,3 +7,4 @@ from setlist import SetList
 from search import SearchIndexing, SearchDeindexing
 from permissioned import Permissioning
 from activity import Activity, ActivityFanout
+from comment import Comment

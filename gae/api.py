@@ -1,4 +1,4 @@
-from tick.api import TickListSave, TickListLoad, SetListSave, SetListFind, SetListLoad, UserFollow, UserFind, SetListShare, TickListShare, UserUpdate, SetListUse, TickListVersion, UserInvite, TickListUpdate, Recommend, TickListFind
+from tick.api import TickListSave, TickListLoad, SetListSave, SetListFind, SetListLoad, UserFollow, UserFind, SetListShare, TickListShare, UserUpdate, SetListUse, TickListVersion, UserInvite, TickListUpdate, Recommend, TickListFind, Comment, GetComments
 
 from tick.models import SearchIndexing, SearchDeindexing, Permissioning, ActivityFanout
 
@@ -25,6 +25,8 @@ def main():
       ('/tick/api/userinvite', UserInvite),
       ('/tick/api/ticklistupdate', TickListUpdate),
       ('/tick/api/recommend', Recommend),
+      ('/tick/api/comment', Comment),
+      ('/tick/api/getcomments', GetComments),
 
       ('/tick/tasks/permissioning', Permissioning),
       ('/tick/tasks/searchindexing', SearchIndexing),

@@ -3,6 +3,9 @@ from google.appengine.api import users
 
 from tickmodel import TickModel
 
+from datetime import datetime, timedelta
+from dateutil import relativedelta 
+
 class Audited(TickModel):
     creator_id = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -20,10 +23,31 @@ class Audited(TickModel):
 
 
         self.add_before_put_trigger(before_put_trigger)
-        
-        #from tickuser import TickUser
-        
+
+        from tickuser import TickUser
         self.add_to_simple_field_mapping('creator',lambda this: TickUser.get_by_user_id(this.creator_id).tick_name)
-        self.add_to_simple_field_mapping('updater',lambda this: TickUser.get_by_user_id(this.updater_id).tick_name)        
+        self.add_to_simple_field_mapping('creator_gravatar',lambda this: TickUser.get_by_user_id(this.creator_id).gravatar_link())
+        self.add_to_simple_field_mapping('updater',lambda this: TickUser.get_by_user_id(this.updater_id).tick_name)
+        self.add_to_simple_field_mapping('updater_gravatar',lambda this: TickUser.get_by_user_id(this.updater_id).gravatar_link())
+        self.add_to_simple_field_mapping('age',lambda this: this.age())
 
-
+    def age(self,updated=False,refdate=None):
+        if not refdate:
+            refdate = datetime.now()
+        if updated: 
+            rd = relativedelta.relativedelta (refdate,self.updated)
+        else: # we are looking for created
+            rd = relativedelta.relativedelta (refdate,self.created)
+        if rd.years > 0:
+            return '%d years ago' % rd.year
+        elif rd.months > 0:
+            return '%d months ago' % rd.months
+        elif rd.days > 0:
+            return '%d days ago' % rd.days
+        elif rd.hours > 0:
+            return '%d hours ago' % rd.hours
+        elif rd.minutes > 0:
+            return '%d minutes ago' % rd.minutes
+        elif rd.seconds > 0:
+            return '%d seconds ago' % rd.seconds
+        return 'some time ago'

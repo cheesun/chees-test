@@ -5,6 +5,7 @@
 {% block onload %}
                 var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
                 l.loadSetlist({{id}});
+                var c = new chees.tick.Comments('comments','{{id}}','setlist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %});
 {% endblock %}
 
 
@@ -19,6 +20,8 @@
 {% include "domplings/setlistdialog.dompling" %}       
 {% include "domplings/savedialog.dompling" %}
 {% include "domplings/sharedialog.dompling" %}
+
+{% include "domplings/comments.dompling" %}
 
 {% endblock %}
 
@@ -35,8 +38,10 @@
             <p>
                 {{description|escape}}
             </p>
-            <div id="output"></div>  
+            <div id="output"></div>
+            <div id="comments"></div>
             <div id="help">
+                <h2>Help</h2>
                 <ul>
                     <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
                     <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>

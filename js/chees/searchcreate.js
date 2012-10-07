@@ -507,14 +507,6 @@ chees.tick.SearchAndCreateDialog.prototype.addResult = function (searchId,result
     for (var i=0; i< resultList.length; i++) {
         var result = resultList[i];
         this.currentResults.push(result);
-        // TODO: remove this debugging
-        /*
-        with ({res:result}) {
-            goog.events.listen(res.dom['root'],goog.events.EventType.CLICK,function(e){
-                if (e.target != res.dom['root']) return;
-                res.select();
-            });          
-        }*/
         this.dialogDom['resultList'].appendChild(result.dom['root']);
         if (this.currentResults.length == 1) this.currentResults[0].select();
     }
@@ -541,10 +533,6 @@ chees.tick.SearchAndCreateDialog.prototype.search = function () {
     for (var i=0;i<this.sections.length;i++) {
         this.sections[i].doSearch(this.lastSearchId,searchText,addResultCallback);
     }
-    /*
-    this.userResultHandler.doSearch(this.lastSearchId,searchText,addResultCallback);
-    this.ticklistResultHandler.doSearch(this.lastSearchId,searchText,addResultCallback);
-    this.setlistResultHandler.doSearch(this.lastSearchId,searchText,addResultCallback);    */
     this.lastSearchId ++;    
 
     return true;

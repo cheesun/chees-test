@@ -519,11 +519,67 @@
     /* the list is generated in the javascript and displayed in this element */
     #output {
         width: 45em;
+        float: left;
     }        
+    
+    /* comments will be put here */
+    #comments {
+        width: 35em;
+        float: left;
+        padding: 2em 0 0 2em;
+    }
+    
+        #comments .comment {
+            font-size: 0.85em;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;               
+            border-radius: 3px 3px 3px 3px;
+            background: #F8F8F8;
+            margin-bottom: 0.2em;
+            padding: 0.5em 1em 0.25em;
+            width: 100%;
+        }
+
+        #comments .slip {
+            margin-left: -0.75em;
+            margin-top: -0.25em;
+        }
+        
+        #comments .comment-text {
+            padding: 0.25em;
+        }
+
+        #comments .comment-age {
+            color: lightgray;
+            padding: 0.5em;
+        }
+
+        #comments #new-comment {
+            font-size: 0.8em;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;               
+            border-radius: 3px 3px 3px 3px;
+            background: #F8F8F8;
+            padding: 0.25em;
+            width: 100%;
+        }
+
+        #comments textarea {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;   
+            border: 1px solid #DDD;
+            width: 100%;
+            margin: 0 0 -0.25em 0;
+        }
 
     /* help section */
     #help {
         margin-top: 1em;
+        float: left;
+        padding-left: 2em;
     }
 
     /* the row of buttons above the list which open up dialogs */

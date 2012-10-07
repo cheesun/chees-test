@@ -1,0 +1,18 @@
+            <div id="template_comment">
+                <div title='text' class='comment'>
+                    <span class='slip tickuserSlip'><img %src%="!user_gravatar!"></img><a href='/tick/tickuser/$user_id$''>$user_name$</a></span>
+                    <span class='comment-text' title='comment_text'>^text^</span><span class='comment-age' title='comment_age'>$age$</span>
+                </div>
+            </div>
+            
+            <div id="template_comments">
+                <div>
+                    <h2>Comments</h2>
+                    <div title='comment_area'>
+                    </div>
+                    <div id='new-comment'>
+                        <textarea title='textinput'></textarea>
+                        <div><input type='button' title='cancel_button' value='cancel'></input><input type='button' title='submit_button' value='submit'></input></div>
+                    </div>
+                </div>
+            </div>

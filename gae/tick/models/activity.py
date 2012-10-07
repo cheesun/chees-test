@@ -90,7 +90,6 @@ class Activity(TickModel):
         if not actor:
             actor = TickUser.get_current_user()
             
-        # TODO: add check for whether the activity has happened within the last hour. if it has, dont repeat it.
         one_hour_ago = datetime.today() - timedelta(hours=1)
         query = cls.all(keys_only=True)
         if target:

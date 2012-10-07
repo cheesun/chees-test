@@ -2,8 +2,9 @@
  * define the html in your document, generally you want them to be hidden
  * the title of each node, if specified, becomes the instance attribute name and the title attribute is removed
  * if you would like a title to be set on the output node, append that title as [title]
- * instances of "!variable!" int the dom are replaced with unescaped HTML
- * instances of "$variable$" in the dom are replaced with the value passed in via a dict {'variable':'new value'}
+  * instances of "$variable$" in the dom are replaced with the value passed in via a dict {'variable':'new value'} the data is escaped
+ * instances of "^variable^" similar to $variable$ except that we replace \n with <br>
+ * instances of "!variable!" similar to $variable$ except that the contents are unescaped HTML
  * instances of %text% in the dom are replaced with that text <-- we use this to escape things like img tags so they dont get loaded when the page loads
  */
 
@@ -40,6 +41,13 @@ chees.Dompling.knead = function (string, data) {
         re = new RegExp("!"+i+"!",'g');
         output = output.replace(re,value);
     }    
+    for (var i in data) {
+        var value = data[i];
+        if (value == null) value = '';
+        value = chees.tick.tools.escapeHTML(value).replace(/\n/g,'<br>');
+        re = new RegExp("\\^"+i+"\\^",'g');
+        output = output.replace(re,value);
+    } 
     return output;
 }
 

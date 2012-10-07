@@ -266,5 +266,38 @@ class Recommend(TickApiHandler):
         new = models.Activity.create('<actor>|recommended|<target>',actor=current_user,target=entity)  
         if new is None:
             return self.output('already recommended recently')
-            #raise Exception('already recommended recently')
         return self.output('recommended')
+
+class Comment(TickApiHandler):
+    LOGIN_REQUIRED = True
+    def post(self):
+        id = int(self.request.get('id'))      
+        type = self.request.get('type')        
+        if type == 'ticklist':  
+            entity = models.TickList.get_by_id(id)
+        elif type == 'setlist':
+            entity = models.SetList.get_by_id(id)
+        else:
+            raise Exception('invalid type')
+        models.Comment.create(entity,self.request.get('text'))
+        return self.output('commented')
+    
+class GetComments(TickApiHandler):
+    def get(self):
+        id = int(self.request.get('id'))      
+        type = self.request.get('type')        
+        last_id = int(self.request.get('latest'))
+        if type == 'ticklist':  
+            entity = models.TickList.get_by_id(id)
+        elif type == 'setlist':
+            entity = models.SetList.get_by_id(id)
+        else:
+            raise Exception('invalid type')
+        if last_id >= 0:
+            last_key_name = model.Comment.make_key_name(entity,last_id)
+            comments = models.Comment.all().ancestor(entity).filter('__key__ >',Key.from_path(model.Comment,last_key_name,parent=entity)).order('__key__').fetch(1000)
+        else:
+            comments = models.Comment.all().ancestor(entity).order('__key__').fetch(1000)
+        self.output([comment.to_simple(['creator','creator_gravatar','creator_id','text','age']) for comment in comments])
+        
+        

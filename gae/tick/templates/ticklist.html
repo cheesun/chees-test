@@ -9,6 +9,7 @@
                 var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':{{id}}},"{{name|escapejs}}");
                 var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
                 l.loadList({{id}});
+                var c = new chees.tick.Comments('comments','{{id}}','ticklist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %});
                 
                 window.onbeforeunload = function(e){return l.leavePage(e)};
 {% endblock %}
@@ -25,13 +26,17 @@
 {% include "domplings/savedialog.dompling" %}
 {% include "domplings/sharedialog.dompling" %}
 
+{% include "domplings/comments.dompling" %}
+
 {% endblock %}
 
 {% block content %}
             <span class='slip bigSlip ticklistSlip'><span id='ticklist_title'>{{name}}</span></span> by <span class='slip tickuserSlip'><img src='{{owner.gravatar}}'></img><a href='/tick/tickuser/{{owner.id}}'>{{owner.tick_name}}</a></span>
             <h2 class='listTitle'></h2>
             <div id="output"></div>  
+            <div id="comments"></div>
             <div id="help">
+                <h2>Help</h2>
                 <ul>
                     <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
                     <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>
