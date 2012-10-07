@@ -577,8 +577,8 @@ chees.tick.List.prototype.gotoTask = function (task) {
     var target = this.currentSelection;
     if (task) target = task;
     var current = target;
-    while (current.parent && current.parent.isComplete) current = current.parent;
-    if (target !== current) chees.tick.GlobalNotify.publish("The task you are looking for is hidden in a completed sublist. Showing the first ancestor that has uncompleted tasks.");
+    while (current.parent && current.parent.complete) current = current.parent;
+    if (target !== current) chees.tick.GlobalNotify.publish("The item you are looking for is hidden in a completed sublist. Showing the first ancestor that has uncompleted tasks.");
     this.selectTask(current,true,true);
 }
 
