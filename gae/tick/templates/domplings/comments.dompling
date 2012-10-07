@@ -1,18 +1,34 @@
+            <div id="template_reference">
+                <span>
+                    <span title='refer' class='refer'>$refer$</span><span title='reference' class='reference'>$reference$</span>
+                </span>
+            </div>
+            
             <div id="template_comment">
                 <div title='text' class='comment'>
-                    <span class='slip tickuserSlip'><img %src%="!user_gravatar!"></img><a href='/tick/tickuser/$user_id$''>$user_name$</a></span>
-                    <span class='comment-text' title='comment_text'>^text^</span><span class='comment-age' title='comment_age'>$age$</span>
+                    <span class='slip tickuserSlip'><img %src%="!user_gravatar!"></img><a href='/tick/tickuser/$user_id$''>$user_name$</a></span><span class='comment-age' title='comment_age'>$age$</span>
+                    <div class='comment-text' title='comment_text'>!text!</div>
+                    <div title='reference'></div>
                 </div>
             </div>
             
             <div id="template_comments">
                 <div>
                     <h2>Comments</h2>
-                    <div title='comment_area'>
-                    </div>
-                    <div id='new-comment'>
+                    <div title='show_hide' style='display: none'></input><span title='show_hide_message'></span> <input type='button' title='show_hide_button' value='show'></div>
+                    <div title='hidden_comments' style='display: none'></div>
+                    <div title='comment_area'></div>
+                    <div id='new-comment' title='new_comment'>
                         <textarea title='textinput'></textarea>
-                        <div><input type='button' title='cancel_button' value='cancel'></input><input type='button' title='submit_button' value='submit'></input></div>
+                        <div>
+                            <input type='button' title='cancel_button' value='cancel'></input>
+                            <input type='button' title='refer_button[refer to the currently selected list item in your comment]' value='refer'></input>
+                            <input type='button' title='comment_button' value='comment'></input>
+                        </div>
+                        <div title='reference_container' style='display: none'>
+                            <span title='reference'></span>
+                            <input type='button' title='clear_reference_button' value='clear'></input>
+                        </div>                        
                     </div>
                 </div>
             </div>

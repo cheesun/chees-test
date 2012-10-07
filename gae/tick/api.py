@@ -273,13 +273,16 @@ class Comment(TickApiHandler):
     def post(self):
         id = int(self.request.get('id'))      
         type = self.request.get('type')        
+        reference = self.request.get('reference',None)
+        if reference:
+            reference = int(reference)
         if type == 'ticklist':  
             entity = models.TickList.get_by_id(id)
         elif type == 'setlist':
             entity = models.SetList.get_by_id(id)
         else:
             raise Exception('invalid type')
-        models.Comment.create(entity,self.request.get('text'))
+        models.Comment.create(entity,self.request.get('text'),reference)
         return self.output('commented')
     
 class GetComments(TickApiHandler):
@@ -298,6 +301,6 @@ class GetComments(TickApiHandler):
             comments = models.Comment.all().ancestor(entity).filter('__key__ >',Key.from_path(model.Comment,last_key_name,parent=entity)).order('__key__').fetch(1000)
         else:
             comments = models.Comment.all().ancestor(entity).order('__key__').fetch(1000)
-        self.output([comment.to_simple(['creator','creator_gravatar','creator_id','text','age']) for comment in comments])
+        self.output([comment.to_simple(['creator','creator_gravatar','creator_id','text','age','reference']) for comment in comments])
         
         

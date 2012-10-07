@@ -16,6 +16,7 @@ class Comment(Audited):
     target_kind = db.StringProperty(required=True)
     target = db.ReferenceProperty(required=True)
     text = db.StringProperty(required=True,multiline=True)
+    reference = db.IntegerProperty()
         
     @staticmethod
     def make_key_name(target,count=None):
@@ -29,9 +30,9 @@ class Comment(Audited):
         return '%s||%012d' % (target_id,count)
         
     @classmethod
-    def create(cls,target,text):
+    def create(cls,target,text,reference=None):
         # TODO: prevent double posting: add check for whether an identical comment has been posted within the last minute. if it has, dont repeat it.
-        new_comment = Comment(target=target,target_kind=target.kind(),text=text,parent=target,key_name=cls.make_key_name(target))
+        new_comment = Comment(target=target,target_kind=target.kind(),text=text,reference=reference,parent=target,key_name=cls.make_key_name(target))
         new_comment.put()
         return new_comment
 

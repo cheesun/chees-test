@@ -56,14 +56,13 @@ chees.tick.List = function(element,user_id) {
     
     // list state
     this.nextTaskId = 0;
-    
     this.rootTask = new chees.tick.Task(null,null,true);
+    this.taskLookup = {};
 
     // state    
     this.currentSelection = this.rootTask;
     this.dom['rootElement'].appendChild(this.rootTask.dom['root']);
     this.editMode = false;
-
     
     // permissions
     this.can_edit = false;
@@ -111,7 +110,7 @@ chees.tick.List.prototype.loadSetlist = function (id) {
             loadAnimation.stop();
             self.setupList(loaded['list']);
             self.selectTask(self.rootTask);  
-            self.setlistFindObject.insertSetlist(id);          
+            self.setlistFindObject.insertSetlist(id);
             self.setlistFindObject.reset();
         }    
     );    
@@ -200,6 +199,7 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
             var task = t[q.dequeue()];
             // create the task
             var newtask = new chees.tick.Task(task['id']);
+            this.taskLookup[task['id']] = newtask;
             newtask.setText(task['text']);
             newtask.setNotes(task['notes'],true);
             o[task['id']] = newtask;
@@ -463,6 +463,7 @@ chees.tick.List.validateText = function (text) {
 chees.tick.List.prototype.newTask = function (text) {
     if (!text) text = '';
     var newTask = new chees.tick.Task(this.nextTaskId++, text);
+    this.taskLookup[newTask.id] = newTask;
     this.initTask(newTask);
     return newTask;
 }
@@ -566,5 +567,29 @@ chees.tick.List.prototype.leavePage = function (evt) {
     if (!this.saveObject.saved) return "This list has unsaved changes, which will be lost if you navigate away from this page. Are you sure you want to leave?";
 }
 
+chees.tick.List.prototype.getTask = function (id) {
+    if (id) return this.taskLookup[id];
+    if (this.currentSelection === this.rootTask) return null;
+    return this.currentSelection;
+}
 
+chees.tick.List.prototype.gotoTask = function (task) {
+    var target = this.currentSelection;
+    if (task) target = task;
+    var current = target;
+    while (current.parent && current.parent.isComplete) current = current.parent;
+    if (target !== current) chees.tick.GlobalNotify.publish("The task you are looking for is hidden in a completed sublist. Showing the first ancestor that has uncompleted tasks.");
+    this.selectTask(current,true,true);
+}
+
+chees.tick.List.prototype.getPath = function (task) {
+    var current = this.currentSelection;
+    if (task) current = task;
+    var nodes = [];
+    while (current != this.rootTask) {
+        nodes.push(current.text);
+        current = current.parent;
+    }
+    return nodes.reverse().join(' > ');
+}
 

@@ -9,7 +9,7 @@
                 var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':{{id}}},"{{name|escapejs}}");
                 var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
                 l.loadList({{id}});
-                var c = new chees.tick.Comments('comments','{{id}}','ticklist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %});
+                var c = new chees.tick.Comments('comments',l,'{{id}}','ticklist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %});
                 
                 window.onbeforeunload = function(e){return l.leavePage(e)};
 {% endblock %}
@@ -33,23 +33,25 @@
 {% block content %}
             <span class='slip bigSlip ticklistSlip'><span id='ticklist_title'>{{name}}</span></span> by <span class='slip tickuserSlip'><img src='{{owner.gravatar}}'></img><a href='/tick/tickuser/{{owner.id}}'>{{owner.tick_name}}</a></span>
             <h2 class='listTitle'></h2>
-            <div id="output"></div>  
+            <div id="left">
+                <div id="output"></div>
+                <div id="help">
+                    <h2>Help</h2>
+                    <ul>
+                        <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
+                        <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>
+                        <li><strong>Up/Down</strong> keys or click an item to change your selection.</li>
+                        <li><strong>Shift + Up/Down</strong> to select other items in the same group.</li>
+                        <li><strong>Ctrl + Direction</strong> or drag an item to move the currently selected item.</li>
+                        <li><strong>Ctrl + Del</strong> to delete the current item.</li>
+                        <li><strong>Ctrl + E</strong> to edit the current item.</li>
+                        <li><strong>Ctrl + Enter</strong> to mark/unmark the current item as completed.</li>
+                        <li><strong>Ctrl + S</strong> to save.</li>
+                        <li><strong>Esc</strong> cancels the current action.</li>
+                    </ul>
+                </div>        
+            </div>
             <div id="comments"></div>
-            <div id="help">
-                <h2>Help</h2>
-                <ul>
-                    <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
-                    <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>
-                    <li><strong>Up/Down</strong> keys or click an item to change your selection.</li>
-                    <li><strong>Shift + Up/Down</strong> to select other items in the same group.</li>
-                    <li><strong>Ctrl + Direction</strong> or drag an item to move the currently selected item.</li>
-                    <li><strong>Ctrl + Del</strong> to delete the current item.</li>
-                    <li><strong>Ctrl + E</strong> to edit the current item.</li>
-                    <li><strong>Ctrl + Enter</strong> to mark/unmark the current item as completed.</li>
-                    <li><strong>Ctrl + S</strong> to save.</li>
-                    <li><strong>Esc</strong> cancels the current action.</li>
-                </ul>
-            </div>        
 {% endblock %}
 
 

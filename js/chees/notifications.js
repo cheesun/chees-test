@@ -46,6 +46,7 @@ chees.tick.Notifications = function (container, note_text, close_button, display
         this.close_button,
         goog.events.EventType.CLICK,
         function (e) {
+            e.stopPropagation(); 
             clearTimeout(self.hide_timeout);
             self.hide_timeout = null;
             var anim = self.hide(); 
@@ -122,6 +123,7 @@ chees.tick.Notifications.prototype.hide = function () {
 
 chees.tick.Notifications.prototype.publishMessage = function(text,css_class) {
     // prevent spam
+    text = chees.tick.tools.escapeHTML(text);
     if (this.last_published !== text) {
         // clear things out if the user dismissed messages last time
         if (this.empty_next_time) {
