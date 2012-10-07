@@ -191,7 +191,7 @@ chees.tick.Comments.prototype.submit = function () {
     var data = {
         'id' :          this.target_id,
         'type' :        this.target_type,
-        'text' :        text,
+        'text' :        text
     }
     var reference_id = null;
     if (this.reference) {
