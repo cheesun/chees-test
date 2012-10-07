@@ -594,7 +594,10 @@
             margin-right: 0.25em;
             cursor: pointer;
         }
-        
+
+         #comments #new-comment .reference {
+            color: inherit;
+        }
         
         #comments .reference:hover {
             color: inherit;
