@@ -1,7 +1,12 @@
 from google.appengine.ext import db
 from unidecode import unidecode
-from django.template import defaultfilters
 import sys
+
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+from google.appengine.dist import use_library
+use_library('django', '1.2')
+from django.template import defaultfilters
 
 def transactional(funct):
     def f(*args,**kw):
