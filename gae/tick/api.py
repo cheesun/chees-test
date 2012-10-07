@@ -283,6 +283,7 @@ class Comment(TickApiHandler):
         else:
             raise Exception('invalid type')
         models.Comment.create(entity,self.request.get('text'),reference)
+        new = models.Activity.create('<actor>|commented on|<target>',actor=self.current_user,target=entity)
         return self.output('commented')
     
 class GetComments(TickApiHandler):
