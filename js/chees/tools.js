@@ -61,6 +61,9 @@ chees.tick.tools.augmentLinks = function (text) {
     return text.replace(new RegExp(regex,'gi'),'<a href="$1" target="_blank">$1</a>$2');
 }
 
+chees.tick.tools.augmentTags = function (text) {
+    return text.replace(/\[(\w+)\]/gi,"<span class='tag' style=''>$1</span>");
+}
 
 chees.tick.tools.getActualColor = function (node, def) {
     if (!def) def = '#ffc';

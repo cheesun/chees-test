@@ -343,6 +343,7 @@ chees.tick.Task.prototype.setText = function (text,esc) {
     this.text = text;
     this.updated = true;
     processed = chees.tick.tools.augmentLinks(processed);
+    processed = chees.tick.tools.augmentTags(processed);
     if(!this.virtual) this.dom['tasktext'].innerHTML = processed;
 }
 

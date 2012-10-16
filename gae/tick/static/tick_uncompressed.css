@@ -343,6 +343,18 @@
 
 /* for user, ticklist and setlist slips - the inline representations of each of these things */
 
+    /* lets include tags under slips for now */
+    span.tag {
+        display: inline-block;
+        background-color: orange;
+        color: white;
+        -webkit-border-radius: 3px 3px 3px 3px;
+        -moz-border-radius: 3px 3px 3px 3px;    
+        border-radius: 3px 3px 3px 3px;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+    }
+
     span.slip {
         display: inline-block;
     }
