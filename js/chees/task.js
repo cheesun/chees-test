@@ -53,7 +53,7 @@ chees.tick.Task = function(id,text,virtual,locked) {
     
     // init
     this.makeDom();  
-    this.setText(text);
+    if (text) this.setText(text);
     
     if (!this.virtual) {
         this.checkBox = new chees.tick.control.CheckBox(
