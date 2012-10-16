@@ -354,6 +354,10 @@
         padding-left: 0.25em;
         padding-right: 0.25em;
     }
+    
+    .completedTask .tag {
+        background-color: #cc8;
+    }
 
     span.slip {
         display: inline-block;
