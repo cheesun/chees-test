@@ -19,7 +19,11 @@ GlobNot.prototype.publish = function (message,classname) {
 
 chees.tick.GlobalNotify = new GlobNot();
     
-/** @constructor */
+/** 
+ * @constructor
+ * @extends {goog.events.EventTarget}
+ */
+
 chees.tick.Notifications = function (container, note_text, close_button, displaytime, max_msg) {
     this.container = document.getElementById(container);
     this.note_text = document.getElementById(note_text);
@@ -55,6 +59,7 @@ chees.tick.Notifications = function (container, note_text, close_button, display
         }
     );  
 }
+goog.inherits(chees.tick.Notifications, goog.events.EventTarget);
 
 chees.tick.Notifications.prototype.renderFrame = function (e) {
     var size = goog.style.getBorderBoxSize(this.container);
@@ -65,6 +70,7 @@ chees.tick.Notifications.prototype.renderFrame = function (e) {
     goog.style.setPosition(this.container,0,e.y);
     goog.style.setStyle(this.doc_body,'margin-top',new_margin.toString() + 'px');
     window.scrollTo(hscroll, vscroll-original_margin+new_margin);
+    goog.events.dispatchEvent(this,new goog.events.Event(goog.events.EventType.RESIZE));
 }
 
 chees.tick.Notifications.prototype.repositionHidden = function () {

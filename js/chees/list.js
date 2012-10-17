@@ -426,7 +426,7 @@ chees.tick.List.prototype.initTask = function (t) {
 chees.tick.List.prototype.showTask = function (t, focus) {
     if (!chees.tick.tools.isFullyVisible(t.dom['control'])) {
         var y = goog.style.getPageOffset(t.dom['control']).y;
-        window.scroll(0,y-50);    
+        window.scroll(0,y-100);    
     }
     if (focus)
         t.focus();

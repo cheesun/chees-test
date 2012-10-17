@@ -98,6 +98,13 @@ chees.tick.Dialog = function (button,template,hover) {
         function (e) { if (self.popup.isVisible()) self.popup.reposition(); }
     );      
     
+    if (chees.tick.GlobalNotify && chees.tick.GlobalNotify.notifier) {
+        goog.events.listen(
+            chees.tick.GlobalNotify.notifier,
+            goog.events.EventType.RESIZE, 
+            function (e) { if (self.popup.isVisible()) self.popup.reposition(); }
+        );
+    }
 }
 
 chees.tick.Dialog.prototype.toggle = function (show) {
