@@ -808,9 +808,7 @@
             background-color: white;
             border: 1px solid #eed;
             margin: 0.5em 1px;
-            color: #444;
             padding: 0.25em;
-            font-size: 0.8em;
         }
 
 
@@ -826,12 +824,10 @@
 
         .findItemSelected {
             background-color: #ded;
-            color: #484;
         }
 
         .findItem:hover {
             background-color: #ded;
-            color: #484;
         }
 
         .findItemAdd {
@@ -855,34 +851,6 @@
             background-position: left center;   
             background-repeat: no-repeat;  
         }
-
-        /* preview of setlist */
-
-            .findPreview {
-                margin-left: 0.5em;
-                background-color: #fff;
-                position: absolute;
-                border: 2px solid #ddd;
-                width: 20em;
-                padding: 1em 0.5em 0.5em;
-                box-shadow: 4px 4px 4px 0 #aaa;
-                -moz-box-shadow: 4px 4px 4px 0 #aaa;
-                -webkit-box-shadow: 4px 4px 4px 0 #aaa;    
-            }
-
-            .findPreview ul {
-                padding-left: 1.5em;
-                list-style-type: disc;  
-            }
-
-            .findPreview .separator {
-                border-top: 1px solid #ddd;
-                margin: 1em 0.25em 0em;    
-            }
-
-            .findPreviewDescription {
-                padding: 0 0.5em;
-            }
 
 
     /* tasklist */
@@ -915,11 +883,6 @@
                 -webkit-box-shadow: 4px 4px 4px 0px #aaa;        
                 box-shadow: 4px 4px 4px 0px #aaa;            
             }
-
-        .roottask ul {
-            margin-left: 0;
-            padding-left: 0;
-        }
 
         .roottask {
             padding: 0;

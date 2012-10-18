@@ -10,19 +10,9 @@ goog.require('goog.structs.Map');
 goog.require('goog.json');
 
 goog.require('goog.events');
-goog.require('goog.ui.Popup');
-goog.require('goog.ui.PopupBase.EventType');
-goog.require('goog.positioning.AnchoredViewportPosition');
-goog.require('goog.positioning.Corner');
-goog.require('goog.math.Box');
-goog.require('goog.fx.dom.FadeInAndShow');
-goog.require('goog.fx.dom.FadeOutAndHide');
 
 /** @constructor */
-chees.tick.SetlistFind = function (list) { //button,taskEntry,taskEntryText,list) {
-    //this.button = button;
-    //this.taskEntry = taskEntry;
-    //this.taskEntryText = taskEntryText;
+chees.tick.SetlistFind = function (list) {
     this.list = list;
     
     this.dialogTemplate = new chees.Dompling('template_finddialog');
@@ -30,15 +20,9 @@ chees.tick.SetlistFind = function (list) { //button,taskEntry,taskEntryText,list
     
     this.resultTemplate = new chees.Dompling('template_finditem');
 
-    // preview popup
+    // preview
     this.previewTemplate = new chees.Dompling('template_findpreview');
     this.previewDom = this.previewTemplate.steam('root');
-    document.getElementById('overlay').appendChild(this.previewDom['root']);
-    this.previewPopup = new goog.ui.Popup(this.previewDom['root']);  
-    this.previewPopup.setVisible(false);  
-    this.previewPopup.setAutoHide(true);
-    this.previewPopup.setPinnedCorner(goog.positioning.Corner.TOP_LEFT);    
-    this.previewPopup.setHideOnEscape(true);
 
     // current state
     this.results = [];
@@ -51,17 +35,11 @@ chees.tick.SetlistFind = function (list) { //button,taskEntry,taskEntryText,list
 
     // events
     var self = this;
-    goog.events.listen(
-        window, 
-        goog.events.EventType.RESIZE, 
-        function (e) { if (self.previewPopup.isVisible()) self.previewPopup.reposition(); }
-    );             
     
     this.initKeyboard();
 }
 
 chees.tick.SetlistFind.prototype.select = function (target) {
-    this.previewPopup.setVisible(false);
     if (this.currentSelection != null) 
         goog.dom.classes.remove(
             this.results[this.currentSelection][0].root,
@@ -100,7 +78,8 @@ chees.tick.SetlistFind.prototype.initKeyboard = function () {
         if      (keyCode == goog.events.KeyCodes.UP) self.select('up');
         else if (keyCode == goog.events.KeyCodes.DOWN) self.select('down');
         else if (keyCode == goog.events.KeyCodes.LEFT) {
-            self.previewPopup.setVisible(false);
+            var current = self.results[self.currentSelection];
+            self.hidePreview(current[0],current[1]);
         }
         else if (keyCode == goog.events.KeyCodes.RIGHT) {
             var current = self.results[self.currentSelection];
@@ -123,29 +102,8 @@ chees.tick.SetlistFind.prototype.initKeyboard = function () {
 
 chees.tick.SetlistFind.prototype.hideDialog = function () {
     this.currentSelection = null;
-    this.previewPopup.setVisible(false);
     if (this.dialogDom['root'].parentNode) this.dialogDom['root'].parentNode.removeChild(this.dialogDom['root']);
 }
-
-/*chees.tick.SetlistFind.prototype.toggleDialog = function () {
-    if (!this.popup.isVisible()) {
-        if(this.search())   
-            this.popup.setVisible(true); 
-        else {
-            var self = this;
-            goog.events.listenOnce(
-                this.button,
-                goog.events.EventType.CLICK,
-                function (e) {        
-                    self.toggleDialog(); 
-                    }
-            );
-        }
-    }
-    else {
-        this.popup.setVisible(false);
-    }
-}*/
 
 chees.tick.SetlistFind.prototype.setlistToList = function(setlist) {
     var list = document.createElement('UL');
@@ -181,8 +139,6 @@ chees.tick.SetlistFind.prototype.loadSetlist = function (id,funct) {
     }
 }
 
-
-
 chees.tick.SetlistFind.prototype.insertSetlist = function (id,reset) {
     var self = this;
     this.loadSetlist(
@@ -202,7 +158,6 @@ chees.tick.SetlistFind.prototype.insertSetlist = function (id,reset) {
                 }
                 // do top level tasks last so that building subtasks is fast (no dom manipulation)
                 for (var i in toplevel) toplevel[i].insertBelow(addedTasks[null]);
-                self.previewPopup.setVisible(false);
                 self.hideDialog();
                 self.lastAdded = addedTasks;
                 self.lastAddedId = id;
@@ -239,6 +194,19 @@ chees.tick.SetlistFind.prototype.confirmUsage = function () {
     return true;
 }
 
+chees.tick.SetlistFind.prototype.hidePreview = function (previewItem,id) {
+    this.previewDom['root'].style.display = 'none';
+    this.previewDom['root'].parentNode.removeChild(this.previewDom['root']);
+    goog.events.listenOnce(
+        previewItem['previewButton'],
+        goog.events.EventType.CLICK,
+        function (e) { 
+            this.select([previewItem,id]);        
+            this.showPreview(previewItem,id);
+            }
+    );
+}
+
 chees.tick.SetlistFind.prototype.showPreview = function (previewItem,id) {
     this.previewDom['description'].innerHTML = 'loading...';
     var self = this;
@@ -258,31 +226,17 @@ chees.tick.SetlistFind.prototype.showPreview = function (previewItem,id) {
     );
     
     var finddialog = this.dialogDom['root'];
-    var popupPosition = new goog.positioning.AnchoredViewportPosition(finddialog,goog.positioning.Corner.TOP_RIGHT);
-    this.previewPopup.setPosition(popupPosition);
-    this.previewPopup.setVisible(true);
+
+    if (this.previewDom['root'].parentNode)
+        this.previewDom['root'].parentNode.removeChild(this.previewDom['root']);
+    previewItem['slip'].appendChild(this.previewDom['root']);
+    this.previewDom['root'].style.display = 'block';
 
     goog.events.listenOnce(
-        this.previewPopup,
-        goog.ui.PopupBase.EventType.BEFORE_HIDE,
-        function (e) { 
-            goog.dom.classes.remove(finddialog,'findDialogShowingPreview');
-            setTimeout(
-                function () {
-                    goog.events.listenOnce(
-                        previewItem.root,
-                        goog.events.EventType.CLICK,
-                        function (e) { 
-                            self.select([previewItem,id]);
-                            self.showPreview(previewItem,id);
-                        }
-                    );          
-                },
-                goog.ui.PopupBase.DEBOUNCE_DELAY_MS);            
-        }
+        previewItem['previewButton'],
+        goog.events.EventType.CLICK,
+        function (e) { self.hidePreview(previewItem,id); }
     );
-    
-    goog.dom.classes.add(this.dialogDom['root'],'findDialogShowingPreview');
 }
 
 chees.tick.SetlistFind.prototype.addResult = function (result) {
@@ -295,11 +249,12 @@ chees.tick.SetlistFind.prototype.addResult = function (result) {
         goog.events.EventType.CLICK,
         function (e) { 
             e.stopPropagation();
+            self.select([newItem,result['id']]);
             self.insertSetlist(result['id']);
             }
     );
     goog.events.listenOnce(
-        newItem.root,
+        newItem['previewButton'],
         goog.events.EventType.CLICK,
         function (e) { 
             self.select([newItem,result['id']]);        
