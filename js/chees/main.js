@@ -22,3 +22,8 @@ goog.exportSymbol('chees.tick.GlobalNotify.register',chees.tick.GlobalNotify.reg
 goog.exportSymbol('chees.tick.GlobalNotify.publish',chees.tick.GlobalNotify.publish);
 
 goog.exportSymbol('chees.tick.Comments',chees.tick.Comments);
+
+
+goog.require('goog.events');
+goog.exportSymbol('goog.events.listen',goog.events.listen);
+goog.exportSymbol('goog.events.EventType.LOAD',goog.events.EventType.LOAD);

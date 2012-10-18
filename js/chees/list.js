@@ -39,7 +39,9 @@ function debug (text) {
     debug_counter ++;
 }
 
-/** @constructor */
+/** @constructor
+ *  @extends {goog.events.EventTarget}
+ */
 chees.tick.List = function(element,user_id) {
     // dom
     var d = new chees.Dompling("template_list");  
@@ -82,6 +84,8 @@ chees.tick.List = function(element,user_id) {
     // init the rootTask
     this.initTask(this.rootTask);    
 }
+goog.inherits(chees.tick.List, goog.events.EventTarget);
+
 
 // static methods
 
@@ -112,6 +116,7 @@ chees.tick.List.prototype.loadSetlist = function (id) {
             self.selectTask(self.rootTask);  
             self.setlistFindObject.insertSetlist(id);
             self.setlistFindObject.reset();
+            goog.events.dispatchEvent(self,new goog.events.Event(goog.events.EventType.LOAD));
         }    
     );    
 }
@@ -130,6 +135,7 @@ chees.tick.List.prototype.loadList = function (id) {
             self.setupList(obj['list']);
             self.setupTasks(obj['tasks']);
             self.dom['rootElement'].focus();
+            goog.events.dispatchEvent(self,new goog.events.Event(goog.events.EventType.LOAD));
         } else {
             chees.tick.GlobalNotify.publish('load failed: ' + event.target.getResponseText(),"bad");
         }

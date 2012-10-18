@@ -4,8 +4,13 @@
 
 {% block onload %}
                 var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
+                goog.events.listen(
+                    l,
+                    goog.events.EventType.LOAD,
+                    function () { new chees.tick.Comments('comments',l,'{{id}}','setlist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %}); }
+                    );                
                 l.loadSetlist({{id}});
-                var c = new chees.tick.Comments('comments',l,'{{id}}','setlist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %});
+                
 {% endblock %}
 
 

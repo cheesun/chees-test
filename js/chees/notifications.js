@@ -4,6 +4,7 @@ goog.provide('chees.tick.GlobalNotify');
 goog.require('goog.dom');
 goog.require('goog.fx.Animation');
 goog.require('goog.style');
+goog.require('goog.events');
 
 /** @constructor 
  *  global (exported) construct which allows outsiders to register a specific Notifications object
