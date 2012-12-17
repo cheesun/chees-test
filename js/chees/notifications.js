@@ -62,6 +62,7 @@ chees.tick.Notifications = function (container, note_text, close_button, display
 }
 goog.inherits(chees.tick.Notifications, goog.events.EventTarget);
 
+// animation
 chees.tick.Notifications.prototype.renderFrame = function (e) {
     var size = goog.style.getBorderBoxSize(this.container);
     var hscroll = (document.all ? document.scrollLeft : window.pageXOffset);
@@ -128,10 +129,11 @@ chees.tick.Notifications.prototype.hide = function () {
     return this.current_anim;
 }
 
+//logic
 chees.tick.Notifications.prototype.publishMessage = function(text,css_class) {
     // prevent spam
     text = chees.tick.tools.escapeHTML(text);
-    if (this.last_published !== text) {
+    if (!this.last_published || this.last_published.slice(0,10) !== text.slice(0,10)) {
         // clear things out if the user dismissed messages last time
         if (this.empty_next_time) {
             this.note_text.innerHTML = '';

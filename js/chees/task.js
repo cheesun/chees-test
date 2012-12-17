@@ -607,9 +607,10 @@ chees.tick.Task.prototype.done = function () {
                     var text = event.target.getResponseText();
                     var returned = goog.json.parse(text);
                     var results = returned['results'];
-                    var message = 'Did you know there are ' + results.length + ' setlists that match the text "' + query + '"? You can click the pencil (edit) and then the magnifying glass (find) to see their details and use them in your list.';
+                    var summary = query.split(' ').splice(0,5).join(' ') + '...';
+                    var message = 'Did you know there are ' + results.length + ' setlists that match the text "' + summary + '"? You can click the pencil (edit) and then the magnifying glass (find) to see their details and use them in your list.';
                     if (results.length == 1)
-                        message = 'Did you know there is ' + results.length + ' setlist that match the text "' + query + '"? You can click the pencil (edit) and then the magnifying glass (find) to see its details and use it in your list.';
+                        message = 'Did you know there is ' + results.length + ' setlist that match the text "' + summary + '"? You can click the pencil (edit) and then the magnifying glass (find) to see its details and use it in your list.';
                     if (results.length > 0) 
                         chees.tick.GlobalNotify.publish(message);
                 } 
