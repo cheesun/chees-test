@@ -537,7 +537,9 @@ chees.tick.List.prototype.selectRight = function () {
 
 chees.tick.List.prototype.deleteTask = function () {
     if (this.currentSelection == this.rootTask) return;
-    this.currentSelection.del();  
+    toDelete = this.currentSelection;
+    this.selectUp();
+    toDelete.del();  
     this.reportChange(); 
 }
 
