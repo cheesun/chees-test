@@ -40,23 +40,32 @@
             <h2 class='listTitle'></h2>
             <div id="left">
                 <div id="output"></div>
-                <div id="help">
-                    <h2>Help</h2>
-                    <ul>
-                        <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
-                        <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>
-                        <li><strong>Up/Down</strong> keys or click an item to change your selection.</li>
-                        <li><strong>Shift + Up/Down</strong> to select other items in the same group.</li>
-                        <li><strong>Ctrl + Direction</strong> or drag an item to move the currently selected item.</li>
-                        <li><strong>Ctrl + Del</strong> to delete the current item.</li>
-                        <li><strong>Ctrl + E</strong> to edit the current item.</li>
-                        <li><strong>Ctrl + Enter</strong> to mark/unmark the current item as completed.</li>
-                        <li><strong>Ctrl + S</strong> to save.</li>
-                        <li><strong>Esc</strong> cancels the current action.</li>
-                    </ul>
-                </div>        
+                <div id="help">                    
+                    <input id = "help-button" type="button" value="show/hide help"/>
+                    <div id="help-list">
+                        <h2>Help</h2>
+                        <ul>
+                            <li>Press <strong>Enter</strong> to begin adding an item. The new item is added after the currently selected item, or at the start of the list.</li>
+                            <li><strong>Ctrl + M</strong> to see if there are any setlists matching the selected task.</li>
+                            <li><strong>Up/Down</strong> keys or click an item to change your selection.</li>
+                            <li><strong>Shift + Up/Down</strong> to select other items in the same group.</li>
+                            <li><strong>Ctrl + Direction</strong> or drag an item to move the currently selected item.</li>
+                            <li><strong>Ctrl + Del</strong> to delete the current item.</li>
+                            <li><strong>Ctrl + E</strong> to edit the current item.</li>
+                            <li><strong>Ctrl + Enter</strong> to mark/unmark the current item as completed.</li>
+                            <li><strong>Ctrl + S</strong> to save.</li>
+                            <li><strong>Esc</strong> cancels the current action.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div id="comments"></div>
+{% endblock %}
+
+{% block final %}
+            <script type="text/javascript">
+              var show_hide_help = new chees.tick.control.ShowHide("help-button", "help-list");
+            </script>
 {% endblock %}
 
 

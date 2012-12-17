@@ -12,6 +12,24 @@ goog.require('goog.dom');
 goog.require('goog.net.XhrLite');
 
 /** @constructor */
+chees.tick.control.ShowHide = function (trigger, target, defaultstate) {
+  this.trigger = document.getElementById(trigger);
+  this.target = document.getElementById(target);
+  this.original = this.target.style.display;
+  this.target.style.display = defaultstate || 'none';
+  var self = this;
+  goog.events.listen(this.trigger,goog.events.EventType.CLICK,function(){self.toggle()}); 
+}
+
+chees.tick.control.ShowHide.prototype.toggle = function () {
+  if (this.target.style.display == this.original) {
+    this.target.style.display = 'none';
+  } else {
+    this.target.style.display = this.original;
+  }
+}
+
+/** @constructor */
 chees.tick.control.AjaxButton = function (button,target,data,states) {
     this.button = button;
     this.target = target;

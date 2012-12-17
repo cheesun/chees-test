@@ -15,6 +15,7 @@ goog.exportSymbol('chees.tick.List.prototype.leavePage',chees.tick.List.prototyp
 goog.exportSymbol('chees.tick.List.prototype.loadSetlist',chees.tick.List.prototype.loadSetlist);
 
 goog.exportSymbol('chees.tick.control.AjaxEditable',chees.tick.control.AjaxEditable);
+goog.exportSymbol('chees.tick.control.ShowHide',chees.tick.control.ShowHide);
 
 goog.exportSymbol('chees.tick.Notifications',chees.tick.Notifications);
 goog.exportSymbol('chees.tick.GlobalNotify',chees.tick.GlobalNotify);
