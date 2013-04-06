@@ -3,7 +3,7 @@ js/closure-library/closure/bin/build/closurebuilder.py \
     --root=js/chees/ \
     --namespace="chees.tick.main" \
     --output_mode=compiled \
-    --compiler_jar=js/closure-library/compiler.jar \
+    --compiler_jar=js/compiler.jar \
         --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     > tick.js \
 && mv tick.js gae/tick/static \
