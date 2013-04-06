@@ -1,12 +1,7 @@
 from google.appengine.api import users
 from google.appengine.ext import webapp
 
-import os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
-from django.utils import simplejson
-
+import json
 import models
 
 class TickApiHandler(webapp.RequestHandler):
@@ -14,10 +9,10 @@ class TickApiHandler(webapp.RequestHandler):
 
     def __init__(self,*args,**kwargs):
         super(TickApiHandler,self).__init__(*args,**kwargs)
-        self.current_user = models.TickUser.get_current_user()       
+        self.current_user = models.TickUser.get_current_user()
         def wrap_get_post(funct):
             def newfunct(*args,**kwargs):
-                try:               
+                try:
                     if self.LOGIN_REQUIRED:
                         if users.get_current_user() is None:
                             self.response.set_status(401)
@@ -26,15 +21,22 @@ class TickApiHandler(webapp.RequestHandler):
                 except Exception, e:
                     self.response.set_status(403)
                     self.output(str(e))
-                    return 
-                return funct(self,*args,**kwargs)                    
+                    return
+                return funct(self,*args,**kwargs)
             return newfunct
-        self.get = wrap_get_post(self.__class__.get)
-        self.post = wrap_get_post(self.__class__.post)
-        
+        try:
+            self.get = wrap_get_post(self.__class__.get)
+        except AttributeError:
+            pass
+        try:
+            self.post = wrap_get_post(self.__class__.post)
+        except AttributeError:
+            pass
+
+
     def output(self,text):
         if not isinstance(text,basestring):
-            text = simplejson.dumps(text)
+            text = json.dumps(text)
         return self.response.out.write(text)
 
 # helper function used by some of the api calls
@@ -45,35 +47,35 @@ def get_simple(list_entity,user_key):
         return list_entity.to_simple(['top_task_path'])
     else:
         return list_entity.to_simple(['owner','owner_gravatar','owner_id','top_task_path'])
-        
-# API CALLS        
-        
-class TickListSave(TickApiHandler): 
+
+# API CALLS
+
+class TickListSave(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
         data = self.request.get('data')
-        id = int(self.request.get('id'))
-        ver = int(self.request.get('ver'))
-        changes = simplejson.loads(data)
-        entity = models.TickList.save_list_items(id,ver,changes['inserts'],changes['updates'],changes['deletes'])         
-        models.Activity.create('<actor>|updated|<target>',target=entity)   
+        id = long(self.request.get('id'))
+        ver = long(self.request.get('ver'))
+        changes = json.loads(data)
+        entity = models.TickList.save_list_items(id,ver,changes['inserts'],changes['updates'],changes['deletes'])
+        models.Activity.create('<actor>|updated|<target>',target=entity)
         return self.output(entity.version)
-        
+
 class TickListLoad(TickApiHandler):
     def get(self):
         #import time
         #time.sleep(3)
-        list_id = int(self.request.get('id'))
+        list_id = long(self.request.get('id'))
         ticklist,tasks = models.TickList.get_list_and_tasks(list_id)
-        output = simplejson.dumps({
+        output = json.dumps({
             'list'  : ticklist.to_simple(['version','sharing','can_edit']),
             'tasks' : [t.to_simple() for t in tasks],
             })
-        return self.output(output)  
+        return self.output(output)
 
 class TickListVersion(TickApiHandler):
     def get(self):
-        list_id = int(self.request.get('id')) 
+        list_id = long(self.request.get('id'))
         return self.output(models.TickList.get_by_id(list_id).version)
 
 class TickListFind(TickApiHandler):
@@ -84,9 +86,9 @@ class TickListFind(TickApiHandler):
         if user:
             user_key = user.key()
             results = [get_simple(ticklist,user_key) for ticklist in models.TickList.search(query)]
-        else:              
-            results = [ticklist.to_simple(['owner','owner_gravatar','owner_id','top_task_path']) for ticklist in models.TickList.search(query)]        
-        output = simplejson.dumps({
+        else:
+            results = [ticklist.to_simple(['owner','owner_gravatar','owner_id','top_task_path']) for ticklist in models.TickList.search(query)]
+        output = json.dumps({
             'id' : searchid,
             'results' : results
             })
@@ -95,7 +97,7 @@ class TickListFind(TickApiHandler):
 class TickListShare(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        id = int(self.request.get('id'))
+        id = long(self.request.get('id'))
         sharing = self.request.get('sharing')
         entity = models.TickList.get_by_id(id)
         if not entity.can_edit():
@@ -106,10 +108,10 @@ class TickListShare(TickApiHandler):
             models.Activity.create('<actor>|made|<target>|public',target=entity)
         self.output('ticklist %s is now %s' % (entity.name,sharing))
 
-class SetListSave(TickApiHandler): 
+class SetListSave(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        lst = simplejson.loads(self.request.get('list'))
+        lst = json.loads(self.request.get('list'))
         name = self.request.get('setlistName')
         desc = self.request.get('setlistDescription')
         sharing = self.request.get('setlistShare')
@@ -118,7 +120,7 @@ class SetListSave(TickApiHandler):
             raise Exception("you've already created an active setlist with this name")
         entity = models.SetList.create_setlist(name,desc,sharing,lst)
         if sharing == 'public':
-            models.Activity.create('<actor>|created|<target>',target=entity)        
+            models.Activity.create('<actor>|created|<target>',target=entity)
         return self.output('%s setlist "%s" created' % (sharing,name))
         return self.output(str(lst))
 
@@ -130,10 +132,10 @@ class SetListFind(TickApiHandler):
         if user:
             user_key = user.key()
             results = [get_simple(setlist,user_key) for setlist in models.SetList.search(query)]
-        else:              
+        else:
             results = [setlist.to_simple(['owner','owner_gravatar','owner_id']) for setlist in models.SetList.search(query)]
-        
-        output = simplejson.dumps({
+
+        output = json.dumps({
             'id' : searchid,
             'results' : results
             })
@@ -141,18 +143,18 @@ class SetListFind(TickApiHandler):
 
 class SetListLoad(TickApiHandler):
     def get(self):
-        id = int(self.request.get('id'))
+        id = long(self.request.get('id'))
         setlist,tasks = models.SetList.get_setlist_and_tasks(id)
-        output = simplejson.dumps({
+        output = json.dumps({
             'list'  : setlist.to_simple(['description','sharing','can_edit']),
             'tasks' : [t.to_simple() for t in tasks],
-            })  
+            })
         return self.output(output)
 
 class SetListUse(TickApiHandler):
     def post(self):
-        id = int(self.request.get('id'))
-        ticklist_id = int(self.request.get('ticklist_id'))
+        id = long(self.request.get('id'))
+        ticklist_id = long(self.request.get('ticklist_id'))
         setlist = models.SetList.get_by_id(id)
         ticklist = models.TickList.get_by_id(ticklist_id)
         if setlist and ticklist:
@@ -163,23 +165,23 @@ class SetListUse(TickApiHandler):
 class SetListShare(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        id = int(self.request.get('id'))
+        id = long(self.request.get('id'))
         sharing = self.request.get('sharing')
         entity = models.SetList.get_by_id(id)
         if not entity.can_edit():
             raise Exception('you do not have permissions to change the sharing on this setlist')
         entity.sharing = sharing
-        entity.put()      
-        entity.enqueue_indexing(url='/tick/tasks/searchindexing')            
+        entity.put()
+        entity.enqueue_indexing(url='/tick/tasks/searchindexing')
         if sharing == 'public':
-            models.Activity.create('<actor>|made|<target>|public',target=entity)        
+            models.Activity.create('<actor>|made|<target>|public',target=entity)
         self.output('setlist %s is now %s' % (entity.name,sharing))
 
 class UserFind(TickApiHandler):
     def get(self):
         query = self.request.get('q')
         searchid = self.request.get('id')
-       
+
         def augment_simple(tickuser):
             follower = models.TickUser.get_current_user()
             simple = tickuser.to_simple(['gravatar','full_name','email_address'])
@@ -197,10 +199,10 @@ class UserFind(TickApiHandler):
                     simple['follow'] = 'follow'
                     simple['disabled'] = ''
             return simple
-       
+
         self.output({
             'id' : searchid,
-            'results' : [augment_simple(tickuser) for tickuser in models.TickUser.search(query)]           
+            'results' : [augment_simple(tickuser) for tickuser in models.TickUser.search(query)]
             })
 
 class UserCheckName(TickApiHandler):
@@ -211,8 +213,8 @@ class UserCheckName(TickApiHandler):
 class TickListUpdate(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        current_user = models.TickUser.get_current_user()    
-        id = int(self.request.get('id'))
+        current_user = models.TickUser.get_current_user()
+        id = long(self.request.get('id'))
         attr = self.request.get('attr')
         if attr != 'name':
             raise Exception('only the name of a ticklist may be changed')
@@ -222,7 +224,7 @@ class TickListUpdate(TickApiHandler):
         setattr(entity,attr,val)
         entity.put()
         models.Activity.create('<actor>|renamed the ticklist "%s" to|<target>'%orig_val,actor=current_user,target=entity)
-        self.output('%s changed from %s to %s' % (attr,orig_val,val))   
+        self.output('%s changed from %s to %s' % (attr,orig_val,val))
 
 
 class UserUpdate(TickApiHandler):
@@ -234,14 +236,14 @@ class UserUpdate(TickApiHandler):
         orig_val = getattr(current_user,attr)
         setattr(current_user,attr,val)
         current_user.put()
-        models.Activity.create('<actor>|changed their profile',actor=current_user)                
-        self.output('%s changed from %s to %s' % (attr,orig_val,val))   
+        models.Activity.create('<actor>|changed their profile',actor=current_user)
+        self.output('%s changed from %s to %s' % (attr,orig_val,val))
 
 class UserFollow(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
         follower = models.TickUser.get_current_user()
-        leader = models.TickUser.get_by_id(int(self.request.get('leader')))
+        leader = models.TickUser.get_by_id(long(self.request.get('leader')))
         results = models.Follow.add_follower(leader,follower)
         if results:
             return self.output('you are now following %s' % leader.tick_name)
@@ -254,20 +256,20 @@ class UserInvite(TickApiHandler):
         email_address = self.request.get('email_address')
         invitation = models.Invitation.invite(email_address)
         return self.output('invited %s' % email_address)
-    
+
 class Recommend(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        current_user = models.TickUser.get_current_user()    
-        id = int(self.request.get('id'))      
+        current_user = models.TickUser.get_current_user()
+        id = long(self.request.get('id'))
         type = self.request.get('type')
-        if type == 'ticklist':  
+        if type == 'ticklist':
             entity = models.TickList.get_by_id(id)
         elif type == 'setlist':
             entity = models.SetList.get_by_id(id)
         else:
             raise Exception('invalid type')
-        new = models.Activity.create('<actor>|recommended|<target>',actor=current_user,target=entity)  
+        new = models.Activity.create('<actor>|recommended|<target>',actor=current_user,target=entity)
         if new is None:
             return self.output('already recommended recently')
         return self.output('recommended')
@@ -275,12 +277,12 @@ class Recommend(TickApiHandler):
 class Comment(TickApiHandler):
     LOGIN_REQUIRED = True
     def post(self):
-        id = int(self.request.get('id'))      
-        type = self.request.get('type')        
+        id = long(self.request.get('id'))
+        type = self.request.get('type')
         reference = self.request.get('reference',None)
         if reference:
-            reference = int(reference)
-        if type == 'ticklist':  
+            reference = long(reference)
+        if type == 'ticklist':
             entity = models.TickList.get_by_id(id)
         elif type == 'setlist':
             entity = models.SetList.get_by_id(id)
@@ -289,13 +291,13 @@ class Comment(TickApiHandler):
         models.Comment.create(entity,self.request.get('text'),reference)
         new = models.Activity.create('<actor>|commented on|<target>',actor=self.current_user,target=entity)
         return self.output('commented')
-    
+
 class GetComments(TickApiHandler):
     def get(self):
-        id = int(self.request.get('id'))      
-        type = self.request.get('type')        
-        last_id = int(self.request.get('latest'))
-        if type == 'ticklist':  
+        id = long(self.request.get('id'))
+        type = self.request.get('type')
+        last_id = long(self.request.get('latest'))
+        if type == 'ticklist':
             entity = models.TickList.get_by_id(id)
         elif type == 'setlist':
             entity = models.SetList.get_by_id(id)
@@ -307,5 +309,5 @@ class GetComments(TickApiHandler):
         else:
             comments = models.Comment.all().ancestor(entity).order('__key__').fetch(1000)
         self.output([comment.to_simple(['creator','creator_gravatar','creator_id','text','age','reference']) for comment in comments])
-        
-        
+
+

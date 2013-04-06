@@ -4,7 +4,7 @@
 /* base.html */
 
     html {
-        overflow: -moz-scrollbars-vertical; 
+        overflow: -moz-scrollbars-vertical;
         overflow-y: scroll;
         background-color: #595;
     }
@@ -17,7 +17,7 @@
         -webkit-box-shadow: 0 5px 10px -2px black;
         -moz-box-shadow:    0 5px 10px -2px black;
         box-shadow:         0 5px 10px -2px black;
-        margin-bottom: 10px;        
+        margin-bottom: 10px;
     }
 
     *:focus {
@@ -37,19 +37,19 @@
 
     /* notifications */
     #notifications-container {
-        display: none; 
+        display: none;
         position: fixed;
         z-index: 6001;
         top: 0;
         left: 0;
-        right: 0;    
+        right: 0;
         font-size:0.9em;
     }
-    
+
     #notifications {
         background: #fde073;
         text-align: center;
-        overflow: hidden; 
+        overflow: hidden;
         -webkit-box-shadow: 0 0 10px black;
         -moz-box-shadow:    0 0 10px black;
         box-shadow:         0 0 10px black;
@@ -70,7 +70,7 @@
     }
 
     #notifications-text .neutral {
-        background-color: inherit; 
+        background-color: inherit;
     }
 
     #notifications-close {
@@ -83,7 +83,7 @@
       color: gray;
       line-height: 1;
     }
-    
+
     #notifications-close:hover {
        color: black;
        border: 2px solid black;
@@ -92,8 +92,8 @@
     /* title bar, containing links and branding */
     #title {
         background-image: -moz-linear-gradient(top , #595 0%, #484 100%);
-        background-image: -webkit-linear-gradient(top , #595 0%, #484 100%);    
-        background-image: linear-gradient(top , #595 0%, #484 100%);        
+        background-image: -webkit-linear-gradient(top , #595 0%, #484 100%);
+        background-image: linear-gradient(top , #595 0%, #484 100%);
         background-color: #484;
         color: white;
         padding: 0 0 0.1em;
@@ -109,7 +109,7 @@
             color: #fff;
         }
 
-        #branding .chees { 
+        #branding .chees {
             padding: 0.25em 0;
             font-style: italic;
             font-family: serif;
@@ -121,7 +121,7 @@
         #branding {
             float: right;
             font-size: 2.25em;
-            font-weight: 900;    
+            font-weight: 900;
             padding-right: 0.25em;
         }
 
@@ -130,7 +130,7 @@
         #links {
             text-align: left;
             font-weight: bold;
-            margin-left: 2em;   
+            margin-left: 2em;
             padding-top: 1em;
             color: #484;
             vertical-align: bottom;
@@ -156,10 +156,10 @@
         #login {
             float: right;
             margin-top: 0.25em;
-            padding-top: 0;  
+            padding-top: 0;
             padding-right: 1em;
             margin-bottom: 1em;
-            color: #484;      
+            color: #484;
             text-align: right;
             font-size: 0.75em;
         }
@@ -174,7 +174,7 @@
         }
 
     /* second bar area under title bar */
-    
+
         #undertitle {
             border-top: 1px solid #8a8;
             height: 1px;
@@ -182,17 +182,17 @@
             background-color: #cdc;
             border-bottom: 1px solid #ded;
         }
-        
+
         /* intelligent input */
 
             /* the input row */
 
                 .ticklistCreationRow {
-                    background-color: #eee;    
-                    -moz-box-shadow: 0px 4px 4px 0px #aaa;    
-                    -webkit-box-shadow: 0px 4px 4px 0px #aaa;        
-                    box-shadow: 0px 4px 4px 0px #aaa;      
-                    padding-bottom: 0.5em;      
+                    background-color: #eee;
+                    -moz-box-shadow: 0px 4px 4px 0px #aaa;
+                    -webkit-box-shadow: 0px 4px 4px 0px #aaa;
+                    box-shadow: 0px 4px 4px 0px #aaa;
+                    padding-bottom: 0.5em;
                 }
 
                 .ticklistCreation {
@@ -255,7 +255,7 @@
                     .searchString {
                         font-weight: bold;
                     }
-                    
+
                     .searchResult {
                         border: 1px solid transparent;
                         padding: 0.2em;
@@ -280,12 +280,12 @@
                     .setlistPreview ul {
                         margin: 0;
                         padding: 0 0.5em 0 1.5em;
-                        list-style-type: disc;  
+                        list-style-type: disc;
                     }
 
                     .setlistPreview .separator {
                         border-top: 1px solid #ddd;
-                        margin: 0.5em 0.25em;    
+                        margin: 0.5em 0.25em;
                     }
 
                     .setlistPreviewDescription {
@@ -325,8 +325,8 @@
         margin: 0 0.5em;
         -moz-box-shadow: 4px 4px 4px 0 #aaa;
         -webkit-box-shadow: 4px 4px 4px 0 #aaa;
-        box-shadow: 4px 4px 4px 0 #aaa;        
-    }   
+        box-shadow: 4px 4px 4px 0 #aaa;
+    }
 
     #centeredInner div.column ul {
         list-style-position: inside;
@@ -338,7 +338,7 @@
     #centeredInner div.column ul li {
         padding: 0.25em 0 0.25em 0;
         margin: 0;
-        border-top: 1px solid #ddd;    
+        border-top: 1px solid #ddd;
     }
 
 /* for user, ticklist and setlist slips - the inline representations of each of these things */
@@ -349,12 +349,11 @@
         background-color: orange;
         color: white;
         -webkit-border-radius: 3px 3px 3px 3px;
-        -moz-border-radius: 3px 3px 3px 3px;    
+        -moz-border-radius: 3px 3px 3px 3px;
         border-radius: 3px 3px 3px 3px;
-        padding-left: 0.25em;
-        padding-right: 0.25em;
+        padding: 2px 0.25em 0;
     }
-    
+
     .completedTask .tag {
         background-color: #cc8;
     }
@@ -368,11 +367,11 @@
         margin: 0.2em 0.25em 0.25em;
         /*margin-bottom: 0.5em;*/
         -webkit-border-radius: 3px 3px 3px 3px;
-        -moz-border-radius: 3px 3px 3px 3px;    
+        -moz-border-radius: 3px 3px 3px 3px;
         border-radius: 3px 3px 3px 3px;
         -moz-box-shadow: 1px 1px 2px 0 #aaa;
         -webkit-box-shadow: 1px 1px 2px 0 #aaa;
-        box-shadow: 1px 1px 2px 0 #aaa;  
+        box-shadow: 1px 1px 2px 0 #aaa;
         line-height: 1.75em;
     }
 
@@ -390,8 +389,8 @@
         border: none;
         background-color: inherit;
         -webkit-border-radius: 3px 3px 3px 3px;
-        -moz-border-radius: 3px 3px 3px 3px;    
-        border-radius: 3px 3px 3px 3px;    
+        -moz-border-radius: 3px 3px 3px 3px;
+        border-radius: 3px 3px 3px 3px;
         padding: 0.1em 0.2em;
         margin: 0 0.25em;
     }
@@ -402,7 +401,7 @@
 
     .slip img {
         vertical-align: middle;
-        margin-left: -0.3em;   
+        margin-left: -0.3em;
         margin-right: 0.5em;
         margin-top: -0.1em;
     }
@@ -428,27 +427,27 @@
 
         .ticklistSlip {
             background-color: #f0f0da;
-            background-image: url('icons/check_list_small.png');   
-            background-position: 0.2em 0.2em; 
-            background-repeat: no-repeat;    
-            padding-left: 2em;    
+            background-image: url('icons/check_list_small.png');
+            background-position: 0.2em 0.2em;
+            background-repeat: no-repeat;
+            padding-left: 2em;
         }
 
         .ticklistSlip.bigSlip {
-            background-image: url('icons/check_list.png');   
+            background-image: url('icons/check_list.png');
         }
 
         .setlistSlip {
             background-color: #eaeaf0;
-            background-image: url('icons/magic_wand_small.png');   
-            background-position: 0.2em 0.2em; 
-            background-repeat: no-repeat;    
+            background-image: url('icons/magic_wand_small.png');
+            background-position: 0.2em 0.2em;
+            background-repeat: no-repeat;
             padding-left: 2em;
         }
 
         .bigSlip {
             font-size: 2em;
-            margin-top: 0.5em;  
+            margin-top: 0.5em;
         }
 
         .bigSlip input {
@@ -457,7 +456,7 @@
         }
 
         .setlistSlip.bigSlip {
-            background-image: url('icons/magic_wand.png');   
+            background-image: url('icons/magic_wand.png');
         }
 
 /* loading animation */
@@ -540,8 +539,8 @@
     /* the list is generated in the javascript and displayed in this element */
     #output {
         width: 45em;
-    }        
-    
+    }
+
     /* comments will be put here */
     #comments {
         width: 35em;
@@ -550,11 +549,11 @@
         margin-left: 2em;
         font-size: 0.85em;
     }
-    
+
         #comments .comment {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
-            box-sizing: border-box;               
+            box-sizing: border-box;
             margin-bottom: 0.2em;
             border-radius: 3px 3px 3px 3px;
             background: #F8F8F8;
@@ -566,20 +565,20 @@
             margin-left: -0.75em;
             margin-top: -0.25em;
         }
-        
+
         #comments .comment-text {
             margin: 0.25em 0;
             font-size: 1.1em;
         }
-        
+
         #comments .comment-text a {
             color: inherit;
-            background-position: right center;   
-            background-repeat: no-repeat;      
-            background-image: url('icons/link_notetext.png');   
+            background-position: right center;
+            background-repeat: no-repeat;
+            background-image: url('icons/link_notetext.png');
             padding-right: 17px;
             margin-right: 0.25em;
-        }        
+        }
 
         #comments .comment-age {
             color: gray;
@@ -589,7 +588,7 @@
         #comments #new-comment {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
-            box-sizing: border-box;               
+            box-sizing: border-box;
             border-radius: 3px 3px 3px 3px;
             background: #F8F8F8;
             padding: 0.25em;
@@ -599,13 +598,13 @@
         #comments .refer {
             color: gray;
         }
-        
+
          #comments .reference {
             color: gray;
             text-decoration: none;
-            background-position: right center;   
-            background-repeat: no-repeat;      
-            background-image: url('icons/reference_comments.png');   
+            background-position: right center;
+            background-repeat: no-repeat;
+            background-image: url('icons/reference_comments.png');
             padding-right: 17px;
             margin-right: 0.25em;
             cursor: pointer;
@@ -614,7 +613,7 @@
          #comments #new-comment .reference {
             color: inherit;
         }
-        
+
         #comments .reference:hover {
             color: inherit;
             text-decoration: underline;
@@ -624,13 +623,13 @@
             font-size: 1em;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
-            box-sizing: border-box;   
+            box-sizing: border-box;
             border: 1px solid #DDD;
             width: 100%;
             padding: 0.25em;
         }
-        
-        
+
+
 
     /* help section */
     #help {
@@ -678,27 +677,27 @@
         /* specific types of buttons */
 
             .ticklistSaveButton {
-                background-image: url('icons/disk_small.png');   
-                background-position: 0.4em center; 
-                background-repeat: no-repeat;    
+                background-image: url('icons/disk_small.png');
+                background-position: 0.4em center;
+                background-repeat: no-repeat;
             }
 
             .setlistSaveButton {
-                background-image: url('icons/magic_wand_small.png');   
-                background-position: 0.4em center; 
-                background-repeat: no-repeat;    
+                background-image: url('icons/magic_wand_small.png');
+                background-position: 0.4em center;
+                background-repeat: no-repeat;
             }
 
             .shareButton {
-                background-image: url('icons/two_people_small.png');   
-                background-position: 0.4em center; 
-                background-repeat: no-repeat;    
+                background-image: url('icons/two_people_small.png');
+                background-position: 0.4em center;
+                background-repeat: no-repeat;
             }
 
         .dialogButtonsRow > div > input.activeDialog {
             background-color: #ddd;
-            -moz-box-shadow: 4px 4px 4px 0 #aaa;        
-            -webkit-box-shadow: 4px 4px 4px 0 #aaa;       
+            -moz-box-shadow: 4px 4px 4px 0 #aaa;
+            -webkit-box-shadow: 4px 4px 4px 0 #aaa;
             box-shadow: 4px 4px 4px 0 #aaa;
         }
 
@@ -710,25 +709,25 @@
 
         .dialog {
             max-width: 30em;
-            overflow: auto; 
+            overflow: auto;
             font-size: 1.25em;
             visibility: hidden;
             background-color: white;
             position: absolute;
             border: 2px solid #ddd;
             margin-top: -1px;
-            margin-right: -1px; 
+            margin-right: -1px;
             color: #444;
             padding: 1em 1em 1em;
             z-index: 105;
-            -moz-box-shadow: 4px 4px 4px 0 #aaa;        
-            -webkit-box-shadow: 4px 4px 4px 0 #aaa;    
-            box-shadow: 4px 4px 4px 0 #aaa;    
+            -moz-box-shadow: 4px 4px 4px 0 #aaa;
+            -webkit-box-shadow: 4px 4px 4px 0 #aaa;
+            box-shadow: 4px 4px 4px 0 #aaa;
         }
 
         .dialog input,select {
             font-size: 0.8em;
-        }   
+        }
 
         .dialog div {
             margin-bottom: 0.5em;
@@ -765,13 +764,13 @@
             font-family: sans-serif;
             width: 100%;
             height: 10em;
-            font-size: 1em;    
+            font-size: 1em;
         }
 
         .dialog .setlistPreview {
             border: 1px solid #ddd;
-            width: 100%;  
-            font-size: 0.75em;  
+            width: 100%;
+            font-size: 0.75em;
         }
 
         .dialog .setlistPreview > ul {
@@ -836,9 +835,9 @@
             margin-left: 0.25em;
             border: none;
             background-color: inherit;
-            background-image: url('icons/script_add.png');   
-            background-position: left center;   
-            background-repeat: no-repeat;  
+            background-image: url('icons/script_add.png');
+            background-position: left center;
+            background-repeat: no-repeat;
         }
 
         .findItemView {
@@ -847,21 +846,21 @@
             margin-left: 0.25em;
             border: none;
             background-color: inherit;
-            background-image: url('icons/script_go.png');   
-            background-position: left center;   
-            background-repeat: no-repeat;  
+            background-image: url('icons/script_go.png');
+            background-position: left center;
+            background-repeat: no-repeat;
         }
 
 
     /* tasklist */
 
-        .task { 
-            margin-top: 0em;    
-            padding: 0 0 0 0; 
+        .task {
+            margin-top: 0em;
+            padding: 0 0 0 0;
             border: 1px solid transparent;
             background-color: transparent;
             margin-right: -1px;
-        }    
+        }
 
         /* hack for transparent borders in IE6 */
         *html .task {
@@ -879,9 +878,9 @@
                 padding: 0.5em 0.5em 0.75em;
                 background-color: #ffc;
                 border: 1px solid #ddd;
-                -moz-box-shadow: 4px 4px 4px 0px #aaa;    
-                -webkit-box-shadow: 4px 4px 4px 0px #aaa;        
-                box-shadow: 4px 4px 4px 0px #aaa;            
+                -moz-box-shadow: 4px 4px 4px 0px #aaa;
+                -webkit-box-shadow: 4px 4px 4px 0px #aaa;
+                box-shadow: 4px 4px 4px 0px #aaa;
             }
 
         .roottask {
@@ -894,7 +893,7 @@
             vertical-align: middle;
             color: #cc8;
             border: 2px dashed transparent;
-            margin-top: 0.75em; 
+            margin-top: 0.75em;
             margin-bottom: 0.75em;
             font-weight: bold;
             padding: 0.25em 0.5em;
@@ -918,10 +917,10 @@
             padding-left: 0.3em;
             border-left: 1px solid #ddd;
         }
-        
+
         .rootTask input[type=button] {
             margin: 0px;
-        }        
+        }
 
     /* components of each task */
 
@@ -942,11 +941,11 @@
             margin: 1px;
             border: 1px solid transparent;
             /* word wrap*/
-            white-space: pre-wrap;      /* CSS3 */   
-            white-space: -moz-pre-wrap; /* Firefox */    
-            white-space: -pre-wrap;     /* Opera <7 */   
-            white-space: -o-pre-wrap;   /* Opera 7 */    
-            word-wrap: break-word;      /* IE */    
+            white-space: pre-wrap;      /* CSS3 */
+            white-space: -moz-pre-wrap; /* Firefox */
+            white-space: -pre-wrap;     /* Opera <7 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            word-wrap: break-word;      /* IE */
         }
 
         .tasktext[contenteditable=true] {
@@ -956,9 +955,9 @@
 
         .tasktext a {
             color: inherit;
-            background-position: right center;   
-            background-repeat: no-repeat;      
-            background-image: url('icons/link_tasktext.png');   
+            background-position: right center;
+            background-repeat: no-repeat;
+            background-image: url('icons/link_tasktext.png');
             padding-right: 21px;
             margin-right: 0.25em;
         }
@@ -968,7 +967,7 @@
             padding-left: 0.5em;
             padding-right: 0.5em;
             border: 1px solid #eed;
-            background-color: white;    
+            background-color: white;
         }
 
         .taskedit {
@@ -1007,7 +1006,7 @@
         }
 
         /* check box for each task */
-        
+
             .checkbox {
                 margin: 0 0.25em 0 0.75em;
                 width: 1em;
@@ -1025,8 +1024,8 @@
 
             .checkedCheckBox {
                 background-color: #484;
-                background-image: url('tick.png');   
-                background-position: right bottom; 
+                background-image: url('tick.png');
+                background-position: right bottom;
             }
 
         /* notes, displayed between item text and checkbox */
@@ -1049,21 +1048,21 @@
                 font-family: sans-serif;
                 font-weight: normal;
                 background-color: #fff;
-                border: 1px solid #eed;      
-                color: #000;   
+                border: 1px solid #eed;
+                color: #000;
                 line-height: 1.2;
                 margin-bottom: 2px;
             }
 
             .note div {
                 /* word wrap*/
-                white-space: pre-wrap;      /* CSS3 */   
-                white-space: -moz-pre-wrap; /* Firefox */    
-                white-space: -pre-wrap;     /* Opera <7 */   
-                white-space: -o-pre-wrap;   /* Opera 7 */    
+                white-space: pre-wrap;      /* CSS3 */
+                white-space: -moz-pre-wrap; /* Firefox */
+                white-space: -pre-wrap;     /* Opera <7 */
+                white-space: -o-pre-wrap;   /* Opera 7 */
                 word-wrap: break-word;      /* IE */
             }
-        
+
             .note div a {
                 color: inherit;
                 background-position: right center;
@@ -1072,24 +1071,24 @@
                 padding-right: 17px;
                 margin-right: 0.25em;
             }
-        
+
             .note textarea {
                 min-width: 19em;
                 max-width: 19em;
                 height: 1.2em;
                 min-height: 1.2em;
-                resize: none;                
-            } 
+                resize: none;
+            }
 
             .note .empty {
                 background-color: inherit;
-                color: #cc8;    
+                color: #cc8;
             }
 
             .note textarea:focus {
                 background-color: #fff;
-                border: 1px solid #eed;      
-                color: #000;    
+                border: 1px solid #eed;
+                color: #000;
             }
 
         /* buttons for actions to be performed on tasks */
@@ -1102,8 +1101,8 @@
                 border: 1px solid transparent;
                 color: transparent;
                 background-color: transparent;
-                background-position: center center;   
-                background-repeat: no-repeat;      
+                background-position: center center;
+                background-repeat: no-repeat;
                 height: 28px;
                 width: 28px
             }
@@ -1117,39 +1116,39 @@
             }
 
             .taskEditButton {
-                background-image: url('icons/pencil_small.png');   
+                background-image: url('icons/pencil_small.png');
             }
 
             .taskLeftButton {
-                background-image: url('icons/left_small.png');   
+                background-image: url('icons/left_small.png');
             }
 
             .taskRightButton {
-                background-image: url('icons/right_small.png');   
+                background-image: url('icons/right_small.png');
             }
 
             .taskUpButton {
-                background-image: url('icons/up_small.png');   
+                background-image: url('icons/up_small.png');
             }
 
             .taskDownButton {
-                background-image: url('icons/down_small.png');   
+                background-image: url('icons/down_small.png');
             }
 
             .taskCancelButton {
-                background-image: url('icons/cancel_small.png');   
+                background-image: url('icons/cancel_small.png');
             }
 
             .taskDeleteButton {
-                background-image: url('icons/bin_small.png');   
+                background-image: url('icons/bin_small.png');
             }
 
             .taskFindButton {
-                background-image: url('icons/magnifying_glass_small.png');   
+                background-image: url('icons/magnifying_glass_small.png');
             }
 
             .taskDoneButton {
-                background-image: url('icons/done_small.png');   
+                background-image: url('icons/done_small.png');
             }
 
     /* modifiers for tasks */
@@ -1165,7 +1164,7 @@
             }
 
         /* collapsed tasks, with their subtasks hidden */
-        
+
             .collapsedTask > .sublistContainer {
                 display: none;
             }
@@ -1180,14 +1179,14 @@
 
             .collapsedTask > div.containsFloats > div.taskBody > div.taskBodyBullet > li {
                 list-style-type: circle;
-            }        
+            }
 
         /* style sheets for selected tasks */
 
             .selectedtask {
                 -moz-border-radius: 3px;
                 border-radius: 3px;
-                border: 1px solid #484;    
+                border: 1px solid #484;
             }
 
             /* hack for transparent borders in IE6 */
@@ -1199,7 +1198,7 @@
             }
 
         /* make completed tasks less outstanding */
-        
+
             .completedTask {
                 color: #cc8;
             }
@@ -1207,7 +1206,7 @@
     /* drag and drop */
 
         /* target element for dragging and dropping */
-        
+
             .dragTarget {
                 height: 10px;
                 margin: 0px;
@@ -1235,11 +1234,11 @@
             }
 
         /* added to item while dragging */
-        
+
             .dragtask {
                 width: 35em;
                 opacity:0.3;
-                background-color: #ffc;    
+                background-color: #ffc;
                 filter:alpha(opacity=30);
             }
 
@@ -1248,7 +1247,7 @@
             }
 
         /* when hovering over while dragging */
-        
+
             .dragOver {
                 border: 2px dashed #cc8;
                 margin-top: -2px;
@@ -1281,7 +1280,7 @@
     }
 
     .listListRows {
-        
+
     }
 
     .listList .separator {
@@ -1332,35 +1331,35 @@
             border: 1px solid transparent;
             color: transparent;
             background-color: #fff;
-            background-position: center center;   
-            background-repeat: no-repeat;      
+            background-position: center center;
+            background-repeat: no-repeat;
             height: 28px;
             width: 28px
         }
 
 
         .deleteListButton {
-            background-image: url('icons/delete.png');   
+            background-image: url('icons/delete.png');
         }
 
         .completeListButton {
-            background-image: url('icons/done.png');   
+            background-image: url('icons/done.png');
         }
 
         .favouriteListButton {
-            background-image: url('icons/filled_star.png');   
+            background-image: url('icons/filled_star.png');
         }
 
         .nonFavouriteListButton {
-            background-image: url('icons/empty_star.png');   
+            background-image: url('icons/empty_star.png');
         }
 
         .scheduleListButton {
-            background-image: url('icons/calendar.png');   
+            background-image: url('icons/calendar.png');
         }
 
         .likeListButton {
-            background-image: url('icons/thumbs_up.png');   
+            background-image: url('icons/thumbs_up.png');
         }
 
         .listList .listActionButton:hover {
@@ -1425,7 +1424,7 @@
     .profileTable th {
         text-align: right;
         padding: 0.5em 2em 0.5em 1em;
-        color: #444;      
+        color: #444;
         vertical-align: top;
     }
 
@@ -1457,7 +1456,7 @@
     .userCard > .bigGravatar > img {
         box-shadow: 2px 2px 2px 0 #aaa;
         -moz-box-shadow: 2px 2px 2px 0 #aaa;
-        -webkit-box-shadow: 2px 2px 2px 0 #aaa;    
+        -webkit-box-shadow: 2px 2px 2px 0 #aaa;
     }
 
     .userCard table {
@@ -1466,10 +1465,10 @@
     .userCard table th {
         vertical-align: top;
         text-align: right;
-        color: #444;    
-        width: 7em;  
+        color: #444;
+        width: 7em;
         padding: 0 1em 0.5em 0;
-        line-height: 1.5em;    
+        line-height: 1.5em;
     }
 
     .userCard table td {
@@ -1477,7 +1476,7 @@
         vertical-align: top;
         line-height: 1.5em;
     }
-    
+
     .userCard table td span {
         margin-right: 0.5em;
     }

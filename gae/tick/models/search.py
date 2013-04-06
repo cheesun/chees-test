@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 #
 # The MIT License
-# 
+#
 # Copyright (c) 2009 William T. Katz
 # Website/Contact: http://www.billkatz.com
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to 
-# deal in the Software without restriction, including without limitation 
-# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-# and/or sell copies of the Software, and to permit persons to whom the 
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
 """A simple full-text search system
@@ -47,7 +47,7 @@ from google.appengine.ext import webapp
 from google.appengine.api import users
 from google.appengine.api import taskqueue
 
-from django.utils import simplejson
+import json
 
 # Use python port of Porter2 stemmer.
 from Stemmer import Stemmer
@@ -113,21 +113,21 @@ PUNCTUATION_REGEX = re.compile('[' + re.escape(string.punctuation) + ']')
 # identical to a base index entity.
 class SearchIndex(PermissionIndex):
     """Holds full text indexing on an entity.
-    
+
     This model is used by the Searchable mix-in to hold full text
     indexes of a parent entity.
     """
-    
+
     # for permissions - might need to change this later
     #edit_permissions = db.StringListProperty()
     #view_permissions = db.StringListProperty()
 
     phrases = db.StringListProperty(required=True)
     rating = db.IntegerProperty(required=True,default=0)
-    # this is used for allowing an index to have an ordering 
+    # this is used for allowing an index to have an ordering
     # might be a date, or a rating
     ordinal = db.FloatProperty(default=0.0)
-    
+
     @staticmethod
     def get_index_key_name(parent, index_num=1):
         key = parent.key()
@@ -159,9 +159,9 @@ class SearchIndex(PermissionIndex):
     def put_index(cls, parent, phrases, index_num=1, rating=0, ordinal=0.0, view_permissions=[], edit_permissions=[]):
         parent_key = parent.key()
         args = {'key_name': cls.get_index_key_name(parent, index_num),
-                'parent': parent_key, 'parent_kind': parent_key.kind(), 
+                'parent': parent_key, 'parent_kind': parent_key.kind(),
                 'phrases': phrases,
-                'rating': rating, 
+                'rating': rating,
                 'ordinal' : ordinal,
                 'view_permissions': view_permissions,
                 'edit_permissions': edit_permissions,
@@ -181,9 +181,9 @@ class StemmedIndex(SearchIndex):
 
 class Searchable(object): #object):
     """A class that supports full text indexing and search on entities.
-    
+
     Add this class to your model's inheritance declaration like this:
-    
+
         class Page(Searchable, db.Model):
             title = db.StringProperty()
             author_name = db.StringProperty()
@@ -200,7 +200,7 @@ class Searchable(object): #object):
 
     You can declare a string property to be stowed in index key names by
     using the INDEX_TITLE_FROM_PROP variable.  This allows you to retrieve
-    useful labels on key-only searches without doing a get() on the whole 
+    useful labels on key-only searches without doing a get() on the whole
     entity.
 
     Defaults are for searches to use stemming, multiple index entities,
@@ -234,7 +234,7 @@ class Searchable(object): #object):
     Note that a url must be included that corresponds with the url mapped
     to search.LiteralIndexing controller.
 
-    You can limit the properties indexed by passing in a list of 
+    You can limit the properties indexed by passing in a list of
     property names:
 
         myPage.enqueue_indexing(url='/foo', only_index=['content'])
@@ -266,14 +266,14 @@ class Searchable(object): #object):
     Because stemming can be toggled for any particular Model, only entities will
     be returned that match indexing style (i.e., stemming on or off).
     """
-    
+
     INDEX_ONLY = None                       # Can set to list of property names to index.
     INDEX_STEMMING = True                   # Allow stemming to be turned off per subclass.
     INDEX_MULTI_WORD = True                 # Add two and three-word phrases to index.
-    
+
     INDEX_SUBENTITY_QUERIES = []            # List of functions which return a query object
     INDEX_ADD_STOP_WORDS = frozenset([])    # Add some other stopwords to use
-    
+
     INDEX_ORDERING_FUNCT = None             # Function(self) -> float
 
     # If TRUE, incurs additional query/delete overhead on indexing but will workaround
@@ -284,19 +284,19 @@ class Searchable(object): #object):
         super(Searchable,self).__init__(*args,**kwargs)
 
     @staticmethod
-    def full_text_search(phrase, limit=10, 
-                         kind=None, 
+    def full_text_search(phrase, limit=10,
+                         kind=None,
                          stemming=INDEX_STEMMING,
                          multi_word_literal=INDEX_MULTI_WORD,
                          add_stop_words=frozenset([])):
         """Queries search indices for phrases using a merge-join.
-        
+
         Args:
             phrase: String.  Search phrase.
             kind: String.  Returned keys/entities are restricted to this kind.
 
         Returns:
-            A list of (key, title) tuples corresponding to the indexed entities.  
+            A list of (key, title) tuples corresponding to the indexed entities.
             Multi-word literal matches are returned first.
 
         TODO -- Should provide feedback if input search phrase has stop words, etc.
@@ -333,12 +333,12 @@ class Searchable(object): #object):
                 pub_query = klass.all(keys_only=True).filter('phrases =', phrase).filter('view_permissions =','public').order('ordinal') #.order('-rating')
                 if kind:
                     if current_user:
-                        query = query.filter('parent_kind =', kind)              
-                    pub_query = pub_query.filter('parent_kind =', kind)  
+                        query = query.filter('parent_kind =', kind)
+                    pub_query = pub_query.filter('parent_kind =', kind)
                 if current_user:
                     index_keys.extend([key for key in query.fetch(limit=limit-len(index_keys)) if key not in index_keys])
-                index_keys.extend([key for key in pub_query.fetch(limit=limit-len(index_keys)) if key not in index_keys])                
-                
+                index_keys.extend([key for key in pub_query.fetch(limit=limit-len(index_keys)) if key not in index_keys])
+
 
         if len(index_keys) < limit:
             new_limit = limit - len(index_keys)
@@ -346,17 +346,17 @@ class Searchable(object): #object):
             if stemming:
                 keywords = stemmer.stemWords(keywords)
             for keyword in keywords:
-                if current_user:            
+                if current_user:
                     query = klass.all(keys_only=True).filter('phrases =', keyword).filter('view_permissions =',current_user.user_id()).order('ordinal') #.order('-rating')
-                pub_query = klass.all(keys_only=True).filter('phrases =', keyword).filter('view_permissions =','public').order('ordinal') #.order('-rating')              
+                pub_query = klass.all(keys_only=True).filter('phrases =', keyword).filter('view_permissions =','public').order('ordinal') #.order('-rating')
                 if kind:
-                    if current_user:                
-                        query = query.filter('parent_kind =', kind)  
-                    pub_query = pub_query.filter('parent_kind =', kind)                      
+                    if current_user:
+                        query = query.filter('parent_kind =', kind)
+                    pub_query = pub_query.filter('parent_kind =', kind)
                 if current_user:
                     index_keys.extend([key for key in query.fetch(limit=limit-len(index_keys)) if key not in index_keys])
-                index_keys.extend([key for key in pub_query.fetch(limit=limit-len(index_keys)) if key not in index_keys])                
-                
+                index_keys.extend([key for key in pub_query.fetch(limit=limit-len(index_keys)) if key not in index_keys])
+
         return [(key.parent(), SearchIndex.get_title(key.name())) for key in index_keys]
 
     @classmethod
@@ -388,14 +388,14 @@ class Searchable(object): #object):
 
     @classmethod
     def get_search_phraseset(cls, text, add_stop_words = frozenset([])):
-        """Returns set of phrases, including two and three adjacent word phrases 
+        """Returns set of phrases, including two and three adjacent word phrases
            not spanning punctuation or stop words.
 
         Args:
             text: String with punctuation.
 
         Returns:
-            A set of search terms that aren't stop words and meet length 
+            A set of search terms that aren't stop words and meet length
             requirement.  Set includes phrases of adjacent words that
             aren't stop words.  (Stop words are allowed in middle of three-word
             phrases like "Statue of Liberty".)
@@ -414,7 +414,7 @@ class Searchable(object): #object):
             two_words = []
             three_words = ['', '']
             three_words_no_stop = [False, False]
-            text = text.replace('-', ' ')                 
+            text = text.replace('-', ' ')
             text, _ = PUNCTUATION_REGEX.subn(' ', text)
             fragments = text.split()
             for frag in fragments:
@@ -447,7 +447,7 @@ class Searchable(object): #object):
     @classmethod
     def search(cls, phrase, limit=10, keys_only=False):
         """Queries search indices for phrases using a merge-join.
-        
+
         Use of this class method lets you easily restrict searches to a kind
         and retrieve entities or keys.
 
@@ -455,7 +455,7 @@ class Searchable(object): #object):
             phrase: Search phrase (string)
             limit: Number of entities or keys to return.
             keys_only: If True, return only keys with title of parent entity.
-        
+
         Returns:
             A list.  If keys_only is True, the list holds (key, title) tuples.
             If keys_only is False, the list holds Model instances.
@@ -487,7 +487,7 @@ class Searchable(object): #object):
         for old_key in old_index_keys:
             old_index = db.get(old_key)
             index_num = SearchIndex.get_index_num(old_key.name())
-            index_key = klass.put_index(parent=self, 
+            index_key = klass.put_index(parent=self,
                                         index_num=index_num,
                                         phrases=old_index.phrases,
                                         rating=old_index.rating,
@@ -510,7 +510,7 @@ class Searchable(object): #object):
         db.put(index_entries)
 
     def update_rating(self):
-        """updates the rating on the index entry"""   
+        """updates the rating on the index entry"""
         rating = self.rating
         klass = StemmedIndex #StemmedIndex if self.INDEX_STEMMING else LiteralIndex
         query = klass.all().ancestor(self.key())
@@ -545,7 +545,7 @@ class Searchable(object): #object):
         if self.INDEX_STEMMING:
             stemmer = Stemmer('english')
         phrases = set()
-        
+
         # allow indexing of 'subentities' such as tasks of a list as well
         queries = [(self,self.INDEX_ONLY)] + self.INDEX_SUBENTITY_QUERIES
         import logging
@@ -579,9 +579,9 @@ class Searchable(object): #object):
 
     def deindex(self):
         key = self.key()
-        klass = StemmedIndex #StemmedIndex if self.INDEX_STEMMING else LiteralIndex            
-        existing_index_keys = klass.all(keys_only=True).ancestor(key).fetch(1000)        
-        db.delete(existing_index_keys)        
+        klass = StemmedIndex #StemmedIndex if self.INDEX_STEMMING else LiteralIndex
+        existing_index_keys = klass.all(keys_only=True).ancestor(key).fetch(1000)
+        db.delete(existing_index_keys)
 
     def index(self, indexing_func=None):
         """Generates or replaces a search entities for a Model instance.
@@ -616,20 +616,20 @@ class Searchable(object): #object):
             ordinal = self.INDEX_ORDERING_FUNCT()
         else:
             ordinal = 0.0
-            
+
         # permissions
         try:
             view_permissions, edit_permissions = self.base_permissions()
         except AttributeError:
             # object is not permissioned
-            view_permissions, edit_permissions = (['public'], [])        
+            view_permissions, edit_permissions = (['public'], [])
         while (num_phrases > 0):
             cur_num_phrases = min(num_phrases, MAX_ENTITY_SEARCH_PHRASES)
             end_index = start_index + cur_num_phrases
             num_indices = (num_phrases - 1) / MAX_ENTITY_SEARCH_PHRASES + 1
-            index_key = klass.put_index(parent=self, 
+            index_key = klass.put_index(parent=self,
                                         index_num=entity_num,
-                                        phrases=search_phrases[start_index:end_index], 
+                                        phrases=search_phrases[start_index:end_index],
                                         rating=rating,
                                         ordinal=ordinal,
                                         view_permissions=view_permissions[:MAX_ENTITY_SEARCH_PHRASES],
@@ -650,7 +650,7 @@ class Searchable(object): #object):
 
     def enqueue_indexing(self, url, only_index=None, delay=None, condition=None):
         """Adds an indexing task to the default task queue.
-        
+
         Args:
             url: String. The url associated with LiteralIndexing handler.
             only_index: List of strings.  Restricts indexing to these prop names.
@@ -662,18 +662,18 @@ class Searchable(object): #object):
             if only_index:
                 params['only_index'] = ' '.join(only_index)
             if condition:
-                params['condition'] = simplejson.dumps(condition)
+                params['condition'] = json.dumps(condition)
             taskqueue.Task(url=url, params=params,countdown=delay).add()
 
     def enqueue_deindexing(self, url):
         if url:
             params = {'key': str(self.key())}
             taskqueue.Task(url=url, params=params).add()
-    
+
 
 
 class SearchIndexing(webapp.RequestHandler):
-    """Handler for full text indexing task."""    
+    """Handler for full text indexing task."""
     def post(self):
         key_str = self.request.get('key')
         only_index_str = self.request.get('only_index')
@@ -683,7 +683,7 @@ class SearchIndexing(webapp.RequestHandler):
             entity = db.get(key)
             try:
                 if condition:
-                    prop,val = simplejson.loads(condition)
+                    prop,val = json.loads(condition)
                     if entity.properties()[prop].get_value_for_datastore(entity) != val:
                         # Clear task because the condition doesnt evaluate to true
                         self.response.set_status(200)
@@ -697,9 +697,9 @@ class SearchIndexing(webapp.RequestHandler):
             else:
                 only_index = only_index_str.split(',') if only_index_str else None
                 entity.index()
-                
+
 class SearchDeindexing(webapp.RequestHandler):
-    """Handler for de-indexing task."""    
+    """Handler for de-indexing task."""
     def post(self):
         key_str = self.request.get('key')
         if key_str:

@@ -63,21 +63,21 @@ chees.tick.ResultHandler.prototype.doQuery = function (searchId,searchText,callb
     var myCallback = function (event) {
         if (searchId < self.lastProcessedQuery) return;
         self.lastProcessedQuery = searchId;
-        var response = event.target.getResponseText();       
-        var parsed = goog.json.parse(response);    
+        var response = event.target.getResponseText();
+        var parsed = goog.json.parse(response);
         if (event.target.getStatus() == 200) {
             return callback(searchId,parsed);
         } else {
             return parsed;
-        }        
+        }
     }
     var searchQuery = encodeURIComponent(searchText);
-    return goog.net.XhrIo.send(this.targetUrl + '?q=' + searchQuery + '&id=' + searchId, myCallback);  
+    return goog.net.XhrIo.send(this.targetUrl + '?q=' + searchQuery + '&id=' + searchId, myCallback);
 };
 
 
 chees.tick.ResultHandler.prototype.doSearch = function (searchId,query,callback) {
-    // subclass should implement this by calling doQuery with its own callback. 
+    // subclass should implement this by calling doQuery with its own callback.
     // that callback should finally call the callback passed into this function
     // return this.doQuery(searchId,query,callback);
     throw Error('not implemented');
@@ -86,12 +86,13 @@ chees.tick.ResultHandler.prototype.doSearch = function (searchId,query,callback)
 
 
 // TickListSearchResult
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.SearchResult
  */
 chees.tick.TickListResult = function (data,dom) {
-    chees.tick.SearchResult.call(this,'ticklist',data,dom);    
+    goog.base(this);
+    chees.tick.SearchResult.call(this,'ticklist',data,dom);
 }
 
 goog.inherits(chees.tick.TickListResult, chees.tick.SearchResult);
@@ -101,17 +102,18 @@ chees.tick.TickListResult.prototype.primaryAction = function () {
 }
 
 // TickListResultHandler
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.ResultHandler
  */
 chees.tick.TickListResultHandler = function () {
+    goog.base(this);
     chees.tick.ResultHandler.call(this);
     this.resultType = 'ticklist';
     this.targetUrl = '/tick/api/ticklistfind';
     this.resultTemplate = new chees.Dompling('template_ticklistresult');
     this.listOwnerTemplate = new chees.Dompling('template_listowner');
-    this.createTicklistTemplate = new chees.Dompling('template_ticklistcreate');    
+    this.createTicklistTemplate = new chees.Dompling('template_ticklistcreate');
 };
 goog.inherits(chees.tick.TickListResultHandler, chees.tick.ResultHandler);
 
@@ -124,11 +126,11 @@ chees.tick.TickListResultHandler.prototype.doSearch = function (searchId,query,c
         var nameExists = false;
         // create a result for each ticklist result
         for (var i in data['results']) {
-            var resultData = data['results'][i];      
+            var resultData = data['results'][i];
             var resultDom = self.resultTemplate.steam('root',resultData);
             if (resultData['name'].toLowerCase() == compare) nameExists = true;
             if ('owner' in resultData) {
-                var ownerDom = self.listOwnerTemplate.steam('root',resultData);        
+                var ownerDom = self.listOwnerTemplate.steam('root',resultData);
                 resultDom['root'].insertBefore(ownerDom['root'],resultDom['slip'].nextSibling);
             }
             output.push(new chees.tick.TickListResult(resultData,resultDom));
@@ -147,12 +149,13 @@ chees.tick.TickListResultHandler.prototype.doSearch = function (searchId,query,c
 };
 
 // UserSearchResult
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.SearchResult
  */
 chees.tick.UserSearchResult = function (data,dom) {
-    chees.tick.SearchResult.call(this,'user',data,dom);    
+    goog.base(this);
+    chees.tick.SearchResult.call(this,'user',data,dom);
 }
 
 goog.inherits(chees.tick.UserSearchResult, chees.tick.SearchResult);
@@ -163,16 +166,17 @@ chees.tick.UserSearchResult.prototype.primaryAction = function () {
 
 
 // UserResultHandler
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.ResultHandler
  */
 chees.tick.UserResultHandler = function () {
+    goog.base(this);
     chees.tick.ResultHandler.call(this);
     this.resultType = 'user';
     this.targetUrl = '/tick/api/userfind';
     this.resultTemplate = new chees.Dompling('template_userresult');
-    this.inviteTemplate = new chees.Dompling('template_inviteuser');    
+    this.inviteTemplate = new chees.Dompling('template_inviteuser');
 };
 goog.inherits(chees.tick.UserResultHandler, chees.tick.ResultHandler);
 
@@ -181,10 +185,10 @@ chees.tick.UserResultHandler.prototype.doSearch = function (searchId,query,callb
     var compare = query.toLowerCase();
     var myCallback = function (searchId,data) {
         var output = [];
-        var emailExists = false;    
+        var emailExists = false;
         // create a result for each user result
         for (var i in data['results']) {
-            var resultData = data['results'][i];      
+            var resultData = data['results'][i];
             if ('email_address' in resultData && resultData['email_address'] == query) emailExists = true;
             var resultDom = self.resultTemplate.steam('root',resultData);
             output.push(new chees.tick.UserSearchResult(resultData,resultDom));
@@ -208,8 +212,8 @@ chees.tick.UserResultHandler.prototype.doSearch = function (searchId,query,callb
 };
 
 // SetlistSearchResult
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.SearchResult
  */
 chees.tick.SetListResult = function (data,dom) {
@@ -223,7 +227,7 @@ chees.tick.SetListResult = function (data,dom) {
     this.showPreviewCallback = function(event) {
         if (event.target.getStatus() == 200) {
             var response = event.target.getResponseText();
-            var returned = goog.json.parse(response);        
+            var returned = goog.json.parse(response);
             var template = new chees.Dompling('template_setlistpreview');
             self.previewDom = template.steam('root',{
                 'description':returned['list']['description'],
@@ -238,7 +242,7 @@ chees.tick.SetListResult = function (data,dom) {
         self.rightAction();
         e.stopPropagation();
     });
-    
+
 }
 goog.inherits(chees.tick.SetListResult, chees.tick.SearchResult);
 
@@ -253,10 +257,10 @@ chees.tick.SetListResult.setlistToList = function (setlist) {
         var new_list = document.createElement('UL');
         new_element.appendChild(new_list);
         lists[current['id']] = new_list;
-        lists[current['parent']].appendChild(new_element);        
+        lists[current['parent']].appendChild(new_element);
     }
     return list.outerHTML;
-} 
+}
 
 chees.tick.SetListResult.prototype.hidePreview = function (){
     this.previewDom['root'].style.display = 'none';
@@ -267,10 +271,10 @@ chees.tick.SetListResult.prototype.hidePreview = function (){
 
 chees.tick.SetListResult.prototype.showPreview = function (){
     this.previewDom['root'].style.display = 'block';
-    this.dom['previewButton'].value = 'hide preview';                                                
-    this.dom['previewButton'].innerHTML = 'hide preview';                    
+    this.dom['previewButton'].value = 'hide preview';
+    this.dom['previewButton'].innerHTML = 'hide preview';
     this.showingPreview = true;
-} 
+}
 
 
 chees.tick.SetListResult.prototype.primaryAction = function () {
@@ -282,7 +286,7 @@ chees.tick.SetListResult.prototype.rightAction = function () {
         goog.net.XhrIo.send(
             this.loadUrl + '?id=' + this.data['id'],
             this.showPreviewCallback
-        );    
+        );
     } else {
         if (this.showingPreview) this.hidePreview();
         else this.showPreview();
@@ -291,8 +295,8 @@ chees.tick.SetListResult.prototype.rightAction = function () {
 
 
 // SetListResultHandler
-/** 
- * @constructor 
+/**
+ * @constructor
  * @extends chees.tick.ResultHandler
  */
 chees.tick.SetListResultHandler = function () {
@@ -307,15 +311,15 @@ goog.inherits(chees.tick.SetListResultHandler, chees.tick.ResultHandler);
 
 chees.tick.SetListResultHandler.prototype.doSearch = function (searchId,query,callback) {
     var self = this;
-    var compare = query.toLowerCase();   
-   
+    var compare = query.toLowerCase();
+
     var myCallback = function (searchId,data) {
         var output = [];
         // create a result for each setlist result
         for (var i in data['results']) {
-            var resultData = data['results'][i];      
+            var resultData = data['results'][i];
             var resultDom = self.resultTemplate.steam('root',resultData);
-             
+
             if ('owner' in resultData) {
                 var ownerDom = self.listOwnerTemplate.steam('root',resultData);
                 resultDom['root'].insertBefore(ownerDom['root'],resultDom['slip'].nextSibling);
@@ -332,16 +336,16 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
     this.input = goog.dom.getElement(input); // the input field which triggers changes in the dialog
     this.parent = goog.dom.getElement(parent); // which element this dialog appears in
     this.template = template; // what template to use for the dialog body
-    
+
     this.dialogTemplate = new chees.Dompling(template);
     this.dialogDom = this.dialogTemplate.steam('root');
 
     this.parent.appendChild(this.dialogDom['root']);
-   
+
     this.dialogDom['root'].style.display = 'none';
 
     this.loadAnimation = new chees.tick.control.Loading(this.dialogDom['loading'],'5','200');
-    
+
     this.lastInput = '';
 
     this.lastSearchId = 0;
@@ -351,17 +355,17 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
     this.lastQueryChange = null;
 
     this.selectedItem = 0;
-    
+
     this.sections = [];
     this.received = 0;
-   
-    var self = this;     
+
+    var self = this;
 
     goog.events.listen(
         this.input,
         goog.events.EventType.BLUR,
         function (e) { self.handleBlur(); }
-    );  
+    );
 
     goog.events.listen(
         this.input,
@@ -382,30 +386,30 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
             goog.events.EventType.PROPERTYCHANGE
         ],
         function (e) { self.processInput(); }
-    );        
+    );
 
     goog.events.listenOnce(
         this.input,
         goog.events.EventType.FOCUS,
-        function (e) { 
-            self.input.value=''; 
+        function (e) {
+            self.input.value='';
         }
-    ); 
-    
+    );
+
     this.hideDialog('type to search or create lists');
-    
+
     // search stuff
-    
+
     this.sections.push(new chees.tick.UserResultHandler());
     this.sections.push(new chees.tick.TickListResultHandler());
     this.sections.push(new chees.tick.SetListResultHandler());
-    
+
     //this.sections = [this.ticklistSection,this.setlistSection,this.userSection];
-        
+
     // keyboard
     this.keyHandler = new goog.events.KeyHandler(this.input, true);
 
-    function movementKeyHandler(e) {   
+    function movementKeyHandler(e) {
         var keyCode = e.keyCode;
         if (keyCode == goog.events.KeyCodes.UP) {
             var len = self.currentResults.length;
@@ -421,7 +425,7 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
             self.selectedItem ++;
             if (self.selectedItem >= len) self.selectedItem -= len;
             if (orig in self.currentResults) self.currentResults[orig].deselect();
-            self.currentResults[self.selectedItem%len].select();        
+            self.currentResults[self.selectedItem%len].select();
         }
         else if (keyCode == goog.events.KeyCodes.ENTER) {
             self.currentResults[self.selectedItem].primaryAction();
@@ -431,7 +435,7 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
         }
         else if (keyCode == goog.events.KeyCodes.LEFT) {
             self.currentResults[self.selectedItem].leftAction();
-        }        
+        }
         else if (keyCode == goog.events.KeyCodes.ESC) {
             self.input.value = '';
             self.processInput();
@@ -441,9 +445,9 @@ chees.tick.SearchAndCreateDialog = function (input,parent,template) {
         e.preventDefault();
         e.stopPropagation();
     }
-    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler);  
-     
-    
+    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler);
+
+
 }
 
 // set up dom behaviour
@@ -458,15 +462,15 @@ chees.tick.SearchAndCreateDialog.prototype.handleBlur = function () {
         goog.events.listenOnce(
             this.input,
             goog.events.EventType.FOCUS,
-            function (e) { 
-                self.input.value=''; 
+            function (e) {
+                self.input.value='';
             }
-        );          
+        );
     }
 }
 
 chees.tick.SearchAndCreateDialog.prototype.hideDialog = function (inputText) {
-    goog.dom.classes.add(this.input,'inactive');    
+    goog.dom.classes.add(this.input,'inactive');
     if (inputText != null) { this.input.value = inputText; }
     this.dialogDom['root'].style.display = 'none';
 }
@@ -488,14 +492,14 @@ chees.tick.SearchAndCreateDialog.prototype.processInput = function (force) {
             // if the string is longer than 2 characters, or the first 2 characters contain other languages (eg CJK), search
             var self = this;
             if (currentInput.length > 2 || currentInput.charCodeAt(0) > 255 || currentInput.charCodeAt(1) > 255) setTimeout(function(){return self.search()},300);
-            goog.dom.classes.remove(this.input,'inactive');             
-            this.showDialog();       
+            goog.dom.classes.remove(this.input,'inactive');
+            this.showDialog();
         }
-    }    
+    }
 }
 
 // general search functionality
-chees.tick.SearchAndCreateDialog.prototype.addResult = function (searchId,resultList) {   
+chees.tick.SearchAndCreateDialog.prototype.addResult = function (searchId,resultList) {
     if (searchId < this.lastLoadedSearch) return;
     if (searchId > this.lastLoadedSearch && this.received == 0) {  //resultList.length > 0) {
         this.currentResults = [];
@@ -527,13 +531,13 @@ chees.tick.SearchAndCreateDialog.prototype.search = function () {
     }
     var searchQuery = encodeURIComponent(searchText);
     this.queries.push(searchQuery);
-        
+
     var self = this;
     var addResultCallback = function (searchId,resultList) { return self.addResult(searchId,resultList) };
     for (var i=0;i<this.sections.length;i++) {
         this.sections[i].doSearch(this.lastSearchId,searchText,addResultCallback);
     }
-    this.lastSearchId ++;    
+    this.lastSearchId ++;
 
     return true;
 }

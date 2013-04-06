@@ -14,10 +14,10 @@ goog.require('goog.events');
 /** @constructor */
 chees.tick.SetlistFind = function (list) {
     this.list = list;
-    
+
     this.dialogTemplate = new chees.Dompling('template_finddialog');
     this.dialogDom = this.dialogTemplate.steam('root');
-    
+
     this.resultTemplate = new chees.Dompling('template_finditem');
 
     // preview
@@ -35,15 +35,15 @@ chees.tick.SetlistFind = function (list) {
 
     // events
     var self = this;
-    
+
     this.initKeyboard();
 }
 
 chees.tick.SetlistFind.prototype.select = function (target) {
-    if (this.currentSelection != null) 
+    if (this.currentSelection != null)
         goog.dom.classes.remove(
             this.results[this.currentSelection][0].root,
-            'findItemSelected'            
+            'findItemSelected'
             );
     if (target == 'down') {
         if (this.currentSelection == null) this.currentSelection = 0
@@ -51,7 +51,7 @@ chees.tick.SetlistFind.prototype.select = function (target) {
     }
     else if (target == 'up') {
         if (this.currentSelection == null) this.currentSelection = this.results.length-1;
-        else this.currentSelection = Math.abs((this.currentSelection - 1) % this.results.length);        
+        else this.currentSelection = Math.abs((this.currentSelection - 1) % this.results.length);
     }
     else {
         var f = function (element,index,array) {
@@ -62,8 +62,8 @@ chees.tick.SetlistFind.prototype.select = function (target) {
     }
     goog.dom.classes.add(
         this.results[this.currentSelection][0].root,
-        'findItemSelected'        
-        );            
+        'findItemSelected'
+        );
 }
 
 chees.tick.SetlistFind.prototype.initKeyboard = function () {
@@ -74,7 +74,7 @@ chees.tick.SetlistFind.prototype.initKeyboard = function () {
     function movementKeyHandler(e) {
         var stopBubble = true;
         var keyCode = e.keyCode;
-       
+
         if      (keyCode == goog.events.KeyCodes.UP) self.select('up');
         else if (keyCode == goog.events.KeyCodes.DOWN) self.select('down');
         else if (keyCode == goog.events.KeyCodes.LEFT) {
@@ -88,7 +88,7 @@ chees.tick.SetlistFind.prototype.initKeyboard = function () {
         else if (keyCode == goog.events.KeyCodes.ENTER) self.insertSetlist(self.results[self.currentSelection][1]);
         else if (keyCode == goog.events.KeyCodes.ESC) {
             if (self.currentSelection.focused) self.list.selectTask(self.currentSelection);
-            else self.currentSelection.focus();                    
+            else self.currentSelection.focus();
         }
         else stopBubble = false;
 
@@ -97,7 +97,7 @@ chees.tick.SetlistFind.prototype.initKeyboard = function () {
             e.stopPropagation();
         }
     }
-    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler,true);  
+    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler,true);
 }
 
 chees.tick.SetlistFind.prototype.hideDialog = function () {
@@ -116,7 +116,7 @@ chees.tick.SetlistFind.prototype.setlistToList = function(setlist) {
         var new_list = document.createElement('UL');
         new_element.appendChild(new_list);
         lists[current.id] = new_list;
-        lists[current.parent].appendChild(new_element);        
+        lists[current.parent].appendChild(new_element);
     }
     return list;
 }
@@ -130,12 +130,12 @@ chees.tick.SetlistFind.prototype.loadSetlist = function (id,funct) {
         goog.net.XhrIo.send(
             '/tick/api/setlistload?id=' + id,
             function(e){
-                if (e.target.getStatus() == 200) 
+                if (e.target.getStatus() == 200)
                     self.setlistCache[id] = goog.json.parse(e.target.getResponseText());
                 if (funct)
-                    return funct(self.setlistCache[id]);               
+                    return funct(self.setlistCache[id]);
             }
-        );             
+        );
     }
 }
 
@@ -150,7 +150,7 @@ chees.tick.SetlistFind.prototype.insertSetlist = function (id,reset) {
                 var tasks = self.setlistCache[id]['tasks'];
                 var toplevel = [];
                 for (var i in tasks) {
-                    var current = tasks[i];    
+                    var current = tasks[i];
                     addedTasks[current['id']] = self.list.newTask(current['text']);
                     addedTasks[current['id']].setNotes(current['notes'],true);
                     if (current['parent'] != null) addedTasks[current['id']].insertBelow(addedTasks[current['parent']]);
@@ -181,16 +181,16 @@ chees.tick.SetlistFind.prototype.confirmUsage = function () {
     if (this.lastAdded == null) return false;
     var data = {'id':this.lastAddedId,'ticklist_id':this.list.id};
     var map = new goog.structs.Map(data);
-    var querydata = goog.Uri.QueryData.createFromMap(map);        
+    var querydata = goog.Uri.QueryData.createFromMap(map);
     goog.net.XhrIo.send(
         '/tick/api/setlistuse',
         function(e){
-            if (e.target.getStatus() != 200) 
+            if (e.target.getStatus() != 200)
                chees.tick.GlobalNotify.publish(e.target.getResponseText(),'bad');
         },
         'POST',
-        String(querydata)        
-    );  
+        String(querydata)
+    );
     return true;
 }
 
@@ -200,8 +200,8 @@ chees.tick.SetlistFind.prototype.hidePreview = function (previewItem,id) {
     goog.events.listenOnce(
         previewItem['previewButton'],
         goog.events.EventType.CLICK,
-        function (e) { 
-            this.select([previewItem,id]);        
+        function (e) {
+            this.select([previewItem,id]);
             this.showPreview(previewItem,id);
             }
     );
@@ -224,7 +224,7 @@ chees.tick.SetlistFind.prototype.showPreview = function (previewItem,id) {
             }
         }
     );
-    
+
     var finddialog = this.dialogDom['root'];
 
     if (this.previewDom['root'].parentNode)
@@ -241,13 +241,13 @@ chees.tick.SetlistFind.prototype.showPreview = function (previewItem,id) {
 
 chees.tick.SetlistFind.prototype.addResult = function (result) {
     var newItem = this.resultTemplate.steam('root',result); //{'title':' '+title,'id':id});
-    this.dialogDom['contents'].appendChild(newItem.root);    
+    this.dialogDom['contents'].appendChild(newItem.root);
     this.results.push([newItem,result['id']]);
     var self = this;
     goog.events.listen(
         newItem['findItemAdd'],
         goog.events.EventType.CLICK,
-        function (e) { 
+        function (e) {
             e.stopPropagation();
             self.select([newItem,result['id']]);
             self.insertSetlist(result['id']);
@@ -256,8 +256,8 @@ chees.tick.SetlistFind.prototype.addResult = function (result) {
     goog.events.listenOnce(
         newItem['previewButton'],
         goog.events.EventType.CLICK,
-        function (e) { 
-            self.select([newItem,result['id']]);        
+        function (e) {
+            self.select([newItem,result['id']]);
             self.showPreview(newItem,result['id']);
             }
     );
@@ -298,7 +298,7 @@ chees.tick.SetlistFind.prototype.direct = function(text,callback) {
     goog.net.XhrIo.send(
         '/tick/api/setlistfind?q=' + searchQuery,
         callback
-    );    
+    );
 }
 
 chees.tick.SetlistFind.prototype.search = function (text,container) {
@@ -310,7 +310,7 @@ chees.tick.SetlistFind.prototype.search = function (text,container) {
     goog.net.XhrIo.send(
         '/tick/api/setlistfind?q=' + searchQuery,
         function(e){return self.callback(e,container)}
-    );    
+    );
     return true;
 }
 

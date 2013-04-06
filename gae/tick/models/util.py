@@ -2,10 +2,6 @@ from google.appengine.ext import db
 from unidecode import unidecode
 import sys
 
-import os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 from django.template import defaultfilters
 
 def transactional(funct):
@@ -17,8 +13,8 @@ def transactional(funct):
                 return funct(*args,**kw)
             else:
                 exc_info = sys.exc_info()
-                raise exc_info[1], None, exc_info[2]            
-    return f  
+                raise exc_info[1], None, exc_info[2]
+    return f
 
 def slugify(text):
     return unicode(defaultfilters.slugify(unidecode(text)))
@@ -32,17 +28,17 @@ class TaskTree:
         tasks must be added in order using add_node
     '''
     class TaskTreeNode:
-    
+
         def __init__(self,tid=-1,text='',notes=''):
             self.tid = tid
             self.text = text
             self.prev = None
-            self.next = None        
+            self.next = None
             self.first = None
             self.last = None
             self.pid = None
-            self.notes = notes             
-            
+            self.notes = notes
+
         def add_child(self,child):
             child.pid = self.tid
             if self.first == None:
@@ -67,7 +63,7 @@ class TaskTree:
                 'next':     None,
                 'first':    None,
                 'last':     None,
-                }       
+                }
             if self.prev:
                 output['prev'] = self.prev.tid
             if self.next:
@@ -76,8 +72,8 @@ class TaskTree:
                 output['first'] = self.first.tid
             if self.last:
                 output['last'] = self.last.tid
-            return output                
-                
+            return output
+
         def flatten(self):
             output = []
             # for everything other than the root
@@ -87,16 +83,16 @@ class TaskTree:
             while current:
                 output.extend(current.flatten())
                 current = current.next
-            return output    
+            return output
 
     def __init__(self):
         self.toplevel = []
         self.tasks = {}
-        
+
     def reset(self):
         self.toplevel = []
         self.tasks = {}
-        
+
     def add_node(self,pid,tid,text,notes):
         new_node = self.__class__.TaskTreeNode(tid,text,notes)
         self.tasks[tid] = new_node
@@ -104,20 +100,20 @@ class TaskTree:
             self.toplevel.append(new_node)
         else:
             self.tasks[pid].add_child(new_node)
-        
+
     def get_flat(self):
         output = []
         for current in self.toplevel:
             output.extend(current.flatten())
         return output
-        
-        
+
+
 class ListHash:
     @classmethod
     def build_hash(cls,tasks):
         hash = cls()
         for task in tasks:
-            hash.add_item(task)            
+            hash.add_item(task)
         return hash
 
     @staticmethod
@@ -133,22 +129,22 @@ class ListHash:
         for c in input:
             hash ^= long(ord(c))
             hash = (hash * 1099511628211L) & 0xFFFFFFFFFFFFFFFF
-        return hash       
-            
+        return hash
+
     @staticmethod
     def hash_task(task):
         return self.fnv_1a_64(task.to_string())
 
     def _xor_into(self,hash):
         self.value ^= hash
-    
+
     def remove_item(task):
         self._xor_into(self.hash_task(task))
-        
+
     def add_item(task):
         self._xor_into(hash_task(task))
-        
+
     def __init__(self,initial=0L):
         self.value = long(initial)
 
-        
+

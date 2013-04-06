@@ -8,9 +8,9 @@
                     l,
                     goog.events.EventType.LOAD,
                     function () { new chees.tick.Comments('comments',l,'{{id}}','setlist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %}); }
-                    );                
-                l.loadSetlist({{id}});
-                
+                    );
+                l.loadSetlist('{{id}}');
+
 {% endblock %}
 
 
@@ -22,7 +22,7 @@
 {% include "domplings/listandtasks.dompling" %}
 {% include "domplings/findsetlist.dompling" %}
 
-{% include "domplings/setlistdialog.dompling" %}       
+{% include "domplings/setlistdialog.dompling" %}
 {% include "domplings/savedialog.dompling" %}
 {% include "domplings/sharedialog.dompling" %}
 
@@ -32,18 +32,18 @@
 
 {% block content %}
             <span class='slip setlistSlip bigSlip'>{{name}}</span> by <span class='slip tickuserSlip'><img src='{{owner.gravatar}}'></img><a href='/tick/tickuser/{{owner.id}}'>{{owner.tick_name|escape}}</a></span>
-            
+
             <br><div class='objectActions' style='display: inline-block'>
                 <form action="/tick/ticklists" method="post">
                     <input type='hidden' name='action' value='clone'/>
                     <input type='hidden' name='type_id' value="{{id}}"/>
                     create a new checklist of this type called <input type='text' name='name'/> <input type='submit' value='go!'/>
-                </form>            
+                </form>
             </div>
             <p>
                 {{description|escape}}
             </p>
-            
+
             <div id="left">
                 <div id="output"></div>
                 <div id="help">
@@ -62,7 +62,7 @@
                             <li><strong>Esc</strong> cancels the current action.</li>
                         </ul>
                     </div>
-                </div>        
+                </div>
             </div>
 
             <div id="comments"></div>

@@ -47,25 +47,25 @@ chees.tick.Task = function(id,text,virtual,locked) {
     this.complete = false;
     //this.notes = '';
     if (this.complete) this.num_open = 0;
-    
+
     // other flags
-    this.collapsed = false;   
-    
+    this.collapsed = false;
+
     // init
-    this.makeDom();  
+    this.makeDom();
     if (text) this.setText(text);
-    
+
     if (!this.virtual) {
         this.checkBox = new chees.tick.control.CheckBox(
             this.dom['checkBoxControl'],
             function (status) { self.updateStatus(status); }
         );
-        this.noteObject = new chees.tick.Notes(this);        
+        this.noteObject = new chees.tick.Notes(this);
     }
-    
+
     // event handlers
     var self = this;
-    
+
     // most interaction happens with non-virtual (non-root) tasks
     if (!this.virtual) {
         /*goog.events.listen(
@@ -82,33 +82,33 @@ chees.tick.Task = function(id,text,virtual,locked) {
                 this.dom['editbutton'],
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.edit() }
-            );        
+            );
 
             goog.events.listen(
                 this.dom['upbutton'],
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.moveUp() }
             );
-            
+
             goog.events.listen(
                 this.dom['downbutton'],
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.moveDown() }
-            );        
-            
+            );
+
             goog.events.listen(
                 this.dom['leftbutton'],
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.moveLeft() }
             );
-            
+
             goog.events.listen(
                 this.dom['rightbutton'],
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.moveRight() }
             );
 
-            // edit text        
+            // edit text
             goog.events.listen(
                 this.dom['edittextcancel'],
                 goog.events.EventType.CLICK,
@@ -132,64 +132,63 @@ chees.tick.Task = function(id,text,virtual,locked) {
                 goog.events.EventType.CLICK,
                 function (e) { e.preventDefault(); e.stopPropagation(); return self.del() }
             );
-        
+
         }
-        
+
         goog.events.listen(
             this.dom['dropTargetAfter'],
             goog.events.EventType.CLICK,
-            function (e) { 
-                e.preventDefault(); 
-                e.stopPropagation(); 
-                var newTask = self.taskList.newTask(); 
-                newTask.insertAfter(self); 
+            function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var newTask = self.taskList.newTask();
+                newTask.insertAfter(self);
                 self.taskList.selectTask(newTask);
                 newTask.edit();
                 }
-        );     
+        );
 
         // block parent events when editing
-        
+
         this.keyHandler = new goog.events.KeyHandler(this.dom['tasktext'], true);
         goog.events.listen(
             this.keyHandler,
             goog.events.KeyHandler.EventType.KEY,
             function (e) {
-                //alert('bubbled here first'); 
                 if (self.editing) { e.stopPropagation(); }
             },
             true
-        );          
-           
+        );
+
         goog.events.listen(
             this.dom['taskeditcontainer'],
             goog.events.EventType.CLICK,
             function (e) {
-                if (self.editing) e.stopPropagation(); 
+                if (self.editing) e.stopPropagation();
                 }
-        );             
-           
-    }    
-    
+        );
+
+    }
+
     // we can create under the task too
     goog.events.listen(
         this.dom['dropTargetUnder'],
         goog.events.EventType.CLICK,
-        function (e) { 
-            e.preventDefault(); 
-            e.stopPropagation(); 
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             if (!self.virtual && self.first == null) return; // only allow this if there are already children
             if (self.taskList.currentSelection && self.taskList.currentSelection != self.taskList.rootTask) {
                 self.taskList.currentSelection.deselect();
                 }
-            var newTask = self.taskList.newTask(); 
-            newTask.insertFirst(self); 
+            var newTask = self.taskList.newTask();
+            newTask.insertFirst(self);
             self.taskList.selectTask(newTask);
             newTask.edit();
             }
     );       
 
- 
+
 
     // priveleged methods
     
@@ -222,13 +221,12 @@ chees.tick.Task = function(id,text,virtual,locked) {
             self.num_open += current.num_open;
             current = current.next;
         }
-        if (self.virtual) return;        
-        //alert(self.num_open);
+        if (self.virtual) return;
         //if (self.num_open == 0) goog.dom.classes.add(self.dom['task'],'completedGroup');
         //else goog.dom.classes.remove(self.dom.task,'completedGroup');
         if (self.num_open == 0) self.collapse();
-        else self.expand();     
-        if (self.parent) self.parent._checkTasks();      
+        else self.expand();
+        if (self.parent) self.parent._checkTasks();
     }
 
     this._addChild = function (child,before) {
@@ -251,8 +249,8 @@ chees.tick.Task = function(id,text,virtual,locked) {
             before.prev = child;
             self.dom['list'].insertBefore(child.dom['root'],before.dom['root']);
         }
-        self._checkGroup();        
-        // track total & open tasks  
+        self._checkGroup();
+        // track total & open tasks
         self._checkTasks();  
     }
     
@@ -265,9 +263,9 @@ chees.tick.Task = function(id,text,virtual,locked) {
             else self.parent.first = self.next;
             if (self.next) self.next.prev = self.prev;
             else self.parent.last = self.prev;       
-            self.parent._checkGroup();               
+            self.parent._checkGroup();
             self.parent._checkTasks();
-            self.parent = null;                
+            self.parent = null;
         }
         self.next = null;
         self.prev = null;
@@ -367,20 +365,20 @@ chees.tick.Task.prototype.collapse = function () {
 }
 
 chees.tick.Task.prototype.expand = function () {
-    goog.dom.classes.remove(this.dom['task'],'collapsedTask');  
+    goog.dom.classes.remove(this.dom['task'],'collapsedTask');
     this.collapsed = false;
 }
 
 chees.tick.Task.prototype.updateStatus = function (status) {
     this.complete = status;
     if (status) {
-        goog.dom.classes.add(this.dom['control'],'completedTask');  
+        goog.dom.classes.add(this.dom['control'],'completedTask');
         this.num_open --;
     }
     else {
         goog.dom.classes.remove(this.dom['control'],'completedTask');
         this.num_open ++;
-    }        
+    }
     this._checkTasks();
     this.reportChange();
 }
@@ -485,7 +483,7 @@ chees.tick.Task.toSetlist = function (that) {
 }
 
 chees.tick.Task.prototype.toSimpleList = function (simplify) {
-    var simple;    
+    var simple;
     if (!simplify) simple = chees.tick.Task.toSimple(this);
     else simple = simplify(this);
     var children = [];
@@ -508,13 +506,13 @@ chees.tick.Task.prototype.focus = function () {
         )
     }
     this.dom['control'].focus();
-    this.focused = true;    
+    this.focused = true;
 }
 
 chees.tick.Task.prototype.select = function () {
     if (!this.virtual) {
         goog.dom.classes.add(this.dom['task'],'selectedtask');
-        if (!this.editing) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');        
+        if (!this.editing) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');
         this.selected = true;
     }
 }
@@ -525,7 +523,7 @@ chees.tick.Task.prototype.deselect = function () {
         else this.done();
         }
     goog.dom.classes.remove(this.dom['task'],'selectedtask');
-    goog.dom.classes.add(this.dom['taskcontrol'],'hidden'); 
+    goog.dom.classes.add(this.dom['taskcontrol'],'hidden');
     this.selected = false;
 }
 
@@ -540,13 +538,13 @@ chees.tick.Task.prototype.setStatus = function (status) {
 
 chees.tick.Task.prototype.toggleStatus = function () {
     if (this.complete) this.checkBox.unCheck();
-    else this.checkBox.check();   
+    else this.checkBox.check();
 }
 
 chees.tick.Task.prototype.showTask = function (focus) {
     if (!chees.tick.tools.isFullyVisible(this.dom['control'])) {
         var y = goog.style.getPageOffset(this.dom['control']).y;
-        window.scroll(0,y-100);    
+        window.scroll(0,y-100);
     }
     if (focus)
         this.focus();
@@ -558,10 +556,10 @@ chees.tick.Task.prototype.edit = function () {
     if (this.editing) return;
     this.editing = true;
     this.dom['taskedit'].value = this.text;
-    goog.dom.classes.add(this.dom['tasktext'],'hidden');    
-    goog.dom.classes.remove(this.dom['taskeditcontainer'],'hidden');    
+    goog.dom.classes.add(this.dom['tasktext'],'hidden');
+    goog.dom.classes.remove(this.dom['taskeditcontainer'],'hidden');
     goog.dom.classes.remove(this.dom['edittext'],'hidden');
-    goog.dom.classes.add(this.dom['taskcontrol'],'hidden');    
+    goog.dom.classes.add(this.dom['taskcontrol'],'hidden');
     this.dom['taskedit'].focus();
 }
 
@@ -569,15 +567,15 @@ chees.tick.Task.prototype.revert = function () {
     if (!this.editing) return;
     this.editing = false;
     if (!this.updated) { // this was a new task and the user cancelled creation
-        this.del(); 
+        this.del();
         return;
     }
     this.taskList.setlistFindObject.removeLastAdded();
-    this.taskList.setlistFindObject.reset();    
+    this.taskList.setlistFindObject.reset();
     goog.dom.classes.add(this.dom['edittext'],'hidden');
-    if (this.selected) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');    
-    goog.dom.classes.remove(this.dom['tasktext'],'hidden');    
-    goog.dom.classes.add(this.dom['taskeditcontainer'],'hidden');      
+    if (this.selected) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');
+    goog.dom.classes.remove(this.dom['tasktext'],'hidden');
+    goog.dom.classes.add(this.dom['taskeditcontainer'],'hidden');
     this.setText(this.text);
 }
 
@@ -588,16 +586,16 @@ chees.tick.Task.prototype.done = function () {
         return;
         }
     this.editing = false;
-    var used_setlist = this.taskList.setlistFindObject.confirmUsage();  
-    this.taskList.setlistFindObject.reset();  
+    var used_setlist = this.taskList.setlistFindObject.confirmUsage();
+    this.taskList.setlistFindObject.reset();
     goog.dom.classes.add(this.dom['edittext'],'hidden');
-    if (this.selected) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');    
-    goog.dom.classes.remove(this.dom['tasktext'],'hidden');    
-    goog.dom.classes.add(this.dom['taskeditcontainer'],'hidden');  
+    if (this.selected) goog.dom.classes.remove(this.dom['taskcontrol'],'hidden');
+    goog.dom.classes.remove(this.dom['tasktext'],'hidden');
+    goog.dom.classes.add(this.dom['taskeditcontainer'],'hidden');
     this.setText(this.dom['taskedit'].value);
 
     this.reportChange();
-    
+
     // encourage the user to try the 'setlistfind' functionality
     if (!used_setlist && this.first === null) {
         var query = this.dom['taskedit'].value;
@@ -611,11 +609,11 @@ chees.tick.Task.prototype.done = function () {
                     var message = 'Did you know there are ' + results.length + ' setlists that match the text "' + summary + '"? You can click the pencil (edit) and then the magnifying glass (find) to see their details and use them in your list.';
                     if (results.length == 1)
                         message = 'Did you know there is ' + results.length + ' setlist that match the text "' + summary + '"? You can click the pencil (edit) and then the magnifying glass (find) to see its details and use it in your list.';
-                    if (results.length > 0) 
+                    if (results.length > 0)
                         chees.tick.GlobalNotify.publish(message);
-                } 
+                }
             }
-        )        
+        )
     }
 }
 
@@ -632,7 +630,7 @@ chees.tick.Task.prototype.del = function(dont_select) {
         else if (this.next) this.taskList.selectDown();
         else this.taskList.selectUp();
     }
-    this.remove(); 
+    this.remove();
     this.reportChange();
 }
 
@@ -641,29 +639,29 @@ chees.tick.Task.prototype.del = function(dont_select) {
 chees.tick.Task.prototype.moveLeft = function () {
     if (this.virtual || !this.parent || this.parent.virtual) return;
     this.insertAfter(this.parent);
-    this.showTask(true);  
-    this.reportChange();    
+    this.showTask(true);
+    this.reportChange();
 }
 
 chees.tick.Task.prototype.moveRight = function () {
     if (this.virtual || !this.prev) return;
     this.insertBelow(this.prev);
-    this.showTask(true);  
-    this.reportChange();    
+    this.showTask(true);
+    this.reportChange();
 }
 
 chees.tick.Task.prototype.moveDown = function () {
     if (this.virtual || !this.next) return;
     this.insertAfter(this.next);
-    this.showTask(true);  
-    this.reportChange();    
+    this.showTask(true);
+    this.reportChange();
 }
 
 chees.tick.Task.prototype.moveUp = function () {
     if (this.virtual || !this.prev) return;
     this.insertBefore(this.prev);
-    this.showTask(true);  
-    this.reportChange();    
+    this.showTask(true);
+    this.reportChange();
 }
 
 

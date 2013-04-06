@@ -6,16 +6,16 @@
 {% endblock %}
 
 {% block onload %}
-                var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':{{id}}},"{{name|escapejs}}");
+                var ticklist_title_edit = new chees.tick.control.AjaxEditable("ticklist_title","name","/tick/api/ticklistupdate",null,{'id':'{{id}}'},"{{name|escapejs}}");
                 var l = new chees.tick.List("output"{% if user_id %},{{user_id}}{% endif %});
                 goog.events.listen(
                     l,
                     goog.events.EventType.LOAD,
                     function () { new chees.tick.Comments('comments',l,'{{id}}','ticklist'{% if user_id %},'{{gravatar}}','{{user_id}}','{{user}}'{% endif %}); }
                     );
-                l.loadList({{id}});
-                
-                
+                l.loadList('{{id}}');
+
+
                 window.onbeforeunload = function(e){return l.leavePage(e)};
 {% endblock %}
 
@@ -27,7 +27,7 @@
 {% include "domplings/listandtasks.dompling" %}
 {% include "domplings/findsetlist.dompling" %}
 
-{% include "domplings/setlistdialog.dompling" %}       
+{% include "domplings/setlistdialog.dompling" %}
 {% include "domplings/savedialog.dompling" %}
 {% include "domplings/sharedialog.dompling" %}
 
@@ -40,7 +40,7 @@
             <h2 class='listTitle'></h2>
             <div id="left">
                 <div id="output"></div>
-                <div id="help">                    
+                <div id="help">
                     <input id = "help-button" type="button" value="show/hide help"/>
                     <div id="help-list">
                         <h2>Help</h2>

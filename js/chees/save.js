@@ -11,10 +11,10 @@ goog.require('goog.events');
 /** @constructor */
 chees.tick.Save = function (button) {
     this.button = button;
-            
+
     this.dialog = new chees.tick.Dialog(button,'template_savedialog');
     this.dialogButton = new chees.tick.control.Button(this.dialog.dom['saveButton'],function(){return self.save()});
-    
+
     this.id = null;
     this.version = null;
     this.latestState = [];
@@ -23,7 +23,7 @@ chees.tick.Save = function (button) {
     this.saving = false;
     this.autosave = true;
     this.failed = false;
-    
+
     this.notify();
 
     // server change checker
@@ -31,16 +31,16 @@ chees.tick.Save = function (button) {
     this.lastSaved = now.getTime();
     this.lastInterval = 1;
     this.lastLastInterval = 1;
-    
+
     // events
     var self = this;
-    
+
     goog.events.listen(
         this.dialog.dom['autoSave'],
         goog.events.EventType.CHANGE,
         function (e) { self.toggleAutoSave(); }
     );
-    
+
 }
 
 chees.tick.Save.prototype.toggleAutoSave = function () {
@@ -50,21 +50,19 @@ chees.tick.Save.prototype.toggleAutoSave = function () {
 }
 
 chees.tick.Save.prototype.checkServerChange = function () {
-    var now = new Date();    
+    var now = new Date();
     if (this.version == null || this.lastSaved == null || now.getTime() - this.lastSaved < 60000 * this.lastInterval) {
-        //alert('version: ' + this.version + ' lastsaved: ' + this.lastSaved + ' elapsed: ' + (now.getTime() - this.lastSaved) + ' compare: ' + (1000 * this.lastInterval));    
         return;
     }
     if (!this.failed) {
         var self = this;
         function checkServerCallback (e) {
-            if (e.target.getStatus() == 200) {            
+            if (e.target.getStatus() == 200) {
                 var serverId = parseInt(e.target.getResponseText());
                 if (serverId != self.version) {
                     self.lastSaved = null;
-                    if (self.autosave) self.toggleAutoSave();           
-                    this.failed = true; 
-                    //alert('list has changed on server, please refresh');
+                    if (self.autosave) self.toggleAutoSave();
+                    this.failed = true;
                     chees.tick.GlobalNotify.publish('list has changed on server, please refresh','bad');
                 }
             }
@@ -77,7 +75,7 @@ chees.tick.Save.prototype.checkServerChange = function () {
     var origLast = this.lastInterval;
     this.lastInterval += this.lastLastInterval;
     this.lastLastInterval = origLast;
-    
+
 }
 
 chees.tick.Save.prototype.init = function (state) {
@@ -98,7 +96,7 @@ chees.tick.Save.prototype.init = function (state) {
             self.checkServerChange();
         }
     }
-    setInterval(runAutoSave,2000);    
+    setInterval(runAutoSave,2000);
 }
 
 chees.tick.Save.prototype.notify = function (latestState) {
@@ -112,7 +110,7 @@ chees.tick.Save.prototype.notify = function (latestState) {
         this.saved = false;
         this.button.setAttribute('value','save now');
         this.dialog.dom['saveButton'].setAttribute('value','save now');
-        this.dialogButton.enable(); 
+        this.dialogButton.enable();
     }
 }
 
@@ -125,31 +123,32 @@ chees.tick.Save.diffTask = function (a,b) {
             diff[i] = b[i];
             differences ++;
         }
-    }   
+    }
     if (differences <= 0) return {};
     return diff;
 }
 
 
-chees.tick.Save.prototype.getChanges = function () { 
+chees.tick.Save.prototype.getChanges = function () {
+
     var sq = new goog.structs.Queue();
-    for (var i in this.savedState) sq.enqueue(this.savedState[i]); 
+    for (var i in this.savedState) sq.enqueue(this.savedState[i]);
 
     var lq = new goog.structs.Queue();
     for (var j in this.latestState) lq.enqueue(this.latestState[j]);
-    
+
     var inserts = [];
     var updates = [];
     var deletes = [];
-        
+
     while (!sq.isEmpty() || !lq.isEmpty()) {
         var currentS = sq.peek();
         var currentL = lq.peek();
-        if (typeof currentS === 'undefined') {
+        if (!(currentS instanceof Object)) {
             inserts.push(currentL);
             lq.dequeue();
         }
-        else if (typeof currentL === 'undefined') {
+        else if (!(currentL instanceof Object)) {
             deletes.push(currentS);
             sq.dequeue();
         }
@@ -174,7 +173,6 @@ chees.tick.Save.prototype.getChanges = function () {
     output['updates'] = updates;
     output['deletes'] = deletes;
     return goog.json.serialize(output);
-    
 }
 
 chees.tick.Save.prototype.save = function () {
@@ -199,26 +197,25 @@ chees.tick.Save.prototype.save = function () {
 }
 
 chees.tick.Save.prototype.callback = function (event,state,time) {
-    if (event.target.getStatus() == 200) {    
+    if (event.target.getStatus() == 200) {
         this.dialog.dom['saveMessage'].innerHTML = 'last saved at ' + time.toUsTimeString();
-        goog.dom.classes.remove(this.dialog.dom['saveMessage'],'invalidInput');        
-        goog.dom.classes.add(this.dialog.dom['saveMessage'],'validInput');        
+        goog.dom.classes.remove(this.dialog.dom['saveMessage'],'invalidInput');
+        goog.dom.classes.add(this.dialog.dom['saveMessage'],'validInput');
         this.dialog.dom['saveDetails'].innerHTML = '';
         this.savedState = state;
-        this.version = parseInt(event.target.getResponseText());            
+        this.version = parseInt(event.target.getResponseText());
     } else {
         if (this.autosave) this.toggleAutoSave();
         var msg = 'Save at ' + time.toUsTimeString() + ' failed.';
         this.dialog.dom['saveMessage'].innerHTML = msg;
-        goog.dom.classes.remove(this.dialog.dom['saveMessage'],'validInput');        
-        goog.dom.classes.add(this.dialog.dom['saveMessage'],'invalidInput');           
+        goog.dom.classes.remove(this.dialog.dom['saveMessage'],'validInput');
+        goog.dom.classes.add(this.dialog.dom['saveMessage'],'invalidInput');
         var text = event.target.getResponseText();
         this.dialog.dom['saveDetails'].innerHTML = text;
         this.failed = true;
-        //alert(msg + ' Please check details in the save menu above.');
         chees.tick.GlobalNotify.publish(msg + 'Please check details in the save menu.');
         this.dialog.show();
     }
     this.saving = false;
-    this.notify();    
+    this.notify();
 }

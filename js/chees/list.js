@@ -30,7 +30,7 @@ goog.require('goog.structs.Queue');
 
 goog.require('goog.userAgent');
 
-  
+
 
 var debug_counter = 0;
 function debug (text) {
@@ -43,19 +43,21 @@ function debug (text) {
  *  @extends {goog.events.EventTarget}
  */
 chees.tick.List = function(element,user_id) {
+    goog.base(this);
+
     // dom
-    var d = new chees.Dompling("template_list");  
+    var d = new chees.Dompling("template_list");
     this.dom = d.steam("root");
 
     this.container = goog.dom.getElement(element);
     this.container.appendChild(this.dom['root']);
-        
+
     // list properties
     this.title = '';
     this.id = null;
-    
+
     this.list_type = null;
-    
+
     // list state
     this.nextTaskId = 0;
     this.rootTask = new chees.tick.Task(null,null,true);
@@ -65,11 +67,11 @@ chees.tick.List = function(element,user_id) {
     this.currentSelection = this.rootTask;
     this.dom['rootElement'].appendChild(this.rootTask.dom['root']);
     this.editMode = false;
-    
+
     // permissions
     this.can_edit = false;
     this.user_id = user_id;
-    
+
     // load plugins now that the list is done
     this.saveObject = null; // initialized later, in the loadJSON function
     if (this.user_id) this.setlistSaveObject = new chees.tick.SetlistSave(this.dom['setlistSaveButton'],this); // only allow setlist saving for logged in users
@@ -80,7 +82,7 @@ chees.tick.List = function(element,user_id) {
     this.initKeyboard();
     this.initClicks();
     this.initDrag();
-    
+
     // init the rootTask
     this.initTask(this.rootTask);    
 }
@@ -95,14 +97,14 @@ chees.tick.List.patchDraggable = function (draggable,task) {
     var bullet = task.dom['taskbullet'];
     var li = task.dom['taskbulletli'];
     draggable.getDraggableElement = function(target) {
-        if(target != bullet && target != li) return null; 
-        return draggable.element; 
+        if(target != bullet && target != li) return null;
+        return draggable.element;
         }  
 }
 
 // public methods
 
-chees.tick.List.prototype.loadSetlist = function (id) {    
+chees.tick.List.prototype.loadSetlist = function (id) {
     this.list_type = 'setlist';
     var loadAnimation = new chees.tick.control.Loading(this.rootTask.dom['list'],'20','100');
     loadAnimation.play();
@@ -113,15 +115,16 @@ chees.tick.List.prototype.loadSetlist = function (id) {
         function (loaded) {
             loadAnimation.stop();
             self.setupList(loaded['list']);
-            self.selectTask(self.rootTask);  
+            self.selectTask(self.rootTask);
             self.setlistFindObject.insertSetlist(id);
             self.setlistFindObject.reset();
             goog.events.dispatchEvent(self,new goog.events.Event(goog.events.EventType.LOAD));
-        }    
-    );    
+        }
+    );
 }
 
 chees.tick.List.prototype.loadList = function (id) {
+
     this.list_type = 'ticklist';
     this.is_setlist = false;
     var loadAnimation = new chees.tick.control.Loading(this.rootTask.dom['list'],'20','100');
@@ -140,13 +143,13 @@ chees.tick.List.prototype.loadList = function (id) {
             chees.tick.GlobalNotify.publish('load failed: ' + event.target.getResponseText(),"bad");
         }
     }
-        
+
     goog.net.XhrIo.send(
         '/tick/api/listload?id='+id,
         function(e){return load(e)},
         'GET'
-    );                
-}    
+    );
+}
 
 chees.tick.List.prototype.setupList = function (list) {
     // set up list attributes
@@ -157,7 +160,7 @@ chees.tick.List.prototype.setupList = function (list) {
     this.rootTask.setText(this.title);
     this.shareObject.init(this.id,this.list_type,'/tick/api/'+this.list_type+'share',list['sharing'],this.can_edit);
     if (this.can_edit && !this.is_setlist) {
-        this.saveObject = new chees.tick.Save(this.dom['saveButton']);    
+        this.saveObject = new chees.tick.Save(this.dom['saveButton']);
         this.saveObject.id = list['id'];
         this.saveObject.version = list['version'];
     } else {
@@ -180,19 +183,18 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
             firstTask = task['id'];
         }
     }
-    
+
     if (firstTask != null) {
 
         // code to check for and prevent cycles
-        var visited = {};        
+        var visited = {};
 
         // enqueue all top level tasks
         var current = t[firstTask]['next'];
         while (current != null) {
-            if (current in visited) { 
-                //alert('cycle detected! ' + current);
+            if (current in visited) {
                 chees.tick.GlobalNotify.publish('cycle detected! ' + current,'bad');
-                break;            
+                break;
             } else {
                 visited[current] = true;
                 q.enqueue(current);
@@ -200,7 +202,7 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
             }
         }
 
-        var toplevel = [];      
+        var toplevel = [];
         while (!q.isEmpty()) {
             var task = t[q.dequeue()];
             // create the task
@@ -211,37 +213,36 @@ chees.tick.List.prototype.setupTasks = function (tasks) {
             o[task['id']] = newtask;
             if (task['parent'] != null) newtask.insertBelow(o[task['parent']]);
             else toplevel.push(newtask); //newtask.insertBelow(this.rootTask);
-            newtask.setStatus(task['complete']);        
+            newtask.setStatus(task['complete']);
             this.initTask(newtask);
             // enqueue children
             var current = task['first'];
             while (current != null) {
-                if (current in visited) { 
-                    //alert('cycle detected! ' + current);
+                if (current in visited) {
                     chees.tick.GlobalNotify.publish('cycle detected! ' + current,'bad');
-                    break;            
+                    break;
                 } else {
-                    visited[current] = true;            
+                    visited[current] = true;
                     q.enqueue(current);
                     current = t[current]['next'];
                 }
             }
         }
 
-        // we put the toplevel tasks into the dom last so that building subtasks is fast        
+        // we put the toplevel tasks into the dom last so that building subtasks is fast
         for (var i=0; i<toplevel.length; i++) toplevel[i].insertBelow(this.rootTask);
-        
+
     }
-    
+
     // set up save object with initial state from list
     if (this.can_edit && !this.is_setlist) this.saveObject.init(this.generateList());
-    
+
     this.rootTask.focus();
 }
 
 
 chees.tick.List.prototype.initClicks = function () {
-    var self = this;          
+    var self = this;
     goog.events.listen(
         window,
         goog.events.EventType.CLICK,
@@ -250,7 +251,7 @@ chees.tick.List.prototype.initClicks = function () {
             self.selectTask(self.rootTask);
             e.stopPropagation(); 
         }
-    );       
+    );
 }
 
 chees.tick.List.prototype.initKeyboard = function () {
@@ -258,40 +259,40 @@ chees.tick.List.prototype.initKeyboard = function () {
 
     var self = this;
 
-    function movementKeyHandler(e) {   
+    function movementKeyHandler(e) {
         var stopBubble = true;
         var keyCode = e.keyCode;
         var globalCaught = true;
 
         if (e.platformModifierKey) {
-            if (keyCode == goog.events.KeyCodes.S && self.can_edit) self.saveObject.save(); 
+            if (keyCode == goog.events.KeyCodes.S && self.can_edit) self.saveObject.save();
             else {
-                globalCaught = false;          
+                globalCaught = false;
             }
         } else {
             globalCaught = false;
-        }        
+        }
         if (!globalCaught) {
             if (self.currentSelection.editing) {
-                if (e.platformModifierKey && keyCode == goog.events.KeyCodes.M) self.currentSelection.find();            
+                if (e.platformModifierKey && keyCode == goog.events.KeyCodes.M) self.currentSelection.find();
                 if (keyCode == goog.events.KeyCodes.ESC) { self.currentSelection.revert(); self.currentSelection.focus(); }
                 else if (keyCode == goog.events.KeyCodes.ENTER) { self.currentSelection.done(); self.currentSelection.focus(); }
                 return;
-            } else {      
-                if (e.target.nodeName == 'INPUT' || e.target.nodeName == 'TEXTAREA') return;            
+            } else {
+                if (e.target.nodeName == 'INPUT' || e.target.nodeName == 'TEXTAREA') return;
                 if (e.platformModifierKey) { // control or apple key
                     if      (keyCode == goog.events.KeyCodes.UP) self.currentSelection.moveUp();
                     else if (keyCode == goog.events.KeyCodes.DOWN) self.currentSelection.moveDown();
                     else if (keyCode == goog.events.KeyCodes.LEFT) self.currentSelection.moveLeft();
                     else if (keyCode == goog.events.KeyCodes.RIGHT) self.currentSelection.moveRight();
-                    else if (keyCode == goog.events.KeyCodes.ENTER) self.toggleTask();    
-                    else if (keyCode == goog.events.KeyCodes.E) self.currentSelection.edit();            
-                    else if (keyCode == goog.events.KeyCodes.DELETE) self.deleteTask(); //self.currentSelection.del();                           
-                    else stopBubble = false;          
+                    else if (keyCode == goog.events.KeyCodes.ENTER) self.toggleTask();
+                    else if (keyCode == goog.events.KeyCodes.E) self.currentSelection.edit();
+                    else if (keyCode == goog.events.KeyCodes.DELETE) self.deleteTask(); //self.currentSelection.del();
+                    else stopBubble = false;
                 } else if (e.shiftKey) { // move between sibling tasks
                     if      (keyCode == goog.events.KeyCodes.UP) self.selectPrev();
                     else if (keyCode == goog.events.KeyCodes.DOWN) self.selectNext();
-                    else if (keyCode == goog.events.KeyCodes.ENTER) self.createTaskUnder();    
+                    else if (keyCode == goog.events.KeyCodes.ENTER) self.createTaskUnder();
                     else stopBubble = false;
                 }
                 else { // move to adjacent tasks
@@ -314,19 +315,19 @@ chees.tick.List.prototype.initKeyboard = function () {
             e.stopPropagation();
         }
     }
-    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler);  
+    goog.events.listen(this.keyHandler,goog.events.KeyHandler.EventType.KEY,movementKeyHandler);
 }
 
 chees.tick.List.prototype.initDrag = function () {
-    this.dropGroup = new goog.fx.DragDropGroup();   
+    this.dropGroup = new goog.fx.DragDropGroup();
     this.dragGroup = new goog.fx.DragDropGroup();
-    
+
     this.dragGroup.addTarget(this.dropGroup);
     this.dragGroup.setDragClass('dragtask');
 
     this.dragGroup.init();
-    this.dropGroup.init(); 
-    
+    this.dropGroup.init();
+
     var self = this;
 
     // for sources
@@ -336,7 +337,7 @@ chees.tick.List.prototype.initDrag = function () {
         self.currentSelection.done();
     }
 
-    goog.events.listen(this.dragGroup,'dragstart',dragStartHandler);     
+    goog.events.listen(this.dragGroup,'dragstart',dragStartHandler);
 
     // for targets
     function isValidTarget(sourceTask,targetTask,position) {
@@ -350,7 +351,7 @@ chees.tick.List.prototype.initDrag = function () {
     
     function dropItemHandler(e) {
         var sourceTask = e.dragSourceItem.data;
-        var targetTask = e.dropTargetItem.data['task'];    
+        var targetTask = e.dropTargetItem.data['task'];
         var position = e.dropTargetItem.data['pos'];
         if (isValidTarget(sourceTask,targetTask,position)) {
             dragOutHandler(e);
@@ -362,28 +363,28 @@ chees.tick.List.prototype.initDrag = function () {
 
     function dragOverHandler(e) {
         var sourceTask = e.dragSourceItem.data;
-        var targetTask = e.dropTargetItem.data['task'];    
+        var targetTask = e.dropTargetItem.data['task'];
         var position = e.dropTargetItem.data['pos'];
         if (isValidTarget(sourceTask,targetTask,position)) {
-            if (position == 'after') goog.dom.classes.add(targetTask.dom['dropTargetAfter'],'dragOver'); 
+            if (position == 'after') goog.dom.classes.add(targetTask.dom['dropTargetAfter'],'dragOver');
             else if (position == 'under') goog.dom.classes.add(targetTask.dom['dropTargetUnder'],'dragOver'); 
-        }        
+        }
     }
-    
+
     function dragOutHandler(e) {
-        var targetTask = e.dropTargetItem.data['task'];     
-        var position = e.dropTargetItem.data['pos'];     
-            if (position == 'after') goog.dom.classes.remove(targetTask.dom['dropTargetAfter'],'dragOver'); 
-            else if (position == 'under') goog.dom.classes.remove(targetTask.dom['dropTargetUnder'],'dragOver');          
+        var targetTask = e.dropTargetItem.data['task'];
+        var position = e.dropTargetItem.data['pos'];
+            if (position == 'after') goog.dom.classes.remove(targetTask.dom['dropTargetAfter'],'dragOver');
+            else if (position == 'under') goog.dom.classes.remove(targetTask.dom['dropTargetUnder'],'dragOver');
     }
 
     goog.events.listen(this.dropGroup,'drop',dropItemHandler);
-    goog.events.listen(this.dropGroup,'dragover',dragOverHandler);     
-    goog.events.listen(this.dropGroup,'dragout',dragOutHandler);   
+    goog.events.listen(this.dropGroup,'dragover',dragOverHandler);
+    goog.events.listen(this.dropGroup,'dragout',dragOutHandler);
 
     // add root child drag target
     var new_target_under = new goog.fx.DragDropItem(this.rootTask.dom['dropTargetUnder'],{'task':this.rootTask,'pos':'under'});
-    this.dropGroup.addDragDropItem(new_target_under);    
+    this.dropGroup.addDragDropItem(new_target_under);
 
 }
 
@@ -392,47 +393,47 @@ chees.tick.List.prototype.initTask = function (t) {
         // add drag and drop functionality
         var new_source = new goog.fx.DragDropItem(t.dom['root'],t);
         chees.tick.List.patchDraggable(new_source,t);
-        this.dragGroup.addDragDropItem(new_source);          
-    
+        this.dragGroup.addDragDropItem(new_source);
+
         var new_target_after = new goog.fx.DragDropItem(t.dom['dropTargetAfter'],{'task':t,'pos':'after'});
         this.dropGroup.addDragDropItem(new_target_after);
-    
+
         var new_target_into = new goog.fx.DragDropItem(t.dom['control'],{'task':t,'pos':'under'});
-        this.dropGroup.addDragDropItem(new_target_into); 
-    
+        this.dropGroup.addDragDropItem(new_target_into);
+
     }
-    
+
     var new_target_under = new goog.fx.DragDropItem(t.dom['dropTargetUnder'],{'task':t,'pos':'under'});
-    this.dropGroup.addDragDropItem(new_target_under);    
-    
-    
+    this.dropGroup.addDragDropItem(new_target_under);
+
+
        
     // add handler to select when clicked
     var self = this;
-    
+
     if (t != this.rootTask) {
         goog.events.listen(
-            t.dom['control'], 
+            t.dom['control'],
             goog.events.EventType.CLICK,
             function (e) {
                 if (e.target.nodeName == 'INPUT' || e.target.nodeName == 'TEXTAREA') {
                     self.selectTask(t,false,true);
                 }
                 else self.selectTask(t,true,true);
-                e.stopPropagation(); 
+                e.stopPropagation();
             }
         );
     }
-    
+
     // add handler to report changes when task is changed
     t.setTaskList(this);
-    
+
 }
 
 chees.tick.List.prototype.showTask = function (t, focus) {
     if (!chees.tick.tools.isFullyVisible(t.dom['control'])) {
         var y = goog.style.getPageOffset(t.dom['control']).y;
-        window.scroll(0,y-100);    
+        window.scroll(0,y-100);
     }
     if (focus)
         t.focus();
@@ -449,16 +450,16 @@ chees.tick.List.prototype.selectTask = function (t,focus,stay) {
     if (this.currentSelection != this.rootTask) {
         this.currentSelection.deselect();
     }
-    if (!t || this.currentSelection == t || t == this.rootTask) { 
+    if (!t || this.currentSelection == t || t == this.rootTask) {
         this.currentSelection = this.rootTask;
-        if (this.setlistSaveObject) this.setlistSaveObject.generatePreview();     
-        return; 
+        if (this.setlistSaveObject) this.setlistSaveObject.generatePreview();
+        return;
     }
     this.currentSelection = t;
     if (this.setlistSaveObject) this.setlistSaveObject.generatePreview();    
     t.select();
     this.showTask(t, focus);
-}   
+}
 
 chees.tick.List.validateText = function (text) {
     if (!text) return false;
@@ -477,20 +478,20 @@ chees.tick.List.prototype.newTask = function (text) {
 chees.tick.List.prototype.createTaskAfter = function () {
     var currentTask = this.currentSelection;
     currentTask.deselect();
-    var newTask = this.newTask(); 
-    if (currentTask == this.rootTask) newTask.insertFirst(this.rootTask);    
-    else newTask.insertAfter(currentTask); 
+    var newTask = this.newTask();
+    if (currentTask == this.rootTask) newTask.insertFirst(this.rootTask);
+    else newTask.insertAfter(currentTask);
     this.selectTask(newTask);
-    newTask.edit();    
+    newTask.edit();
 }
 
 chees.tick.List.prototype.createTaskUnder = function () {
     var currentTask = this.currentSelection;
     currentTask.deselect();
-    var newTask = this.newTask(); 
-    newTask.insertFirst(currentTask); 
+    var newTask = this.newTask();
+    newTask.insertFirst(currentTask);
     this.selectTask(newTask);
-    newTask.edit();    
+    newTask.edit();
 }
 
 chees.tick.List.prototype.selectPrev = function () {
@@ -522,7 +523,7 @@ chees.tick.List.prototype.selectDown = function () {
         if (next) this.selectTask(next);
         else this.selectTask(this.rootTask);
     }
-    if (this.currentSelection.parent.collapsed) this.selectDown();    
+    if (this.currentSelection.parent.collapsed) this.selectDown();
 }
 
 chees.tick.List.prototype.selectLeft = function () {
@@ -539,8 +540,8 @@ chees.tick.List.prototype.deleteTask = function () {
     if (this.currentSelection == this.rootTask) return;
     toDelete = this.currentSelection;
     this.selectUp();
-    toDelete.del();  
-    this.reportChange(); 
+    toDelete.del();
+    this.reportChange();
 }
 
 chees.tick.List.prototype.toggleTask = function () {
@@ -550,9 +551,9 @@ chees.tick.List.prototype.toggleTask = function () {
 }
 
 chees.tick.List.prototype.generateList = function () {
-        var list = this.rootTask.toSimpleList();    
-        list.sort(function(a,b){return a['id'] - b['id']});
-        return list;    
+    var list = this.rootTask.toSimpleList();
+    list.sort(function(a,b){return a['id'] - b['id']});
+    return list;
 }
 
 chees.tick.List.prototype.reportChange = function () {

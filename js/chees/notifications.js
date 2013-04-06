@@ -6,9 +6,9 @@ goog.require('goog.fx.Animation');
 goog.require('goog.style');
 goog.require('goog.events');
 
-/** @constructor 
+/** @constructor
  *  global (exported) construct which allows outsiders to register a specific Notifications object
- *  used by chees.tick libraries via chees.tick.GlobalNotify.publish() * 
+ *  used by chees.tick libraries via chees.tick.GlobalNotify.publish() *
  * */
 var GlobNot = function() { this.notifier = null};
 GlobNot.prototype.register = function (notifier) {
@@ -19,31 +19,31 @@ GlobNot.prototype.publish = function (message,classname) {
     }
 
 chees.tick.GlobalNotify = new GlobNot();
-    
-/** 
+
+/**
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-
 chees.tick.Notifications = function (container, note_text, close_button, displaytime, max_msg) {
+    goog.base(this);
     this.container = document.getElementById(container);
     this.note_text = document.getElementById(note_text);
     this.close_button = document.getElementById(close_button);
     this.doc_body = document.getElementsByTagName("body")[0];
     this.displaytime = displaytime || 60000;
     this.max_messages = max_msg || 2;
-    
+
     this.hide_timeout = null;
     this.current_anim = null;
     this.last_published = null;
-    
+
     this.ANIMATION_EVENTS = [ goog.fx.Animation.EventType.BEGIN,
                             goog.fx.Animation.EventType.ANIMATE,
                             goog.fx.Animation.EventType.END ];
 
     this.empty_next_time = false;
 
-    goog.style.setPosition(this.container,0,-1000); 
+    goog.style.setPosition(this.container,0,-1000);
 
     // events
     var self = this;
@@ -51,14 +51,14 @@ chees.tick.Notifications = function (container, note_text, close_button, display
         this.close_button,
         goog.events.EventType.CLICK,
         function (e) {
-            e.stopPropagation(); 
+            e.stopPropagation();
             clearTimeout(self.hide_timeout);
             self.hide_timeout = null;
-            var anim = self.hide(); 
+            var anim = self.hide();
             self.empty_next_time = true;
-            
+
         }
-    );  
+    );
 }
 goog.inherits(chees.tick.Notifications, goog.events.EventTarget);
 
@@ -78,7 +78,7 @@ chees.tick.Notifications.prototype.renderFrame = function (e) {
 chees.tick.Notifications.prototype.repositionHidden = function () {
     this.container.style.display = 'block';
     var size = goog.style.getBorderBoxSize(this.container);
-    goog.style.setPosition(this.container,0,-size.height); 
+    goog.style.setPosition(this.container,0,-size.height);
 }
 
 chees.tick.Notifications.prototype.show = function () {
@@ -97,7 +97,7 @@ chees.tick.Notifications.prototype.show = function () {
         this.current_anim,
         this.ANIMATION_EVENTS,
         function (e) {self.renderFrame(e)}
-    );  
+    );
     this.current_anim.play();
     var size = goog.style.getBorderBoxSize(this.container);
 
@@ -119,7 +119,7 @@ chees.tick.Notifications.prototype.hide = function () {
         this.current_anim,
         this.ANIMATION_EVENTS,
         function (e) {self.renderFrame(e)}
-    );  
+    );
     goog.events.listen(
         this.current_anim,
         goog.fx.Animation.EventType.END,
@@ -138,8 +138,8 @@ chees.tick.Notifications.prototype.publishMessage = function(text,css_class) {
         if (this.empty_next_time) {
             this.note_text.innerHTML = '';
             this.empty_next_time = false;
-        } 
-        
+        }
+
         // update text
         var new_element = document.createElement('div');
         new_element.innerHTML = text;
@@ -150,7 +150,7 @@ chees.tick.Notifications.prototype.publishMessage = function(text,css_class) {
     } else {
         if (this.empty_next_time) return;
     }
-    this.last_published = text;   
+    this.last_published = text;
     this.show();
 }
 

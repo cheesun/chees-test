@@ -56,8 +56,8 @@ def build_task_path(tasks):
             return ' > '.join([start,end])
     else:
         return end
-        
-            
+
+
 class TickList(Searchable, Rated, Permissioned, Audited):
     # list attributes
     name = db.StringProperty(required=True)
@@ -75,7 +75,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
     INDEX_ORDERING_FUNCT = lambda this: -float('%s.%s' % (this.updated.strftime('%s'),this.updated.microsecond))
 
     PERMISSION_INDEX_TYPE = StemmedIndex #PermissionIndex
-    
+
     def __init__(self,*args,**kwargs):
         super(TickList,self).__init__(*args,**kwargs)
 
@@ -91,12 +91,12 @@ class TickList(Searchable, Rated, Permissioned, Audited):
 
         def after_put_trigger(this):
             if this.attribute_changed(this.INDEX_TITLE_FROM_PROP):
-                this.indexed_title_changed(ordinal_changed=True)             
+                this.indexed_title_changed(ordinal_changed=True)
             else:
                 this.indexed_ordinal_changed()
             #if this.attribute_changed(this.version):
             #    this.enqueue_indexing(url='/tick/tasks/searchindexing')
-                    
+
         self.add_after_put_trigger(after_put_trigger)
 
     def get_path_to_top_task(self):
@@ -104,7 +104,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         path = cache.get(cache_key)
         if not path:
             candidates = TickTask.all().ancestor(self).filter('prev_sibling =',None).filter('deleted =',False).fetch(1000)
-            if candidates:               
+            if candidates:
                 mapping = {}
                 for candidate in candidates:
                     mapping[candidate.id] = candidate
@@ -124,7 +124,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
     def get_my_lists(cls,limit=50):
         owner = TickUser.get_current_user(keys_only=True)
         lists = cls.all().filter('deleted =',False).filter('owner =',owner).order('-updated').fetch(limit)
-        return lists        
+        return lists
 
     @classmethod
     def get_lists(cls,limit=50):
@@ -143,9 +143,9 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         lists = db.get(ticklist_keys)
         non_deleted = [item for item in lists if item.deleted == False]
         return sorted(non_deleted,key=lambda x: x.updated,reverse=True)
-        
+
     @classmethod
-    @transactional    
+    @transactional
     def save_list_items(cls,id,ver,inserts,updates,deletes):
         '''
         given a set of changes to tasks in a list
@@ -155,7 +155,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         inserts :- [{'id':'','text':'','complete':'','parent':'','prev':'','next':'','first':'','last':''},...]
         updates :- [{'id':'',...},...]
         deletes :- [{'id':'',...},...]
-        '''    
+        '''
         l = cls.get_list(id)
         if not l.can_edit():
             raise Exception('you do not have permissions to edit this checklist')
@@ -163,14 +163,14 @@ class TickList(Searchable, Rated, Permissioned, Audited):
             raise Exception('checklist has been changed on the server since your last save, please reload.')
         elif l.version < ver:
             raise Exception('local checklist is corrupt, please reload.')
-        
-        # deltas for tracking new (total) and completed tasks    
+
+        # deltas for tracking new (total) and completed tasks
         total = 0
         compl = 0
-        
+
         # flags
-        reindex = False 
-        
+        reindex = False
+
         # change tasks for this list
         for i in inserts:
             #logging.warning(l.next_task_id)
@@ -187,7 +187,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
                 if u['complete'] is True:
                     compl += 1
                 else:
-                    compl -= 1                
+                    compl -= 1
             if t.parent_task == None and ('text' in u or 'parent' in u):
                 reindex = True
 
@@ -204,7 +204,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
             # something is wrong, recalculate basis stats
             prepare = TickTask.all().ancestor(l).filter('deleted = ',False)
             l.num_tasks = prepare.count()
-            l.num_completed_tasks = prepare.filter('complete = ',True).count()        
+            l.num_completed_tasks = prepare.filter('complete = ',True).count()
         l.num_tasks += total
         l.num_completed_tasks += compl
         l.put()
@@ -212,16 +212,16 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         if reindex:
             l.enqueue_indexing(url='/tick/tasks/searchindexing',delay=30,condition=('version',l.version))
         return l
-        
+
     @classmethod
     def get_list(cls,id):
         existing_list = cls.get_by_id(id)
         if not existing_list:
-            raise Exception('list does not exist')
-        if not existing_list.can_view(): 
-            raise Exception('you do not have permissions to view this ticklist')    
+            raise Exception('list %s does not exist' % id)
+        if not existing_list.can_view():
+            raise Exception('you do not have permissions to view this ticklist')
         return existing_list
-        
+
     @classmethod
     @transactional
     def get_list_and_tasks(cls,list_id):
@@ -247,8 +247,8 @@ class TickList(Searchable, Rated, Permissioned, Audited):
             sharing=sharing,
             )
         new_list.put()
-        new_list.enqueue_indexing(url='/tick/tasks/searchindexing',condition=('version',new_list.version))        
-        return new_list    
+        new_list.enqueue_indexing(url='/tick/tasks/searchindexing',condition=('version',new_list.version))
+        return new_list
 
     @classmethod
     @transactional
@@ -257,7 +257,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         if not existing_list.can_edit():
             raise Exception('you are not allowed to delete this list')
         if existing_list.deleted:
-            raise Exception('list already deleted')        
+            raise Exception('list already deleted')
         existing_list.deleted = True
         existing_list.put()
         existing_list.enqueue_deindexing(url='/tick/tasks/searchdeindexing')
@@ -269,7 +269,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         owner = users.get_current_user()
         existing_list = cls.get_list(id)
         if not existing_list.open:
-            raise Exception('list already closed')        
+            raise Exception('list already closed')
         if not existing_list.num_completed_tasks == existing_list.num_tasks:
             raise Exception('list not complete')
         existing_list.open = False
@@ -289,9 +289,9 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         new_list.list_type = setlist
         new_list.put()
         cls.save_list_items(new_list.key().id(),new_list.version,inserts,[],[])
-        new_list.enqueue_indexing(url='/tick/tasks/searchindexing',condition=('version',new_list.version))                
+        new_list.enqueue_indexing(url='/tick/tasks/searchindexing',condition=('version',new_list.version))
         return (setlist,new_list)
-        
+
 class TickTask(db.Model):
     # task attributes
     id = db.IntegerProperty(required=True)
@@ -318,7 +318,7 @@ class TickTask(db.Model):
         'parent'    : 'parent_task',
         'first'     : 'first_child',
         'last'      : 'last_child',
-    }     
+    }
 
     def __init__(self,*args,**kwargs):
         super(TickTask,self).__init__(*args,**kwargs)
@@ -346,13 +346,13 @@ class TickTask(db.Model):
             prev_sibling = data['prev'],
             next_sibling = data['next'],
             first_child = data['first'],
-            last_child = data['last'],      
-            notes = data['notes'],  
+            last_child = data['last'],
+            notes = data['notes'],
             parent = l # belongs to the list's entity group
             )
         newTask.put()
         return newTask
-        
+
     @classmethod
     def update_task(cls,list,changes):
         if not changes:
@@ -365,15 +365,15 @@ class TickTask(db.Model):
             if key == 'id':
                 # this should be the same so just leave it alone
                 continue
-            else:        
+            else:
                 # for all other keys, check the key mapping and store the data as is
-                mapped = cls._key_mappings.get(key,key)       
+                mapped = cls._key_mappings.get(key,key)
                 if mapped == 'complete' and changes[key] != t.complete:
                     changed = changes[key]
                 setattr(t,mapped,changes[key])
         t.put()
         return t
-        
+
     @classmethod
     def delete_task(cls,list,task):
         try:
@@ -387,7 +387,7 @@ class TickTask(db.Model):
         t.deleted = True
         t.put()
         return t
-        
+
     def to_string(self):
         return str((id,text,complete,parent_task,prev_task,next_task,first_child,last_child))
 
