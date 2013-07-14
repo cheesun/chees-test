@@ -158,7 +158,7 @@ chees.tick.List.prototype.setupList = function (list) {
     this.id = list['id'];
     this.title = list['name'];
     this.rootTask.setText(this.title);
-    this.shareObject.init(this.id,this.list_type,'/tick/api/'+this.list_type+'share',list['sharing'],this.can_edit);
+    this.shareObject.init(this.id,this.list_type,'/tick/api/'+this.list_type+'share',list['sharing'],this.can_edit,list['permissions']);
     if (this.can_edit && !this.is_setlist) {
         this.saveObject = new chees.tick.Save(this.dom['saveButton']);
         this.saveObject.id = list['id'];

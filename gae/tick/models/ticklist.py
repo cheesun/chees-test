@@ -88,6 +88,7 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         self.add_to_simple_default_fields(['id','name','next_task_id'])
         self.add_to_simple_field_mapping('can_edit',lambda this: this.can_edit())
         self.add_to_simple_field_mapping('top_task_path',lambda this: build_task_path(this.get_path_to_top_task()))
+        self.add_to_simple_field_mapping('permissions',lambda this: this.permission_emails())
 
         def after_put_trigger(this):
             if this.attribute_changed(this.INDEX_TITLE_FROM_PROP):
@@ -291,6 +292,9 @@ class TickList(Searchable, Rated, Permissioned, Audited):
         cls.save_list_items(new_list.key().id(),new_list.version,inserts,[],[])
         new_list.enqueue_indexing(url='/tick/tasks/searchindexing',condition=('version',new_list.version))
         return (setlist,new_list)
+
+    def permission_emails(self):
+        return [TickUser.get_by_user_id(id).email_address for id in self.specified_permissions]
 
 class TickTask(db.Model):
     # task attributes

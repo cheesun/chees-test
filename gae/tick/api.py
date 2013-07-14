@@ -68,7 +68,7 @@ class TickListLoad(TickApiHandler):
         list_id = long(self.request.get('id'))
         ticklist,tasks = models.TickList.get_list_and_tasks(list_id)
         output = json.dumps({
-            'list'  : ticklist.to_simple(['version','sharing','can_edit']),
+            'list'  : ticklist.to_simple(['version','sharing','can_edit','permissions']),
             'tasks' : [t.to_simple() for t in tasks],
             })
         return self.output(output)
@@ -99,10 +99,13 @@ class TickListShare(TickApiHandler):
     def post(self):
         id = long(self.request.get('id'))
         sharing = self.request.get('sharing')
+        specified = [username.strip() for username in self.request.get('specified').split(',')]
         entity = models.TickList.get_by_id(id)
         if not entity.can_edit():
             raise Exception('you do not have permissions to change the sharing on this ticklist')
         entity.sharing = sharing
+        if sharing == 'specific':
+            entity.specified_permissions = [user_id for user in models.TickUser.all().filter('email_address IN', specified) for user_id in user.all_user_ids]
         entity.put()
         if sharing == 'public':
             models.Activity.create('<actor>|made|<target>|public',target=entity)
@@ -181,7 +184,7 @@ class UserFind(TickApiHandler):
     def get(self):
         query = self.request.get('q')
         searchid = self.request.get('id')
-
+        friends_only = self.request.get('friends_only')
         def augment_simple(tickuser):
             follower = models.TickUser.get_current_user()
             simple = tickuser.to_simple(['gravatar','full_name','email_address'])
@@ -200,9 +203,19 @@ class UserFind(TickApiHandler):
                     simple['disabled'] = ''
             return simple
 
+        current_user = models.TickUser.get_current_user()
+        if friends_only:
+            friends = models.Follow.get_friends(current_user.key())
+        if not query and friends_only:
+            search_results = friends
+        else:
+            search_results = models.TickUser.search(query)
+            if friends_only:
+                search_results = [result for result in search_results if result.key() in [friend.key() for friend in friends]]
+
         self.output({
             'id' : searchid,
-            'results' : [augment_simple(tickuser) for tickuser in models.TickUser.search(query)]
+            'results' : [augment_simple(tickuser) for tickuser in search_results]
             })
 
 class UserCheckName(TickApiHandler):

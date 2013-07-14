@@ -297,6 +297,26 @@ class SetListShow(TickPageHandler):
         l = models.SetList.get_setlist(long(id))
         return self.output('setlist.html',{'name':l.name,'id':id,'description':l.description,'owner':models.TickUser.get_by_user_id(l.creator_id).to_simple(['gravatar'])},l)
 
+class Export(TickPageHandler):
+    def get(self,id):
+        ticklist, tasks = models.TickList.get_list_and_tasks(id)
+        output = []
+        output.append(ticklist.name)
+        output.append('%s/%s completed' % (ticklist.num_completed_tasks, ticklist.num_tasks))
+        output.append('')
+        stack = []
+        for task in tasks:
+            if stack:
+                if task.parent_task == stack[-1]:
+                    stack.append(task)
+                else:
+                    while stack and task != stack[-1]:
+                        stack.pop(task)
+            depth = len(stack) + 1
+            output.append('%s %s' % ('*'*depth,task.text))
+
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write(output.join('\n'))
 
 class Profile(TickPageHandler):
 

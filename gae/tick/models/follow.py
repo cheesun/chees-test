@@ -12,13 +12,13 @@ class FollowIndex(PermissionIndex):
 
     def add_followers(self,follower_ids):
         self.view_permissions.extend(follower_ids)
-    
+
     def add_leaders(self,leader_ids):
         self.edit_permissions.extend(leader_ids)
 
     def remove_follower(self,follower_id):
         self.view_permissions.remove(follower_id)
-    
+
     def remove_leader(self,leader_id):
         self.edit_permissions.remove(leader_id)
 
@@ -51,7 +51,7 @@ class Follow(Audited):
                 new_index.add_followers(follower.all_user_ids)
                 new_index.put()
             from activity import Activity
-            Activity.create('<actor>|began following|<target>',actor=follower,target=leader,extra_recipients=[leader])               
+            Activity.create('<actor>|began following|<target>',actor=follower,target=leader,extra_recipients=[leader])
             return True
         else:
             return False
@@ -69,10 +69,10 @@ class Follow(Audited):
         index = existing.get_follow_index()
         for user_id in follower.all_user_ids:
             index.remove_follower(user_id)
-        index.put()  
+        index.put()
         from activity import Activity
-        Activity.create('<actor>|stopped following|<target>',actor=follower,target=leader,extra_recipients=[leader]) 
-        return True      
+        Activity.create('<actor>|stopped following|<target>',actor=follower,target=leader,extra_recipients=[leader])
+        return True
 
     @classmethod
     def get_followers(cls,leader):
@@ -93,16 +93,27 @@ class Follow(Audited):
             follower_key = follower.key()
         except AttributeError:
             follower_key = follower
-        
+
         entities = cls.all().filter('follower_ids =',follower.id()).fetch(1000)
         return [TickUser.get_by_id(entity.leader_id) for entity in entities]
-        
+
     def get_follow_index(self,keys_only=False):
         return FollowIndex.all(keys_only=keys_only).ancestor(self).get()
-    
+
+    @classmethod
+    def get_friends(cls,user):
+        try:
+            user_key = user.key()
+        except AttributeError:
+            user_key = user
+        entity = cls.all().filter('leader_id =',user_key.id()).get()
+        entities = cls.all().filter('follower_ids =',user_key.id()).fetch(1000)
+        ids = set(entity.follower_ids) | set([entity.leader_id for entity in entities])
+        return [TickUser.get_by_id(id) for id in ids]
+
     @classmethod
     def already_following(cls,leader,follower):
         check = cls.all(keys_only=True).ancestor(leader).filter('follower_ids =',follower.key().id()).get()
         return check is not None
-        
-                
+
+

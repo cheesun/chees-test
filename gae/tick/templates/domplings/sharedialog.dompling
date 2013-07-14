@@ -2,14 +2,24 @@
                 <div title='shareDialog' class='dialog shareDialog'>
                     <div title='accessSection'>
                         <div><strong>access</strong></div>
-                        <form>
+                        <form class='accessPickerForm'>
+                          <span class='accessPickerContainer'>
                             <select title='accessSelect' name='accessSelect'>
                                 <option value='private'>private</option>
                                 <option value='public'>public</option>
+                                <option value='specific'>specific</option>
                             </select>
-                            <span title='accessButtons' style='visibility: hidden'>
-                                <input title='accessChangeButton' type='button' value='change'/><input title='accessCancelButton' type='button' value='cancel'/>
-                            </span>    
+                            <span>
+                            <div title='accessPicker' class='accessPicker' style='display: none'>
+                                <textarea title='accessPickerText' type='text' name='accessPicker'></textarea>
+                                <div title='accessPickerAutoComplete' class='accessPickerAutoComplete'></div>
+                            </div>
+                                <div title='accessButtons' style='visibility: hidden'>
+                                    <input title='accessChangeButton' type='button' value='change'/><input title='accessCancelButton' type='button' value='cancel'/>
+                                </div>
+                            </span>
+
+                          </span>
                             <div title='saveDetails' class='saveDetails'></div>
                         </form>
                     </div>
