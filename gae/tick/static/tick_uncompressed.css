@@ -787,6 +787,35 @@
             font-size: 1em;
         }
 
+    /* shareDialog */
+        .shareDialog form.accessPickerForm {
+            width: 25em;
+        }
+
+        .shareDialog span.accessPickerContainer > span {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .shareDialog .accessPicker {
+            margin-bottom: 0;
+        }
+
+        .shareDialog .accessPicker textarea {
+            vertical-align: top;
+            font-size: 0.8em;
+
+        }
+
+        .shareDialog .accessPickerAutoComplete {
+            font-size: 0.8em;
+        }
+
+        .shareDialog .accessPickerAutoComplete .ac-row.active {
+            background-color: lightgrey;
+        }
+
+
     /* dialog row dialog inputs */
 
         .validInput {
