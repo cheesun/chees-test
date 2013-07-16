@@ -811,8 +811,14 @@
             font-size: 0.8em;
         }
 
+        .shareDialog .accessPickerAutoComplete .ac-row {
+            border: 1px solid transparent;
+        }
+
         .shareDialog .accessPickerAutoComplete .ac-row.active {
+            border: 1px solid darkgrey;
             background-color: lightgrey;
+            padding: 3px;
         }
 
 

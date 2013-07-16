@@ -34,7 +34,7 @@ chees.tick.Share = function (button) {
       function(e){
         var results = goog.json.parse(e.target.getResponseText())['results'];
         var friends = results.map(function(item){
-          return item.tick_name;
+          return item['email_address'];
         });
         var matcher = new goog.ui.ac.ArrayMatcher(friends, true);
         var renderer = new goog.ui.ac.Renderer(self.dialog.dom['accessPickerAutoComplete']);
